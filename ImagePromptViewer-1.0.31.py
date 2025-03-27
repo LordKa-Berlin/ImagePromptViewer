@@ -11,9 +11,9 @@ Liest PNG-Bilder ein und extrahiert Prompt, Negativ Prompt und Settings aus dem 
 Haupt- und Vollbildansicht mit Navigation, Kopierfunktionen und Bildöffnung im Systembetrachter.
 Dynamische Anpassung an Monitorauflösung für Schriftgrößen, Buttons und Formulargröße.
 
-Änderungen in Version 1.0.30:
-- Optimierung des Ordner-Einlesens mit Multithreading für große Bildmengen.
-- Lazy Loading der Vorschau-Thumbnails.
+Änderungen in Version 1.0.31:
+- Wiederherstellung der Methode update_selected_monitor aus Version 1.0.30 zur Behebung eines Syntaxfehlers.
+- Beibehaltung der Optimierungen aus Version 1.0.30 (Multithreading und Lazy Loading).
 """
 
 import subprocess, sys
@@ -43,7 +43,7 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "screeninfo"])
     from screeninfo import get_monitors
 
-VERSION = "1.0.30"
+VERSION = "1.0.31"
 
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"
@@ -256,9 +256,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.status("Formular geladen.")
 
     def update_selected_monitor(self, choice):
-        for i, mon in enumerate(self
-
-.monitor_list):
+        for i, mon in enumerate(self.monitor_list):
             if choice.startswith(f"Monitor {i}:"):
                 self.selected_monitor = mon
                 break
