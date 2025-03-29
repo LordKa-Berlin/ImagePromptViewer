@@ -113,3 +113,38 @@ Beispielbild: Ein JPEG-Bild einer Krankenschwester wurde bereitgestellt, um die 
 Erwarteter Prompt: Sollte etwa wie score_9,score_8_up,score_7_up, BREAK 1girl being choked, ArielXL, (hot... aussehen, typisch für KI-generierte Bilder.
 Bitte an dich: Teste den Code mit dem Beispielbild, teile mir die neue Debug-Ausgabe mit und schlage eine Lösung für das Kodierungsproblem vor, falls der Prompt weiterhin unlesbar ist.
 Diese Übersicht sollte dir und jeder KI, die sie liest, einen klaren Stand des Projekts vermitteln. Lass mich wissen, wenn du weitere Informationen brauchst!
+
+
+
+##########################################################################
+Das Script verwendet eine mehrstufige Logik, um die in den Bilddateien eingebetteten Prompts zu extrahieren. Hier eine Zusammenfassung der wesentlichen Schritte und Kriterien:
+Dateityp-Erkennung:
+Öffnen des Bildes: Mit der Pillow-Bibliothek wird versucht, das Bild zu öffnen.
+Header-Check:
+Zunächst wird anhand der Dateiendung (JPEG vs. PNG) bestimmt, welcher Typ vorliegt.
+Zusätzlich wird der erste 8-Byte-Header der Datei ausgelesen. Erkennt man dort das PNG-Signatur-Byte (b'\x89PNG'), wird das Bild als PNG behandelt – auch wenn die Dateiendung etwas anderes angibt.
+Textauslesung:
+Bei JPEGs:
+Es werden die EXIF-Daten mittels der piexif-Bibliothek geladen.
+Speziell wird das UserComment-Tag (EXIF-Tag 37510) untersucht.
+Dekodierungslogik:
+Falls das Byte-Array mit UNICODE\x00\x00 beginnt, wird versucht, den Kommentar über piexif.helper zu dekodieren.
+Sollte dies fehlschlagen, erfolgt ein Fallback: Die ersten 8 Bytes (das "UNICODE"-Präfix) werden entfernt und der Rest wird als UTF-16LE dekodiert.
+Ist kein UNICODE-Präfix vorhanden, wird die Dekodierung standardmäßig mit Latin-1 durchgeführt.
+Bei PNGs:
+Das Script durchsucht das img.info-Dictionary nach einem Schlüssel, der "parameters" (ohne Beachtung der Groß-/Kleinschreibung) enthält.
+Der zugehörige Wert wird als Text extrahiert.
+Normalisierung des extrahierten Textes:
+Alle überflüssigen Leerzeichen werden entfernt, sodass nur einzelne Leerzeichen zwischen den Wörtern verbleiben.
+Segmentierung des Textes:
+Prompt:
+Der Text bis zum Auftreten des Markers "Negative prompt:" wird als Prompt definiert.
+Falls "Negative prompt:" nicht vorhanden ist, wird als Prompt der Text bis zum Marker "Steps:" verwendet.
+Negativer Prompt:
+Falls der Marker "Negative prompt:" gefunden wird, wird der Text danach – entweder bis zum Marker "Steps:" oder bis zum Ende – als Negativ-Prompt abgetrennt.
+Settings:
+Alles, was ab dem Marker "Steps:" kommt (wobei der Marker selbst erhalten bleibt), wird als Settings-Teil interpretiert.
+Rückgabe und Debugging:
+Abschließend werden die drei Textsegmente (Prompt, Negativ-Prompt, Settings) zurückgegeben.
+Während des gesamten Prozesses sammelt das Script Debug-Informationen, die beispielsweise im Debug-Fenster angezeigt werden können.
+Diese strukturierte Vorgehensweise sorgt dafür, dass sowohl bei JPEG- als auch bei PNG-Dateien der eingebettete Text korrekt ausgelesen, normalisiert und in sinnvolle Abschnitte unterteilt wird.
