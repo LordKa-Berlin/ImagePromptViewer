@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Datum: 2025-03-27
-Versionsnummer: 1.0.36.3d
+Versionsnummer: 1.0.36.3i
 Interne Bezeichnung: Master8 Alpha5
 
 Änderungen in Version 1.0.36.2:
@@ -60,7 +60,7 @@ except ImportError:
     import piexif
     from piexif import helper
 
-VERSION = "1.0.36.3d"
+VERSION = "1.0.36.3i"
 
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"
@@ -196,6 +196,28 @@ def extract_text_chunks(img_path):
             settings_text = normalized[idx_steps_in_normalized:]
         else:
             settings_text = str(data_dict.get("steps", ""))
+                # Wenn die direkten Schlüssel nicht gefunden wurden, durchsuche alle Schlüssel
+        if not (prompt_json or negative_json):
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    # Suche nach CLIPTextEncode-Einträgen, um Prompt-Werte zu erhalten
+                    if value.get("class_type", "").lower() == "cliptextencode":
+                        text_val = value.get("inputs", {}).get("text", "")
+                        if not prompt_json:
+                            prompt_json = text_val
+                        elif not negative_json:
+                            negative_json = text_val
+
+        # Falls der Settings-Text noch leer ist, suche nach einem KSampler-Eintrag
+        if not settings_text:
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    if value.get("class_type", "").lower() == "ksampler":
+                        steps_val = value.get("inputs", {}).get("steps", "")
+                        if steps_val:
+                            settings_text = '"steps": ' + str(steps_val)
+                            break
+                        
         if prompt_json or negative_json or settings_text:
             debug_info.append("Debug: JSON-Parsierung erfolgreich (direkt).")
             debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
@@ -425,13 +447,10 @@ class ImageManagerForm(TkinterDnD.Tk):
         
         # Erstelle einen neuen Style für die Combobox
         style = ttk.Style()
-        style.configure("Custom.TCombobox", font=("Arial", 16))  # Schriftgröße hier z.B. 16
+        style.configure("Custom.TCombobox", font=("Arial", 36))  # Schriftgröße hier z.B. 16
 
         # Beim Erstellen der Combobox den neuen Style anwenden
         self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=20)
-        self.filter_combo.pack(side="left", padx=self.button_padding)
-
-        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, font=("Arial", self.main_font_size), width=20)
         self.filter_combo.pack(side="left", padx=self.button_padding)
         self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
         self.clear_button = tk.Button(filter_frame, text="Clear", command=self.clear_filter,
@@ -790,12 +809,20 @@ class ImageManagerForm(TkinterDnD.Tk):
     def clear_filter(self):
         self.filter_var.set("")
         self.apply_filter()
+        self.apply_filter()
 
     def apply_filter(self):
-        filter_text = self.filter_var.get().lower()
+        filter_text = self.filter_var.get().strip().lower()
+        
+        # Wenn ein Filtertext vorhanden ist und noch nicht in der History, zur History hinzufügen
+        if filter_text and filter_text not in self.filter_history:
+            self.filter_history.append(filter_text)
+            # Setze die Combobox-Werte auf die umgekehrte History (letzte Einträge oben)
+            self.filter_combo['values'] = list(reversed(self.filter_history))
+        
         self.filtered_images = []
         
-        # Wenn kein Filtertext vorhanden ist, nimm alle Bilder
+        # Wenn kein Filtertext, nimm alle Bilder
         if not filter_text:
             self.filtered_images = self.folder_images.copy()
         else:
@@ -805,24 +832,20 @@ class ImageManagerForm(TkinterDnD.Tk):
                 if file_path not in self.text_chunks_cache:
                     self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
                 prompt, negativ, settings = self.text_chunks_cache[file_path]
-                # Für die Suche verwenden wir die Kleinbuchstabenversion
-                prompt_lower = prompt.lower()
-                negativ_lower = negativ.lower()
-                settings_lower = settings.lower()
-
+                # Suche immer in der Kleinbuchstabenversion
                 if self.filter_filename_var.get() and filter_text in filename:
                     include = True
-                if self.filter_prompt_var.get() and filter_text in prompt_lower:
+                if self.filter_prompt_var.get() and filter_text in prompt.lower():
                     include = True
-                if self.filter_negativ_var.get() and filter_text in negativ_lower:
+                if self.filter_negativ_var.get() and filter_text in negativ.lower():
                     include = True
-                if self.filter_settings_var.get() and filter_text in settings_lower:
+                if self.filter_settings_var.get() and filter_text in settings.lower():
                     include = True
-
+                
                 if include:
                     self.filtered_images.append(file_path)
         
-        # Falls der Filter keine Übereinstimmung ergibt, füge zumindest das erste Bild hinzu
+        # Falls kein Bild gefunden wird, füge zumindest das erste Bild hinzu
         if not self.filtered_images and self.folder_images:
             self.filtered_images.append(self.folder_images[0])
         

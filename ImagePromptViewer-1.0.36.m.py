@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Datum: 2025-03-27
-Versionsnummer: 1.0.36.3d
-Interne Bezeichnung: Master8 Alpha5
+Versionsnummer: 1.0.36.3k
+Interne Bezeichnung: Master8 Alpha7
 
 Änderungen in Version 1.0.36.2:
 - Anpassung der Textchunk-Aufteilung: "Steps:" wird jetzt im Settings-Feld beibehalten, anstatt es auszuschließen.
@@ -14,6 +14,7 @@ Interne Bezeichnung: Master8 Alpha5
 Zusammenfassung:
 Ein Bildbetrachter für PNG- und JPEG-Dateien, der Textchunks auswertet (PNG: info['parameters'], JPEG: EXIF-Tag 37510) und in Prompt, Negativen Prompt und Settings aufteilt.
 """
+VERSION = "1.0.36.3k"
 
 import subprocess, sys
 import os
@@ -60,7 +61,6 @@ except ImportError:
     import piexif
     from piexif import helper
 
-VERSION = "1.0.36.3d"
 
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"
@@ -196,6 +196,28 @@ def extract_text_chunks(img_path):
             settings_text = normalized[idx_steps_in_normalized:]
         else:
             settings_text = str(data_dict.get("steps", ""))
+                # Wenn die direkten Schlüssel nicht gefunden wurden, durchsuche alle Schlüssel
+        if not (prompt_json or negative_json):
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    # Suche nach CLIPTextEncode-Einträgen, um Prompt-Werte zu erhalten
+                    if value.get("class_type", "").lower() == "cliptextencode":
+                        text_val = value.get("inputs", {}).get("text", "")
+                        if not prompt_json:
+                            prompt_json = text_val
+                        elif not negative_json:
+                            negative_json = text_val
+
+        # Falls der Settings-Text noch leer ist, suche nach einem KSampler-Eintrag
+        if not settings_text:
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    if value.get("class_type", "").lower() == "ksampler":
+                        steps_val = value.get("inputs", {}).get("steps", "")
+                        if steps_val:
+                            settings_text = '"steps": ' + str(steps_val)
+                            break
+                        
         if prompt_json or negative_json or settings_text:
             debug_info.append("Debug: JSON-Parsierung erfolgreich (direkt).")
             debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
@@ -425,13 +447,10 @@ class ImageManagerForm(TkinterDnD.Tk):
         
         # Erstelle einen neuen Style für die Combobox
         style = ttk.Style()
-        style.configure("Custom.TCombobox", font=("Arial", 16))  # Schriftgröße hier z.B. 16
+        style.configure("Custom.TCombobox", font=("Arial", 36))  # Schriftgröße hier z.B. 16
 
         # Beim Erstellen der Combobox den neuen Style anwenden
         self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=20)
-        self.filter_combo.pack(side="left", padx=self.button_padding)
-
-        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, font=("Arial", self.main_font_size), width=20)
         self.filter_combo.pack(side="left", padx=self.button_padding)
         self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
         self.clear_button = tk.Button(filter_frame, text="Clear", command=self.clear_filter,
@@ -562,9 +581,14 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.copy_settings_button.grid(row=1, column=2, padx=self.button_padding, pady=self.button_padding)
         for i in range(3):
             textchunks_frame.grid_columnconfigure(i, weight=1)
+    
+        # Button zum Laden der Ordnerliste (initial "Ordner‑Liste laden")
+        self.load_list_button = tk.Button(self, text="Ordner‑Liste laden", command=self.toggle_folder_list,
+                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.load_list_button.pack(pady=self.button_padding)
 
         self.preview_frame = tk.Frame(self, bg=BG_COLOR)
-        self.preview_frame.pack(fill="both", padx=self.button_padding, pady=self.button_padding, expand=True)
+        # Vorerst nicht packen – der Frame wird erst bei Klick auf „Ordner‑Liste laden“ eingeblendet.
         self.preview_canvas = tk.Canvas(self.preview_frame, bg=BG_COLOR, highlightthickness=0)
         self.preview_canvas.pack(side="left", fill="both", expand=True)
         self.preview_scrollbar = tk.Scrollbar(self.preview_frame, orient="vertical", command=self.preview_canvas.yview)
@@ -790,12 +814,20 @@ class ImageManagerForm(TkinterDnD.Tk):
     def clear_filter(self):
         self.filter_var.set("")
         self.apply_filter()
+        self.apply_filter()
 
     def apply_filter(self):
-        filter_text = self.filter_var.get().lower()
+        filter_text = self.filter_var.get().strip().lower()
+        
+        # Wenn ein Filtertext vorhanden ist und noch nicht in der History, zur History hinzufügen
+        if filter_text and filter_text not in self.filter_history:
+            self.filter_history.append(filter_text)
+            # Setze die Combobox-Werte auf die umgekehrte History (letzte Einträge oben)
+            self.filter_combo['values'] = list(reversed(self.filter_history))
+        
         self.filtered_images = []
         
-        # Wenn kein Filtertext vorhanden ist, nimm alle Bilder
+        # Wenn kein Filtertext, nimm alle Bilder
         if not filter_text:
             self.filtered_images = self.folder_images.copy()
         else:
@@ -805,24 +837,20 @@ class ImageManagerForm(TkinterDnD.Tk):
                 if file_path not in self.text_chunks_cache:
                     self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
                 prompt, negativ, settings = self.text_chunks_cache[file_path]
-                # Für die Suche verwenden wir die Kleinbuchstabenversion
-                prompt_lower = prompt.lower()
-                negativ_lower = negativ.lower()
-                settings_lower = settings.lower()
-
+                # Suche immer in der Kleinbuchstabenversion
                 if self.filter_filename_var.get() and filter_text in filename:
                     include = True
-                if self.filter_prompt_var.get() and filter_text in prompt_lower:
+                if self.filter_prompt_var.get() and filter_text in prompt.lower():
                     include = True
-                if self.filter_negativ_var.get() and filter_text in negativ_lower:
+                if self.filter_negativ_var.get() and filter_text in negativ.lower():
                     include = True
-                if self.filter_settings_var.get() and filter_text in settings_lower:
+                if self.filter_settings_var.get() and filter_text in settings.lower():
                     include = True
-
+                
                 if include:
                     self.filtered_images.append(file_path)
         
-        # Falls der Filter keine Übereinstimmung ergibt, füge zumindest das erste Bild hinzu
+        # Falls kein Bild gefunden wird, füge zumindest das erste Bild hinzu
         if not self.filtered_images and self.folder_images:
             self.filtered_images.append(self.folder_images[0])
         
@@ -977,6 +1005,19 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.preview_items.append(frame)
         self.update_preview_visible()
 
+    def toggle_folder_list(self):
+        # Prüfe, ob der Preview-Frame aktuell angezeigt wird.
+        if self.preview_frame.winfo_ismapped():
+            # Wenn ja: Ausblenden und Button-Text auf "Ordner‑Liste laden" setzen.
+            self.preview_frame.pack_forget()
+            self.load_list_button.config(text="Ordner‑Liste laden")
+        else:
+            # Andernfalls: Frame einblenden, Tabelle aufbauen und Button-Text ändern.
+            self.preview_frame.pack(fill="both", padx=self.button_padding, pady=self.button_padding, expand=True)
+            self.populate_preview_table_lazy()
+            self.load_list_button.config(text="Ordner‑Liste ausblenden")
+
+    
     def update_preview_visible(self):
         canvas_height = self.preview_canvas.winfo_height()
         scroll_region = self.preview_canvas.bbox("all")
@@ -1136,6 +1177,10 @@ class ImageManagerForm(TkinterDnD.Tk):
                     self.status(f"Fehler beim Löschen: {e}")
 
     def show_fullscreen(self):
+
+        # Falls bereits ein Vollbildfenster existiert, schließe es zuerst.
+        if self.fullscreen_win and self.fullscreen_win.winfo_exists():
+            self.safe_close_fullscreen(update_main=False)
         if not hasattr(self, "current_image") or not self.current_image:
             self.status("Kein Bild zum Vollbild verfügbar.")
             return
@@ -1155,6 +1200,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
         self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
         self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
+        self.fullscreen_win.focus_force()
         self.fs_text_focus = False
 
         info_font_size = int(self.main_font_size * 0.9)
@@ -1202,16 +1248,28 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.update_fs_image()
         self.update_fs_texts()
 
-    def safe_close_fullscreen(self):
+    def safe_close_fullscreen(self, update_main=True):
         try:
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
                 self.fullscreen_win.destroy()
-            if hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
+                self.fullscreen_win = None  # Verhindert, dass das Toplevel noch referenziert wird
+            # Setze den Fokus zurück auf das Hauptfenster
+            self.focus_force()
+            # Nur wenn update_main True ist (d.h. beim normalen Schließen des Vollbilds)
+            # wird das zuletzt im Vollbild gezeigte Bild im Hauptfenster aktualisiert.
+            if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
                 self.current_index = self.filtered_images.index(self.fs_image_path)
                 self.display_image(self.fs_image_path)
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
             pass
+
+    def show_preview_table(self):
+        # Packe den Preview-Frame, falls er noch nicht sichtbar ist
+        if not self.preview_frame.winfo_ismapped():
+            self.preview_frame.pack(fill="both", padx=self.button_padding, pady=self.button_padding, expand=True)
+        # Baue die Vorschautabelle auf
+        self.populate_preview_table_lazy()
 
     def update_fs_info_fullscreen(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:

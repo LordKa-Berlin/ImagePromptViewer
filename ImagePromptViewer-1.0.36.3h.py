@@ -428,9 +428,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         style.configure("Custom.TCombobox", font=("Arial", 16))  # Schriftgröße hier z.B. 16
 
         # Beim Erstellen der Combobox den neuen Style anwenden
-        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=20)
-        self.filter_combo.pack(side="left", padx=self.button_padding)
-
         self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, font=("Arial", self.main_font_size), width=20)
         self.filter_combo.pack(side="left", padx=self.button_padding)
         self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
@@ -790,12 +787,20 @@ class ImageManagerForm(TkinterDnD.Tk):
     def clear_filter(self):
         self.filter_var.set("")
         self.apply_filter()
+        self.apply_filter()
 
     def apply_filter(self):
-        filter_text = self.filter_var.get().lower()
+        filter_text = self.filter_var.get().strip().lower()
+        
+        # Wenn ein Filtertext vorhanden ist und noch nicht in der History, zur History hinzufügen
+        if filter_text and filter_text not in self.filter_history:
+            self.filter_history.append(filter_text)
+            # Setze die Combobox-Werte auf die umgekehrte History (letzte Einträge oben)
+            self.filter_combo['values'] = list(reversed(self.filter_history))
+        
         self.filtered_images = []
         
-        # Wenn kein Filtertext vorhanden ist, nimm alle Bilder
+        # Wenn kein Filtertext, nimm alle Bilder
         if not filter_text:
             self.filtered_images = self.folder_images.copy()
         else:
@@ -805,24 +810,20 @@ class ImageManagerForm(TkinterDnD.Tk):
                 if file_path not in self.text_chunks_cache:
                     self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
                 prompt, negativ, settings = self.text_chunks_cache[file_path]
-                # Für die Suche verwenden wir die Kleinbuchstabenversion
-                prompt_lower = prompt.lower()
-                negativ_lower = negativ.lower()
-                settings_lower = settings.lower()
-
+                # Suche immer in der Kleinbuchstabenversion
                 if self.filter_filename_var.get() and filter_text in filename:
                     include = True
-                if self.filter_prompt_var.get() and filter_text in prompt_lower:
+                if self.filter_prompt_var.get() and filter_text in prompt.lower():
                     include = True
-                if self.filter_negativ_var.get() and filter_text in negativ_lower:
+                if self.filter_negativ_var.get() and filter_text in negativ.lower():
                     include = True
-                if self.filter_settings_var.get() and filter_text in settings_lower:
+                if self.filter_settings_var.get() and filter_text in settings.lower():
                     include = True
-
+                
                 if include:
                     self.filtered_images.append(file_path)
         
-        # Falls der Filter keine Übereinstimmung ergibt, füge zumindest das erste Bild hinzu
+        # Falls kein Bild gefunden wird, füge zumindest das erste Bild hinzu
         if not self.filtered_images and self.folder_images:
             self.filtered_images.append(self.folder_images[0])
         
