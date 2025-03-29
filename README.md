@@ -1,62 +1,77 @@
 # ImagePromptViewer
 
 **Version:** 1.0.36.3a  
-**Interne Bezeichnung:** Master8 Alpha5  
-**Stand:** 27. März 2025
+**Codename:** Master8 Alpha5  
+**License:** [CC BY-NC 4.0](LICENSE)
 
-## 🧩 Beschreibung
+## Description
 
-**ImagePromptViewer** ist ein leistungsfähiger Bildbetrachter für `.png`- und `.jpg`/`.jpeg`-Dateien, der eingebettete Prompt-Informationen ausliest. Die Software extrahiert automatisch Prompt, Negative Prompt und Settings aus:
+**ImagePromptViewer** is an advanced image viewer for `.png`, `.jpg`, and `.jpeg` files. It extracts and displays embedded prompt data (such as *prompt*, *negative prompt*, and *generation settings*) from Stable Diffusion outputs.
 
-- PNGs (`info['parameters']`, ggf. auch `prompt`, `metadata`, `description`)
-- JPEGs (EXIF-Tag `UserComment` mit optionalem `UNICODE`-Präfix)
+It supports both:
+- PNG text chunks (e.g., `info['parameters']`)
+- JPEG EXIF tags (`UserComment`, tag `37510`)
 
-Diese Informationen werden übersichtlich dargestellt und können nach verschiedenen Kriterien gefiltert werden.
+The program displays the extracted data in structured fields, and allows filtering, copying, and navigation through folders containing images.
 
-## ✨ Features
+---
 
-- Anzeige eingebetteter Prompt-Daten in übersichtlichen Textfeldern
-- Filterfunktion (Prompt, Negativ Prompt, Settings, Dateiname)
-- Unterstützt Drag & Drop für Einzelbilder (lädt ganzen Ordner)
-- Vorschau der Bildliste und Navigation (Pfeiltasten, Mausrad)
-- Vollbildmodus mit Textanzeige und -kopierfunktion
-- Dynamisches UI-Scaling je nach Monitorauflösung
-- Löschen von Bildern (mit oder ohne Bestätigung)
-- Always-on-Top Funktion (umschaltbar)
-- Debug-Fenster mit System- und Fehlerdiagnose
-- Unterstützung von Unterordnern und Sortierung
+## Features
 
-## 📁 Voraussetzungen
+- 🖼 **View Images** in a resizable interface or fullscreen mode
+- 🧠 **Extract Prompt Data** from PNG and JPEG files automatically
+- 🔍 **Filter Images** by filename, prompt, negative prompt, or settings
+- 🗑 **Delete Images** safely (with or without confirmation)
+- 🖱 **Mouse and Keyboard Support** (navigation, zoom, copy)
+- 🧰 **Debug Info** window with OS, Python version, screen resolution
+- 🎨 **Dark Mode UI** with dynamic scaling for high-DPI screens
+- 🧲 **Drag & Drop Support**: Drop an image to load its folder instantly
 
-- Python 3.8 oder höher
-- Automatische Installation der folgenden Pakete:
-  - `tkinterdnd2`
-  - `Pillow`
-  - `piexif`
-  - `screeninfo`
-  - `send2trash`
+---
 
-## ▶️ Starten
+## Installation
+
+Make sure you have Python 3.8+ installed.  
+Dependencies will be installed automatically on first run (e.g. `Pillow`, `tkinterdnd2`, `piexif`, etc.).
+
+To run:
 
 ```bash
-python ImagePromptViewer.py
+python imagepromptviewer.py
+Or make it executable and launch directly:
 
-💡 Bedienungshinweise
-Mausrad oder Pfeiltasten: Vor-/Zurücknavigation
+bash
+Kopieren
+Bearbeiten
+chmod +x imagepromptviewer.py
+./imagepromptviewer.py
+How It Works
+Select or drop an image.
 
-Drag & Drop: Ein Bild ziehen lädt automatisch den Ordner
+The containing folder is scanned (optionally including subfolders).
 
-F11 oder ESC im Vollbild: Schließen
+Embedded prompts and metadata are parsed and displayed.
 
-Filter: Text eingeben und Suchfelder auswählen (z. B. Prompt)
+Navigate through all images using keyboard, mouse, or preview table.
 
-Debug-Fenster: Zeigt OS, Python-Version, Auflösung, Fehler
+Apply filters to find specific prompts or keywords.
 
-Always on Top: Fenster bleibt im Vordergrund
+Supported Formats
+.png — Reads info['parameters'] or fallback tags
 
-Vollbildmodus: Mit Vollbild-Button starten – inkl. Copy-Funktion
+.jpg / .jpeg — Reads EXIF tag 37510 (UserComment with UNICODE prefix)
 
-🔐 Lizenz
-Dieses Projekt ist lizenziert unter der
-Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
-➡️ Mehr erfahre
+Keyboard Shortcuts
+Key	Action
+→ / ←	Next / Previous image
+Delete	Delete current image
+F11 / Esc	Exit fullscreen mode
+Mouse	Scroll to navigate
+License
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) license.
+
+See LICENSE for more information.
+
+Author
+Developed by LordKa, 2025
+Feel free to use and improve the code non-commercially. Feedback welcome!
