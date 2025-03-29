@@ -2,7 +2,7 @@
 
 **Version:** 1.0.36.3a  
 **Codename:** Master8 Alpha5  
-**License:** [CC BY-NC 4.0](LICENSE)
+**License:** [CC BY-NC 4.0]([License](https://github.com/LordKa-Berlin/ImagePromptViewer/blob/main/LICENSE.md))
 
 ## Description
 
