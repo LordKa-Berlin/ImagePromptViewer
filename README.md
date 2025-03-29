@@ -41,8 +41,6 @@ python imagepromptviewer.py
 Or make it executable and launch directly:
 
 bash
-Kopieren
-Bearbeiten
 chmod +x imagepromptviewer.py
 ./imagepromptviewer.py
 How It Works
