@@ -18,6 +18,8 @@ Textfeld-Hintergrundfarbe: #000000 (Schwarz)
 
 füge bei  jedem vollständigen Script das du erstellst im Nachgang die Anweisung für git (alles was notwendig ist dammit die version nach git aktualisiert wird mi ein) inklusive einer Commitanweisung (änderungen kurz zusammengeasst) mit ein
 
+
+Merke dir folgende Angaben!
 # GIT-UMGEBUNGSKONFIGURATION
 
 ## GitHub Benutzername:
@@ -49,4 +51,4 @@ Die Git-Anweisungen bitte als ausführbaren Code in einem separaten Codeblock
 
 
 
-Hier ist der aktuelle Code, analysiere ihn und verwende ihn als Grundlage für alle weiteren Aktionen! Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, Integriere die zusätzlichen Anforderungen , sodass  alle anderen Funktionalitäten erhalten bleiben.:
+ Hier ist der aktuelle Code, analysiere ihn und verwende ihn als Grundlage für alle weiteren Aktionen! Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, integriere die zusätzlichen Anforderungen, sodass alle anderen Funktionalitäten erhalten bleiben.:

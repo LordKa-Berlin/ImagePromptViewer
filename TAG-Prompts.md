@@ -177,25 +177,3 @@ Wenn ich im Vollbild ein Bild gelöscht habe, dann wird im Vollbild das folgende
 1. Füge in dem Filter Im Hauptformular noch vor dem Kontrollfeld Filename noch ein Kontrollfeld ganzes Word (bitte englische Bezeichnung dafür verwenden) mit ein, mit dem entschieden wird, ob die Einträge im Filter Combo Feld als ganzes Wort gefunden werden sollen oder nur als teil eines wortes! Die default einstellung soll "false" sein.
 2. Die Date Filter im Filter Settings scheinen nicht zu funktionieren. ich habe Created this wekk und es wurden trotzdem alle bilder angezeigt, auch die älter als eine Woche sind, ich denke ds funktioniert bei den andern Date Filtern dann auch nicht
 3. füge hinter die versionsnummer eine Hinweis auf englisch ein das Lordka der ersteller dieses Programs ist.
-
-
-20250401
-
-1. Wenn das Programm auf einem Monitor mit einer Auflösung von 3840x2160 gestartet ist die Größe des Formulars korrekt, alle Buttons und anzeigen werden korrekt dargestellt, auf einem  2560x1440 Monitor sind nicht alle Objekte im Hauptformular richtig zu sehen, auf einem 1920x1080 Monitor ist dann noch weniger zu sehen. - kannst du das Problem lösen? Das Program muss auch in der Lage sein auf Systemen zu funktionieren wo mehrere Monitore angeschlossen sind. Die Auflösung muss sich dynamisch an den ausgewählten Monitor anpassen. 2. Die Filter Combobox soll ebenfalls eine History der letzten 10 Einträge haben. - 3. Die Farbe des Filter Buttons soll sich ändern wenn ein Filter aktiv ist, damit der user dadurch darauf hingewiesen wird, dass ein Filter gesetzt wird, ähnlich wie beim Bild löschen button wenn   das Kontrollfeld "delete immediately" aktiviert. 
-Hier ist der aktuelle Code, analysiere ihn und verwende ihn als Grundlage für alle weiteren Aktionen! Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, Integriere die zusätzlichen Anforderungen , sodass  alle anderen Funktionalitäten erhalten bleiben.:
-
-ich möchte das du folgende Änderungen durchführst, integriere die funktionalität des Formulars Filter Settings in das hauptformular mit allseinen objekten und funktionen. Die Filter Settings sollen als eigenes Frame unter dem Kontrollfeld Search Subfolders rechts am Rand erscheinen. Wenn du das umgesetzt hast entferne den Button Filter Settings und ds Formular Filter settings, da die Funktionen des Filter Settings Formulars ja jetzt im Hauptfenster abgebildet werden. Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, Integriere die zusätzlichen Anforderungen , sodass  alle anderen Funktionalitäten erhalten bleiben.:
-
-
-Führe diese Änderungen in der def setup_ui(self): durch.
-
-der Frame "Prompt Filter, soll mit all seinen Funktionen und Elementen in "Prompt Filter Dae Filter und File Size (kb)" inklusive der Buttons Apply Filter, Clear Reset all" rechts im Hauptformular entfernt werden und dann links am Rand im Hauptformular,auf einer Ebene mit dem Frame der Bildanzeige,  mit all seinen Funktionen und Elementen in "Prompt Filter Dre Filter und File Size (kb)" inklusive der Buttons Apply Filter, Clear Reset all" verschoben werden. Achte darauf das auch das neue Frame und dessen kompletter Inhalt dynamisch an die jeweilige Monitorposition anpasst. 
-Übergebe mir dann die von dir nach meinen Anforderungen angepasste komplette Definition "def setup_ui(self):"so dass ich sie komplett in meinem Code durch deine Version mit den Änderungen ersetzen kann. 
-
-Hier ist der aktuelle Code, analysiere ihn und verwende ihn als Grundlage für alle weiteren Aktionen! Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, integriere die zusätzlichen Anforderungen , sodass  alle anderen Funktionalitäten erhalten bleiben.: 
-
-
-1. in diesem Code sind die Filterfunktion between two dates, not older than x days, older than x days, ohne Funktion, ändere den Code bitte so, dass es möglich ist dort auch Daten einzutragen (Datum bzw. Anzahl der Tage) damit danach auch gefiltert werden kann 2. Wenn ich das Kontrollfeld Search subfolders aktiviere werden die Unterordner in der Anzeige nicht berücksichtigt, wenn ich Select Folder, select image mache und das Kontrollfeld Search subfolders aktiviert ist, dann werden auch die Unterordner berücksichtigt. Ich möchte, dass, wenn ich einen Ordner eingelesen habe, und danach das Kontrollfeld Search subfolders aktiviere, die Anzeige aktualisiert wird, sodass dann auch die Bilder aus den Unterordnern mit angezeigt werden.
-
-
-ich habe im Branch entwicklung folgendes Programm, ich möchte dafür ein preview oder so etwas auf git erstellen, so das jedem klar ist dass das eine vorabversion ist. baue mir für den folgenden Code eine vollständige readme, in der detaliert aufgelistet ist, was das Program ist. Füge auch folgende Informationen ein - noch nicht alle Filterfunktionen funktionieren (Date filter: filter mit Anzahl Tage oder Datumsangaben) die werden aber gerade implementiert.  - ordner/unterordner mit mehr als 4000 Bilddateien bereiten noch Probleme.: 
