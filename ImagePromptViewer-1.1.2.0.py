@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Datum: 2025-03-27
-Versionsnummer: 1.0.36.3n
+Versionsnummer: 1.1.2.0.
 Interne Bezeichnung: Master8 Alpha7
 
 Änderungen in Version 1.0.36.2:
@@ -14,7 +14,8 @@ Interne Bezeichnung: Master8 Alpha7
 Zusammenfassung:
 Ein Bildbetrachter für PNG- und JPEG-Dateien, der Textchunks auswertet (PNG: info['parameters'], JPEG: EXIF-Tag 37510) und in Prompt, Negativen Prompt und Settings aufteilt.
 """
-VERSION = "1.0.36.3n"
+VERSION = "1.1.2.0."
+HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys
 import os
@@ -26,8 +27,18 @@ from tkinter.scrolledtext import ScrolledText
 import threading
 from pathlib import Path
 from collections import deque
+from collections import OrderedDict
 import json
 
+# --------------------------------------------------------
+# Hilfsfunktion zur Validierung von Indexwerten
+# --------------------------------------------------------
+def validate_index(index, items):
+    if index < 0:
+        return 0
+    elif index >= len(items):
+        return len(items) - 1 if items else -1
+    return index
 
 try:
     from tkinterdnd2 import TkinterDnD, DND_FILES
@@ -61,13 +72,14 @@ except ImportError:
     import piexif
     from piexif import helper
 
-
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"
 BTN_FG_COLOR = "#000000"
 TEXT_BG_COLOR = "#333333"
 TEXT_FG_COLOR = "#FFA500"
 HIGHLIGHT_COLOR = "#FF5555"
+BUTTON_BG_COLOR = "#FFA500"
+BUTTON_FG_COLOR = "#000000"
 
 SCALE_OPTIONS = ["Default", "25%", "50%", "75%"]
 DEFAULT_SCALE = "Default"
@@ -80,20 +92,30 @@ def copy_to_clipboard(widget, text):
     widget.clipboard_clear()
     widget.clipboard_append(text)
     widget.update()
+def load_image_with_cache(file_path, cache_dict, cache_limit):
+    if file_path in cache_dict:
+        cache_dict.move_to_end(file_path)
+        return cache_dict[file_path]
+    try:
+        img = Image.open(file_path)
+        cache_dict[file_path] = img
+        if len(cache_dict) > cache_limit:
+            cache_dict.popitem(last=False)  # ältestes Bild entfernen
+        return img
+    except Exception as e:
+        print(f"Fehler beim Laden von {file_path}: {e}")
+        return None
 
 # ---------------------------------------------------------------------
 # Neue extract_text_chunks()-Routine (Integration von PromptSlicer + Prüfung des File-Headers)
 # ---------------------------------------------------------------------
 def extract_text_chunks(img_path):
-    # Öffne das Bild und überprüfe den Dateityp
     try:
         img = Image.open(img_path)
     except Exception as e:
-        messagebox.showerror("Fehler", f"Fehler beim Öffnen des Bildes:\n{e}")
+        messagebox.showerror("Error", f"Error opening image:\n{e}")
         return "", "", ""
     
-    # Prüfe den Header: Falls die Datei mit der PNG-Signatur beginnt, behandle sie als PNG,
-    # auch wenn die Endung .jpeg lautet.
     is_jpeg = img_path.lower().endswith((".jpg", ".jpeg"))
     with open(img_path, "rb") as f:
         header = f.read(8)
@@ -105,67 +127,59 @@ def extract_text_chunks(img_path):
     debug_info = []
     
     if is_jpeg:
-        # Extrahiere EXIF-Daten für JPEG
         try:
             exif_dict = piexif.load(img_path)
             user_comment = exif_dict.get("Exif", {}).get(piexif.ExifIFD.UserComment)
             if user_comment and isinstance(user_comment, bytes):
-                debug_info.append(f"Debug: Rohe Bytes von UserComment: {user_comment[:50].hex()}...")
+                debug_info.append(f"Debug: Raw bytes from UserComment: {user_comment[:50].hex()}...")
                 if user_comment.startswith(b'UNICODE\x00\x00'):
                     try:
                         full_text = helper.UserComment.load(user_comment)
-                        debug_info.append("Debug: Dekodierung mit piexif.helper erfolgreich.")
+                        debug_info.append("Debug: Decoding with piexif.helper successful.")
                         param_key = "EXIF-Exif-37510"
                     except Exception as e:
-                        debug_info.append(f"Debug: piexif.helper Fehlermeldung: {e}")
+                        debug_info.append(f"Debug: piexif.helper error: {e}")
                         full_text = user_comment[8:].decode("utf-16le", errors="ignore")
                         param_key = "EXIF-Exif-37510 (Fallback UTF-16LE)"
                 else:
                     full_text = user_comment.decode("latin-1", errors="ignore")
-                    debug_info.append("Debug: Kein UNICODE-Präfix, dekodiert als Latin-1.")
+                    debug_info.append("Debug: No UNICODE prefix, decoded as Latin-1.")
                     param_key = "EXIF-Exif-37510 (No UNICODE)"
             if not full_text:
-                debug_info.append("Debug: Kein UserComment-Tag gefunden oder kein Byte-Daten.")
+                debug_info.append("Debug: No UserComment tag found or no byte data.")
         except Exception as e:
-            debug_info.append(f"Debug: Fehler beim Auslesen der EXIF-Daten: {e}")
+            debug_info.append(f"Debug: Error reading EXIF data: {e}")
     else:
-        # Extrahiere Text aus PNG (oder falsch benannten PNG-Dateien)
         for key, value in img.info.items():
             if "parameters" in key.lower():
                 param_key = key
                 full_text = str(value)
-                debug_info.append(f"Debug: PNG-Text aus {param_key}: {repr(full_text)[:100]}...")
+                debug_info.append(f"Debug: PNG text from {param_key}: {repr(full_text)[:100]}...")
                 break
-        # Fallback, falls kein "parameters"-Key gefunden wurde
         if not full_text:
             for key, value in img.info.items():
                 if "prompt" in key.lower() or "metadata" in key.lower() or "description" in key.lower():
                     param_key = key
                     full_text = str(value)
-                    debug_info.append(f"Debug: PNG-Text aus Fallback {param_key}: {repr(full_text)[:100]}...")
+                    debug_info.append(f"Debug: PNG text from fallback {param_key}: {repr(full_text)[:100]}...")
                     break
     
     if not full_text:
-        debug_info.append(f"Debug: Kein Schlüssel mit {'UNICODE' if is_jpeg else 'parameters/fallback'} gefunden.")
+        debug_info.append(f"Debug: No key with {'UNICODE' if is_jpeg else 'parameters/fallback'} found.")
         if hasattr(ImageManagerForm, 'instance'):
             ImageManagerForm.instance.debug_info = "\n".join(debug_info)
         return "", "", ""
     
-    # Normalisieren: Reduziere alle Mehrfach-Leerzeichen auf einen einzelnen Space
     normalized = ' '.join(full_text.split())
     debug_info.append(f"Debug: Normalized text: {repr(normalized)[:100]}...")
     
-    # 1) JSON-Parsingschritt:
-    # 1) Versuche JSON-Parsingschritt:
     try:
         data_dict = json.loads(full_text)
-        # Prüfe, ob das JSON einen "models"-Schlüssel enthält
         if "models" in data_dict and isinstance(data_dict["models"], list):
             models = data_dict["models"]
             prompt_json = ""
             negative_json = ""
             steps_json = ""
-            # Iteriere über alle Modelle und suche nach den gewünschten Schlüsseln
             for model in models:
                 if isinstance(model, dict):
                     if "prompt" in model:
@@ -173,14 +187,13 @@ def extract_text_chunks(img_path):
                     if "negativePrompt" in model:
                         negative_json = model["negativePrompt"]
                     if "steps" in model:
-                        # Suche im normalisierten Text nach dem Marker '"steps":'
                         idx_steps_in_normalized = normalized.find('"steps":')
                         if idx_steps_in_normalized != -1:
                             steps_json = normalized[idx_steps_in_normalized:]
                         else:
                             steps_json = str(model["steps"])
             if prompt_json or negative_json or steps_json:
-                debug_info.append("Debug: JSON-Parsierung erfolgreich (models).")
+                debug_info.append("Debug: JSON parsing successful (models).")
                 debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
                 debug_info.append(f"Debug (Negative Prompt): {repr(negative_json)[:50]}...")
                 debug_info.append(f"Debug (Settings): {repr(steps_json)[:100]}...")
@@ -188,7 +201,6 @@ def extract_text_chunks(img_path):
                     ImageManagerForm.instance.debug_info = "\n".join(debug_info)
                 return str(prompt_json), str(negative_json), steps_json
 
-        # Fallback: direkte Schlüssel, falls "models" nicht vorhanden sind
         prompt_json = data_dict.get("prompt", "")
         negative_json = data_dict.get("negativePrompt", "")
         idx_steps_in_normalized = normalized.find('"steps":')
@@ -196,11 +208,9 @@ def extract_text_chunks(img_path):
             settings_text = normalized[idx_steps_in_normalized:]
         else:
             settings_text = str(data_dict.get("steps", ""))
-                # Wenn die direkten Schlüssel nicht gefunden wurden, durchsuche alle Schlüssel
         if not (prompt_json or negative_json):
             for key, value in data_dict.items():
                 if isinstance(value, dict):
-                    # Suche nach CLIPTextEncode-Einträgen, um Prompt-Werte zu erhalten
                     if value.get("class_type", "").lower() == "cliptextencode":
                         text_val = value.get("inputs", {}).get("text", "")
                         if not prompt_json:
@@ -208,7 +218,6 @@ def extract_text_chunks(img_path):
                         elif not negative_json:
                             negative_json = text_val
 
-        # Falls der Settings-Text noch leer ist, suche nach einem KSampler-Eintrag
         if not settings_text:
             for key, value in data_dict.items():
                 if isinstance(value, dict):
@@ -219,7 +228,7 @@ def extract_text_chunks(img_path):
                             break
                         
         if prompt_json or negative_json or settings_text:
-            debug_info.append("Debug: JSON-Parsierung erfolgreich (direkt).")
+            debug_info.append("Debug: JSON parsing successful (direct).")
             debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
             debug_info.append(f"Debug (Negative Prompt): {repr(negative_json)[:50]}...")
             debug_info.append(f"Debug (Settings): {repr(settings_text)[:100]}...")
@@ -227,9 +236,8 @@ def extract_text_chunks(img_path):
                 ImageManagerForm.instance.debug_info = "\n".join(debug_info)
             return str(prompt_json), str(negative_json), settings_text
     except Exception as e:
-        debug_info.append(f"Debug: JSON-Parsing fehlgeschlagen: {e}")
+        debug_info.append(f"Debug: JSON parsing failed: {e}")
     
-    # 2) Falls JSON-Parsingschritt nicht erfolgreich: Suche per String-Suche nach neuen Markern
     normalized_lower = normalized.lower()
     if ('"prompt":' in normalized_lower and 
         '"negativeprompt":' in normalized_lower and 
@@ -249,7 +257,6 @@ def extract_text_chunks(img_path):
             ImageManagerForm.instance.debug_info = "\n".join(debug_info)
         return prompt_new, negativ_new, settings_new
     
-    # 3) Fallback: Alte Marker "Negative prompt:" und "Steps:"
     idx_neg = normalized.find("Negative prompt:")
     idx_steps = normalized.find("Steps:")
     if idx_neg != -1:
@@ -284,7 +291,7 @@ def extract_text_chunks(img_path):
     return prompt, negativ, settings
 
 # ---------------------------------------------------------------------
-# Restlicher Code (unverändert)
+# Restlicher Code (unverändert bis auf sichtbare Texte)
 # ---------------------------------------------------------------------
 
 def get_scaling_factor(monitor):
@@ -339,14 +346,22 @@ class ImageManagerForm(TkinterDnD.Tk):
 
         self.folder_images = []
         self.filtered_images = []
+        from collections import OrderedDict  # nur wenn nicht ganz oben schon vorhanden
+        self.image_cache = OrderedDict()
+        self.cache_limit = 50  # Anzahl zwischengespeicherter Bilder
         self.current_index = -1
-        self.fs_current_index = -1  # Separater Index für Vollbild
+        self.fs_current_index = -1
         self.search_subfolders_var = tk.BooleanVar(value=False)
         self.sort_order = "DESC"
         self.preview_images = {}
         self.fullscreen_win = None
         self.debug_info = ""
         self.filter_history = deque(maxlen=10)
+        self.folder_history = []
+        self.filter_history_list = []
+        history_data = load_history()
+        self.folder_history = history_data.get("folder_history", [])
+        self.filter_history_list = history_data.get("filter_history", [])
 
         self.ctime_cache = {}
         self.text_chunks_cache = {}
@@ -366,6 +381,25 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.bind("<Delete>", self.handle_delete_key)
 
         self.setup_ui()
+        # 🛡️ Initialisierung der Filter-Variablen (damit sie immer existieren)
+        self.prompt_all_words = tk.BooleanVar(value=False)
+        self.prompt_any_word = tk.BooleanVar(value=False)
+        self.prompt_exclude = tk.BooleanVar(value=False)
+        self.prompt_none_of = tk.BooleanVar(value=False)
+        self.prompt_keywords_var = tk.StringVar(value="")
+
+        self.date_between = tk.BooleanVar(value=False)
+        self.date_not_older_than = tk.BooleanVar(value=False)
+        self.date_older_than = tk.BooleanVar(value=False)
+        self.date_this_week = tk.BooleanVar(value=False)
+        self.date_two_weeks = tk.BooleanVar(value=False)
+        self.date_four_weeks = tk.BooleanVar(value=False)
+        self.date_one_month = tk.BooleanVar(value=False)
+        self.date_one_year = tk.BooleanVar(value=False)
+
+        self.min_size_var = tk.StringVar(value="")
+        self.max_size_var = tk.StringVar(value="")
+
         self.update_scaling()
 
     def update_scaling(self):
@@ -409,6 +443,11 @@ class ImageManagerForm(TkinterDnD.Tk):
     def setup_ui(self):
         for widget in self.winfo_children():
             widget.destroy()
+        def select_folder(self):
+            folder = filedialog.askdirectory(title="Select folder")
+            if folder:
+                self.folder_path_var.set(folder)
+                threading.Thread(target=self.load_folder_async, args=(folder,), daemon=True).start()
 
         header_font = ("Arial", self.main_font_size)
         header_text = f"ImagePromptViewer\nVersion: {VERSION}"
@@ -419,7 +458,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         status_font = ("Arial", self.main_font_size)
         self.status_text = ScrolledText(self, height=2, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=status_font)
         self.status_text.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-        self.status("Formular gestartet.")
+        self.status("Form started.")
 
         self.always_on_top_var = tk.BooleanVar(value=False)
         self.top_checkbox = tk.Checkbutton(self, text="Always on Top", variable=self.always_on_top_var,
@@ -442,71 +481,148 @@ class ImageManagerForm(TkinterDnD.Tk):
 
         filter_frame = tk.Frame(self, bg=BG_COLOR)
         filter_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-        self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_filter,
+        self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_filter_legacy,
                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
         self.filter_button.pack(side="left", padx=self.button_padding)
         
-        # Erstelle einen neuen Style für die Combobox
         style = ttk.Style()
-        style.configure("Custom.TCombobox", font=("Arial", 36))  # Schriftgröße hier z.B. 16
+        # Dynamisch skalierte Schriftgröße für die Combobox (Filter)
+        combo_font_size = int(self.main_font_size * 2.2)
+        style = ttk.Style()
+        style.configure("Custom.TCombobox", font=("Arial", combo_font_size))
 
-        # Beim Erstellen der Combobox den neuen Style anwenden
-        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=20)
+        folder_combo_font_size = int(self.main_font_size * 0.9)  # z.B. 90% der normalen Größe
+        style.configure("Folder.TCombobox", font=("Arial", folder_combo_font_size))
+
+        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=25)
+        self.filter_combo['values'] = self.filter_history_list
+        
+
         self.filter_combo.pack(side="left", padx=self.button_padding)
-        self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
+        self.filter_combo.bind("<Return>", lambda e: self.apply_filter_legacy())
         self.clear_button = tk.Button(filter_frame, text="Clear", command=self.clear_filter,
                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=5)
         self.clear_button.pack(side="left", padx=self.button_padding)
-        self.filter_filename_cb = tk.Checkbutton(filter_frame, text="Dateiname", variable=self.filter_filename_var, command=self.apply_filter,
+   
+        self.folder_path_var = tk.StringVar()
+        # === 🔧 Folder path + Buttons Layout ===
+        folder_frame = tk.Frame(self, bg=BG_COLOR)
+        folder_frame.pack(fill="x", padx=10, pady=5)
+
+        tk.Label(folder_frame, text="Folder path:", bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                font=("Arial", self.main_font_size)).pack(side="left", padx=(0, 5))
+        self.folder_path_combo = ttk.Combobox(folder_frame, textvariable=self.folder_path_var,
+                                            width=60, font=("Arial", self.main_font_size))
+        self.folder_path_combo.pack(side="left", fill="x", expand=True, padx=(0, 5))
+
+        self.select_folder_button = tk.Button(folder_frame, text="Select folder", command=self.choose_folder,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.select_folder_button.pack(side="left", padx=self.button_padding)
+
+        # ========== 🔘 Filter-Steuerleiste ==========
+        filter_frame = tk.Frame(self, bg=BG_COLOR)
+        filter_frame.pack(fill="x", padx=10, pady=(0, 5))
+
+        self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_prompt_filter,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.filter_button.pack(side="left", padx=self.button_padding)
+
+        self.filter_prompt_entry = ttk.Combobox(filter_frame, textvariable=self.filter_prompt, width=25,
+                                                font=("Arial", self.main_font_size))
+        self.filter_prompt_entry.pack(side="left", padx=self.button_padding)
+
+        self.clear_filter_button = tk.Button(filter_frame, text="Clear", command=self.clear_prompt_filter,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.clear_filter_button.pack(side="left", padx=self.button_padding)
+
+        # 🔧 NEU: Optimierte Buttons – dynamisch skalierend
+        btn_style = {
+            "bg": BTN_BG_COLOR,
+            "fg": BTN_FG_COLOR,
+            "font": ("Arial", self.main_font_size),
+            "padx": self.button_padding,
+            "ipadx": 5,
+            "ipady": 2
+        }
+
+        self.filter_settings_button = tk.Button(filter_frame, text="Filter Settings", command=self.open_filter_settings, **btn_style)
+        self.filter_settings_button.pack(side="left")
+
+        self.reset_all_button = tk.Button(filter_frame, text="Reset All", command=self.reset_all_filters, **btn_style)
+        self.reset_all_button.pack(side="left")
+
+
+        self.filter_filename_cb = tk.Checkbutton(filter_frame, text="Filename", variable=self.filter_filename_var, command=self.apply_filter_legacy,
                                                  fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.filter_filename_cb.pack(side="left", padx=self.button_padding)
-        self.filter_prompt_cb = tk.Checkbutton(filter_frame, text="Prompt", variable=self.filter_prompt_var, command=self.apply_filter,
+        self.filter_prompt_cb = tk.Checkbutton(filter_frame, text="Prompt", variable=self.filter_prompt_var, command=self.apply_filter_legacy,
                                                fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.filter_prompt_cb.pack(side="left", padx=self.button_padding)
-        self.filter_negativ_cb = tk.Checkbutton(filter_frame, text="Negativ Prompt", variable=self.filter_negativ_var, command=self.apply_filter,
+        self.filter_negativ_cb = tk.Checkbutton(filter_frame, text="Negative Prompt", variable=self.filter_negativ_var, command=self.apply_filter_legacy,
                                                 fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.filter_negativ_cb.pack(side="left", padx=self.button_padding)
-        self.filter_settings_cb = tk.Checkbutton(filter_frame, text="Settings", variable=self.filter_settings_var, command=self.apply_filter,
+        self.filter_settings_cb = tk.Checkbutton(filter_frame, text="Settings", variable=self.filter_settings_var, command=self.apply_filter_legacy,
                                                  fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.filter_settings_cb.pack(side="left", padx=self.button_padding)
         
         self.image_counter_frame = tk.Frame(filter_frame, bg=BG_COLOR)
         self.image_counter_frame.pack(side="left", padx=self.button_padding)
-        self.image_counter_label = tk.Label(self.image_counter_frame, text="Ordner: 0 Bilder gefiltert ", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
+        self.image_counter_label = tk.Label(self.image_counter_frame, text="Folder: 0 images filtered ", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
         self.image_counter_label.pack(side="left")
         self.filtered_counter_label = tk.Label(self.image_counter_frame, text="0", fg="red", bg=BG_COLOR, font=("Arial", self.main_font_size))
         self.filtered_counter_label.pack(side="left")
-        self.image_counter_suffix_label = tk.Label(self.image_counter_frame, text=" Bilder", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
+        self.image_counter_suffix_label = tk.Label(self.image_counter_frame, text=" images", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
         self.image_counter_suffix_label.pack(side="left")
 
         folder_frame = tk.Frame(self, bg=BG_COLOR)
         folder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-        folder_label = tk.Label(folder_frame, text="Ordnerpfad:", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
-        folder_label.pack(side="left", padx=self.button_padding)
+        folder_label = tk.Label(folder_frame, text="Folder path:", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)).pack(side="left", padx=(0, 5))
+
+        self.folder_path_combo = ttk.Combobox(folder_frame, textvariable=self.folder_path, width=60, font=("Arial", self.main_font_size))
+        self.folder_path_combo.pack(side="left", fill="x", expand=True)
+
+        # Entry für Ordnerpfad
         self.folder_path_var = tk.StringVar()
-        self.folder_entry = tk.Entry(folder_frame, textvariable=self.folder_path_var,
-                                     fg=TEXT_FG_COLOR, bg=TEXT_BG_COLOR, font=("Arial", self.main_font_size), width=int(50 * self.scaling_factor))
-        self.folder_entry.pack(side="left", padx=self.button_padding)
-        self.choose_folder_button = tk.Button(folder_frame, text="Ordner auswählen", command=self.choose_folder,
+        visible_chars = max(20, int(25 * self.scaling_factor))  # z.B. 20–50
+        visible_chars = max(20, int(25 * self.scaling_factor))  # Optional: bereits vorhanden
+        self.folder_combo = ttk.Combobox(folder_frame, textvariable=self.folder_path_var,
+                                         values=self.folder_history, width=visible_chars,
+                                         style="Folder.TCombobox")
+
+        self.folder_combo.set("")  # Startwert leer
+        self.folder_combo.pack(side="left", padx=self.button_padding)
+
+        # Bei Auswahl aus History soll Ordner geladen werden
+        self.folder_combo.bind("<<ComboboxSelected>>", lambda e: threading.Thread(
+            target=self.load_folder_async, args=(self.folder_path_var.get(),), daemon=True).start())
+
+        self.choose_folder_button = tk.Button(folder_frame, text="Select folder", command=self.choose_folder,
                                               bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.choose_folder_button.pack(side="left", padx=self.button_padding)
-        self.select_image_button = tk.Button(folder_frame, text="Bild auswählen", command=self.select_image_from_folder,
+        # Select Image Button – wiederhergestellt
+        self.select_image_button = tk.Button(folder_frame, text="Select image", command=self.select_image_from_folder,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                            font=("Arial", self.main_font_size),
+                                            width=int(12 * self.scaling_factor))  # Dynamische Breite
+        self.select_image_button.pack(side="left", padx=self.button_padding)
+
+        self.select_image_button = tk.Button(folder_frame, text="Select image", command=self.select_image_from_folder,
                                              bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.select_image_button.pack(side="left", padx=self.button_padding)
-        self.open_image_button = tk.Button(folder_frame, text="Bild anzeigen", command=self.open_image_in_system,
+        self.open_image_button = tk.Button(folder_frame, text="View image", command=self.open_image_in_system,
                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.open_image_button.pack(side="left", padx=self.button_padding)
-        self.delete_button_main = tk.Button(folder_frame, text="Bild löschen", command=self.delete_current_image,
+        self.delete_button_main = tk.Button(folder_frame, text="Delete image", command=self.delete_current_image,
                                             bg=BTN_BG_COLOR if not self.delete_immediately_main_var.get() else "red", fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.delete_button_main.pack(side="right", padx=self.button_padding)
-        self.delete_immediately_main_cb = tk.Checkbutton(folder_frame, text="sofort löschen", variable=self.delete_immediately_main_var,
+        self.delete_immediately_main_cb = tk.Checkbutton(folder_frame, text="delete immediately", variable=self.delete_immediately_main_var,
                                                          command=self.update_delete_button_color_main, fg=TEXT_FG_COLOR,
                                                          bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.delete_immediately_main_cb.pack(side="right", padx=self.button_padding)
 
         subfolder_frame = tk.Frame(self, bg=BG_COLOR)
         subfolder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-        self.subfolder_cb = tk.Checkbutton(subfolder_frame, text="Unterordner durchsuchen", variable=self.search_subfolders_var,
+        self.subfolder_cb = tk.Checkbutton(subfolder_frame, text="Search subfolders", variable=self.search_subfolders_var,
                                            fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.subfolder_cb.pack(side="left", padx=self.button_padding)
         self.sort_button = tk.Button(subfolder_frame, text="ASC" if self.sort_order == "DESC" else "DESC",
@@ -532,10 +648,10 @@ class ImageManagerForm(TkinterDnD.Tk):
 
         nav_frame = tk.Frame(self, bg=BG_COLOR)
         nav_frame.pack(pady=self.button_padding)
-        self.back_button = tk.Button(nav_frame, text="zurück", command=self.show_previous_image,
+        self.back_button = tk.Button(nav_frame, text="Back", command=self.show_previous_image,
                                      bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
         self.back_button.pack(side="left", padx=self.button_padding)
-        self.next_button = tk.Button(nav_frame, text="weiter", command=self.show_next_image,
+        self.next_button = tk.Button(nav_frame, text="Next", command=self.show_next_image,
                                      bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
         self.next_button.pack(side="left", padx=self.button_padding)
 
@@ -545,7 +661,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.scale_dropdown = tk.OptionMenu(controls_frame, self.scale_var, *SCALE_OPTIONS, command=lambda value: self.rescale_image(value))
         self.scale_dropdown.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
         self.scale_dropdown.pack(side="left", padx=self.button_padding)
-        self.fullscreen_button = tk.Button(controls_frame, text="Vollbild", command=self.show_fullscreen,
+        self.fullscreen_button = tk.Button(controls_frame, text="Fullscreen", command=self.show_fullscreen,
                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.fullscreen_button.pack(side="left", padx=self.button_padding)
         if len(self.monitor_list) > 1:
@@ -569,7 +685,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.negativ_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
                                          fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
         self.negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
-        self.copy_negativ_button = tk.Button(textchunks_frame, text="copy Negativ",
+        self.copy_negativ_button = tk.Button(textchunks_frame, text="copy Negative",
                                              command=lambda: copy_to_clipboard(self, self.negativ_text.get("1.0", tk.END)),
                                              bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.copy_negativ_button.grid(row=1, column=1, padx=self.button_padding, pady=self.button_padding)
@@ -583,13 +699,11 @@ class ImageManagerForm(TkinterDnD.Tk):
         for i in range(3):
             textchunks_frame.grid_columnconfigure(i, weight=1)
     
-        # Button zum Laden der Ordnerliste (initial "Ordner‑Liste laden")
-        self.load_list_button = tk.Button(self, text="Ordner‑Liste laden", command=self.toggle_folder_list,
+        self.load_list_button = tk.Button(self, text="Load folder list", command=self.toggle_folder_list,
                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.load_list_button.pack(pady=self.button_padding)
 
         self.preview_frame = tk.Frame(self, bg=BG_COLOR)
-        # Vorerst nicht packen – der Frame wird erst bei Klick auf „Ordner‑Liste laden“ eingeblendet.
         self.preview_canvas = tk.Canvas(self.preview_frame, bg=BG_COLOR, highlightthickness=0)
         self.preview_canvas.pack(side="left", fill="both", expand=True)
         self.preview_scrollbar = tk.Scrollbar(self.preview_frame, orient="vertical", command=self.preview_canvas.yview)
@@ -604,8 +718,236 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.preview_canvas.bind("<Leave>", lambda e: self.preview_canvas.unbind_all("<MouseWheel>"))
         self.preview_items = []
 
-        self.status("Formular geladen.")
+        self.status("Form loaded.")
+    ####
+    def open_filter_settings(self):
+            if hasattr(self, 'filter_settings_window') and self.filter_settings_window.winfo_exists():
+                self.filter_settings_window.lift()
+                return
 
+            self.filter_settings_window = tk.Toplevel(self)
+            self.filter_settings_window.title("Filter Settings")
+            self.filter_settings_window.configure(bg=BG_COLOR)
+            self.filter_settings_window.geometry("400x800")
+            self.filter_settings_window.resizable(False, False)
+
+            section_font = ("Arial", int(self.main_font_size * 1.2), "bold")
+            normal_font = ("Arial", self.main_font_size)
+
+            # Prompt Filter Section
+            prompt_frame = tk.LabelFrame(self.filter_settings_window, text="Prompt Filter", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=section_font)
+            prompt_frame.pack(fill="x", padx=10, pady=5)
+
+            self.prompt_all_words = tk.BooleanVar()
+            self.prompt_any_word = tk.BooleanVar()
+            self.prompt_exclude = tk.BooleanVar()
+            self.prompt_none_of = tk.BooleanVar()
+
+            tk.Checkbutton(prompt_frame, text="All words must match", variable=self.prompt_all_words, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(prompt_frame, text="Any word", variable=self.prompt_any_word, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(prompt_frame, text="Exclude word", variable=self.prompt_exclude, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(prompt_frame, text="None of the words", variable=self.prompt_none_of, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+
+            tk.Label(prompt_frame, text="Prompt Keywords (comma-separated):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10, pady=(5, 0))
+            self.prompt_keywords_var = tk.StringVar()
+            tk.Entry(prompt_frame, textvariable=self.prompt_keywords_var, font=normal_font, bg=TEXT_BG_COLOR, fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR).pack(fill="x", padx=10, pady=(0, 10))
+
+            # Date Filter Section
+            date_frame = tk.LabelFrame(self.filter_settings_window, text="Date Filter", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=section_font)
+            date_frame.pack(fill="x", padx=10, pady=5)
+
+            self.date_between = tk.BooleanVar()
+            self.date_not_older_than = tk.BooleanVar()
+            self.date_older_than = tk.BooleanVar()
+            self.date_this_week = tk.BooleanVar()
+            self.date_two_weeks = tk.BooleanVar()
+            self.date_four_weeks = tk.BooleanVar()
+            self.date_one_month = tk.BooleanVar()
+            self.date_one_year = tk.BooleanVar()
+
+            tk.Checkbutton(date_frame, text="Between two dates", variable=self.date_between, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Not older than X days", variable=self.date_not_older_than, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Older than X days", variable=self.date_older_than, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Created this week", variable=self.date_this_week, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Created within 2 weeks", variable=self.date_two_weeks, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Created within 4 weeks", variable=self.date_four_weeks, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Created within 1 month", variable=self.date_one_month, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+            tk.Checkbutton(date_frame, text="Created within 1 year", variable=self.date_one_year, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10)
+
+            # File Size Filter Section
+            size_frame = tk.LabelFrame(self.filter_settings_window, text="File Size (KB)", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=section_font)
+            size_frame.pack(fill="x", padx=10, pady=5)
+
+            tk.Label(size_frame, text="Min size (KB):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10, pady=(5, 0))
+            self.min_size_var = tk.StringVar()
+            tk.Entry(size_frame, textvariable=self.min_size_var, font=normal_font, bg=TEXT_BG_COLOR, fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR).pack(fill="x", padx=10)
+
+            tk.Label(size_frame, text="Max size (KB):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=normal_font).pack(anchor="w", padx=10, pady=(10, 0))
+            self.max_size_var = tk.StringVar()
+            tk.Entry(size_frame, textvariable=self.max_size_var, font=normal_font, bg=TEXT_BG_COLOR, fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR).pack(fill="x", padx=10)
+
+            # Button Frame
+            button_frame = tk.Frame(self.filter_settings_window, bg=BG_COLOR)
+            button_frame.pack(fill="x", pady=15)
+
+            apply_button = tk.Button(button_frame, text="Apply Filter", command=self.apply_filters,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=normal_font)
+            apply_button.pack(side="left", padx=(20, 10))
+
+            clear_button = tk.Button(button_frame, text="Clear", command=self.clear_filter_inputs,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=normal_font)
+            clear_button.pack(side="right", padx=(10, 20))
+
+    def clear_filter_inputs(self):
+            # Prompt Filter zurücksetzen
+            for var_name in ["prompt_all_words", "prompt_any_word", "prompt_exclude", "prompt_none_of"]:
+                if hasattr(self, var_name):
+                    getattr(self, var_name).set(False)
+
+            if hasattr(self, "prompt_keywords_var"):
+                self.prompt_keywords_var.set("")
+
+            # Date Filter zurücksetzen
+            for var_name in [
+                "date_between", "date_not_older_than", "date_older_than",
+                "date_this_week", "date_two_weeks", "date_four_weeks",
+                "date_one_month", "date_one_year"]:
+                if hasattr(self, var_name):
+                    getattr(self, var_name).set(False)
+    def reset_all_filters(self):
+                self.clear_filter_inputs()
+                """Setzt alle Filter im Hauptformular und in den Filtereinstellungen zurück."""
+
+                # Filter-Eingabefelder im Hauptformular leeren (falls vorhanden)
+                if hasattr(self, "filter_entry"):
+                    self.filter_entry.delete(0, tk.END)
+                if hasattr(self, "negative_filter_entry"):
+                    self.negative_filter_entry.delete(0, tk.END)
+                if hasattr(self, "filename_filter_entry"):
+                    self.filename_filter_entry.delete(0, tk.END)
+                if hasattr(self, "setting_filter_entry"):
+                    self.setting_filter_entry.delete(0, tk.END)
+
+                # Checkboxen im Hauptformular zurücksetzen
+                for attr in ['filter_filename_cb', 'filter_prompt_cb', 'filter_negativ_cb', 'filter_settings_cb']:
+                    if hasattr(self, attr):
+                        getattr(self, attr).set(False)
+
+                self.status("Alle Filter wurden zurückgesetzt.")
+                # File Size Filter zurücksetzen
+                if hasattr(self, "min_size_var"):
+                    self.min_size_var.set("")
+                if hasattr(self, "max_size_var"):
+                    self.max_size_var.set("")
+                    # Filter sofort neu anwenden
+                    self.apply_filters()
+                    
+    def apply_filters(self):
+        # 🔍 Prompt-Checkboxen & Keywordfeld
+        all_words = self.prompt_all_words.get() if hasattr(self, "prompt_all_words") else False
+        any_word = self.prompt_any_word.get() if hasattr(self, "prompt_any_word") else False
+        exclude_word = self.prompt_exclude.get() if hasattr(self, "prompt_exclude") else False
+        none_of = self.prompt_none_of.get() if hasattr(self, "prompt_none_of") else False
+        keyword_input = self.prompt_keywords_var.get().strip().lower() if hasattr(self, "prompt_keywords_var") else ""
+        keyword_list = [kw.strip() for kw in keyword_input.split(",") if kw.strip()]
+
+        # 📅 Datumsfilter
+        from datetime import datetime, timedelta
+        today = datetime.now()
+
+        date_filters = {
+            "between": self.date_between.get() if hasattr(self, "date_between") else False,
+            "not_older_than": self.date_not_older_than.get() if hasattr(self, "date_not_older_than") else False,
+            "older_than": self.date_older_than.get() if hasattr(self, "date_older_than") else False,
+            "this_week": self.date_this_week.get() if hasattr(self, "date_this_week") else False,
+            "two_weeks": self.date_two_weeks.get() if hasattr(self, "date_two_weeks") else False,
+            "four_weeks": self.date_four_weeks.get() if hasattr(self, "date_four_weeks") else False,
+            "one_month": self.date_one_month.get() if hasattr(self, "date_one_month") else False,
+            "one_year": self.date_one_year.get() if hasattr(self, "date_one_year") else False,
+        }
+
+        # 📏 Dateigröße
+        min_size = self.min_size_var.get() if hasattr(self, "min_size_var") else ""
+        max_size = self.max_size_var.get() if hasattr(self, "max_size_var") else ""
+
+        try:
+            min_size = int(min_size) if min_size else None
+        except ValueError:
+            messagebox.showerror("Input Error", "Min size must be a number.")
+            return
+        try:
+            max_size = int(max_size) if max_size else None
+        except ValueError:
+            messagebox.showerror("Input Error", "Max size must be a number.")
+            return
+
+        # 🔄 Filter anwenden
+        filtered = []
+        for image_path in self.folder_images:
+            passed = True
+
+            # ✅ Dateigröße prüfen
+            if passed and (min_size is not None or max_size is not None):
+                try:
+                    size_kb = os.path.getsize(image_path) // 1024
+                    if (min_size is not None and size_kb < min_size) or (max_size is not None and size_kb > max_size):
+                        passed = False
+                except Exception:
+                    passed = False
+
+            # ✅ Datum prüfen
+            if passed and any(date_filters.values()):
+                try:
+                    file_date = datetime.fromtimestamp(os.path.getctime(image_path))
+                    if date_filters["not_older_than"] and (today - file_date).days > 7:
+                        passed = False
+                    if date_filters["older_than"] and (today - file_date).days <= 7:
+                        passed = False
+                    if date_filters["this_week"] and file_date.isocalendar()[1] != today.isocalendar()[1]:
+                        passed = False
+                    if date_filters["two_weeks"] and (today - file_date).days > 14:
+                        passed = False
+                    if date_filters["four_weeks"] and (today - file_date).days > 28:
+                        passed = False
+                    if date_filters["one_month"] and (today - file_date).days > 30:
+                        passed = False
+                    if date_filters["one_year"] and (today - file_date).days > 365:
+                        passed = False
+                except Exception:
+                    passed = False
+
+            # ✅ Prompt Filter
+            if passed and keyword_list:
+                prompt_text = self.prompt_dict.get(image_path, "").lower()
+
+                if all_words and not all(kw in prompt_text for kw in keyword_list):
+                    passed = False
+                if any_word and not any(kw in prompt_text for kw in keyword_list):
+                    passed = False
+                if exclude_word and any(kw in prompt_text for kw in keyword_list):
+                    passed = False
+                if none_of and any(kw in prompt_text for kw in keyword_list):
+                    passed = False
+
+            if passed:
+                filtered.append(image_path)
+
+        # 💾 Ergebnis speichern und anzeigen
+        self.filtered_images = filtered
+        print(f"✅ {len(self.filtered_images)} von {len(self.folder_images)} Bildern übrig nach Filter.")
+
+        if self.filtered_images:
+            self.current_index = 0
+            self.display_image_safe_async(self.filtered_images[0], default_scale=True)
+        else:
+            self.status("❌ Kein Bild entspricht dem Filter.")
+
+        # Filter-Settings-Fenster schließen
+        if hasattr(self, "filter_settings_window"):
+            self.filter_settings_window.destroy()
+
+
+    # Automatische Skalierung
     def update_ui(self):
         header_font = ("Arial", self.main_font_size)
         if hasattr(self, 'header_label'):
@@ -628,8 +970,6 @@ class ImageManagerForm(TkinterDnD.Tk):
 
         if hasattr(self, 'filter_button'):
             self.filter_button.config(font=("Arial", self.main_font_size))
-        if hasattr(self, 'filter_combo'):
-            self.filter_combo.config(font=("Arial", self.main_font_size))
         if hasattr(self, 'clear_button'):
             self.clear_button.config(font=("Arial", self.main_font_size))
         if hasattr(self, 'filter_filename_cb'):
@@ -695,6 +1035,13 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.drop_canvas.delete("all")
             self.drop_canvas.create_text(int(75 * self.scaling_factor), int(56 * self.scaling_factor),
                                          text="Drop Image Here", fill="white", font=("Arial", self.main_font_size))
+        if hasattr(self, 'filter_settings_button'):
+            self.filter_settings_button.config(font=("Arial", self.main_font_size),
+                                            width=int(12 * self.scaling_factor))
+
+        if hasattr(self, 'reset_all_button'):
+            self.reset_all_button.config(font=("Arial", self.main_font_size),
+                                        width=int(9 * self.scaling_factor))
 
     def handle_delete_key(self, event):
         if self.fullscreen_win and self.fullscreen_win.winfo_exists():
@@ -719,7 +1066,7 @@ class ImageManagerForm(TkinterDnD.Tk):
             if choice.startswith(f"Monitor {i}:"):
                 self.fullscreen_monitor = mon
                 break
-        self.status(f"Vollbild-Monitor gewechselt auf: {choice}")
+        self.status(f"Fullscreen monitor changed to: {choice}")
 
     def toggle_sort_order(self):
         if self.sort_order == "ASC":
@@ -735,9 +1082,9 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.filtered_images.sort(key=lambda x: self.ctime_cache[x], reverse=(self.sort_order == "DESC"))
             if self.filtered_images:
                 self.current_index = 0
-                self.display_image(self.filtered_images[self.current_index])
+                self.display_image_safe_async(self.filtered_images[self.current_index])
                 self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
-            self.status(f"Sortierung geändert zu: {self.sort_order}")
+            self.status(f"Sort order changed to: {self.sort_order}")
 
     def status(self, message):
         self.status_text.config(state=tk.NORMAL)
@@ -746,42 +1093,46 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.status_text.config(state=tk.DISABLED)
 
     def show_debug_info(self):
-        # Ermittelt den Namen des aktuell angezeigten Bildes
         if hasattr(self, "current_image_path") and self.current_image_path:
             bildname = os.path.basename(self.current_image_path)
         else:
-            bildname = "Kein Bild ausgewählt"
+            bildname = "No image selected"
 
-        # Detaillierte Beschreibung der Extraktionsmethode
         extraction_method = (
-            "Textchunk-Extraktion erfolgt mit: extract_text_chunks()\n"
-            "- Für JPEG: Suche im EXIF-Tag 'UserComment'.\n"
-            "  • Falls die Daten mit 'UNICODE\\x00\\x00' beginnen, wird helper.UserComment.load verwendet.\n"
-            "  • Bei Fehlern oder fehlendem Präfix erfolgt ein Fallback (UTF-16LE oder Latin-1-Dekodierung).\n"
-            "- Für PNG: Zunächst wird in img.info nach einem Key gesucht, der 'parameters' enthält.\n"
-            "  • Falls nicht gefunden, erfolgt ein Fallback zu alternativen Schlüsseln wie 'prompt', 'metadata' oder 'description'.\n"
-            "- Neue Marker-Unterstützung: Falls im normalisierten Text die Marker \"prompt\":, \"negativePrompt\": und \"steps\": vorkommen,\n"
-            "  werden diese zur Aufteilung in Prompt, Negativ Prompt und Settings genutzt."
+            "Text chunk extraction is performed with: extract_text_chunks()\n"
+            "- For JPEG: Search in EXIF tag 'UserComment'.\n"
+            "  • If the data starts with 'UNICODE\\x00\\x00', helper.UserComment.load is used.\n"
+            "  • In case of errors or missing prefix, a fallback (UTF-16LE or Latin-1 decoding) is applied.\n"
+            "- For PNG: First, look for a key in img.info that contains 'parameters'.\n"
+            "  • If not found, fallback to alternative keys like 'prompt', 'metadata', or 'description'.\n"
+            "- New marker support: If the normalized text contains the markers \"prompt\":, \"negativePrompt\":, and \"steps\":,\n"
+            "  these are used to split into Prompt, Negative Prompt, and Settings."
         )
 
-        # Systeminformationen sammeln
-        os_info = f"Betriebssystem: {platform.system()} {platform.release()}"
-        python_version = f"Python-Version: {sys.version.split()[0]}"
-        monitor_info = f"Aktuelle Monitorauflösung: {self.selected_monitor.width}x{self.selected_monitor.height}"
+        os_info = f"Operating system: {platform.system()} {platform.release()}"
+        python_version = f"Python version: {sys.version.split()[0]}"
+        monitor_info = f"Current monitor resolution: {self.selected_monitor.width}x{self.selected_monitor.height}"
 
-        # Zusammenführen aller Debug-Informationen
+        cache_info = f"Image cache: {len(self.image_cache)} items\n"
+        if self.image_cache:
+            cache_paths = '\n'.join(list(self.image_cache.keys())[-5:])
+            cache_info += f"Last cached images:\n{cache_paths}\n"
+        else:
+            cache_info += "No images currently cached.\n"
+
         updated_debug = (
-            f"Bildname: {bildname}\n\n"
+            f"Image name: {bildname}\n\n"
             f"{extraction_method}\n\n"
-            f"Systeminformationen:\n"
+            f"System information:\n"
             f"{os_info}\n"
             f"{python_version}\n"
             f"{monitor_info}\n\n"
-            f"Debug-Details:\n"
-            f"{self.debug_info if self.debug_info else 'Keine Debug-Informationen verfügbar.'}"
+            f"{cache_info}\n"
+            f"Debug details:\n"
+            f"{self.debug_info if self.debug_info else 'No debug information available.'}"
         )
 
-        # Debug-Fenster erstellen und anzeigen
+
         debug_win = tk.Toplevel(self)
         debug_win.title("Debug Information")
         debug_win.configure(bg=BG_COLOR)
@@ -793,10 +1144,16 @@ class ImageManagerForm(TkinterDnD.Tk):
         copy_btn = tk.Button(debug_win, text="Copy", command=lambda: copy_to_clipboard(self, updated_debug),
                             bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         copy_btn.pack(side="left", padx=self.button_padding, pady=self.button_padding)
-        close_btn = tk.Button(debug_win, text="Schließen", command=debug_win.destroy,
+        close_btn = tk.Button(debug_win, text="Close", command=debug_win.destroy,
                             bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         close_btn.pack(side="right", padx=self.button_padding, pady=self.button_padding)
-
+        def clear_image_cache():
+            self.image_cache.clear()
+            self.status("Image cache cleared.")
+            messagebox.showinfo("Cache", "Image cache has been cleared.")
+        clear_cache_btn = tk.Button(debug_win, text="Clear Cache", command=clear_image_cache,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        clear_cache_btn.pack(side="left", padx=self.button_padding, pady=self.button_padding)
 
 
     def update_topmost(self):
@@ -814,22 +1171,23 @@ class ImageManagerForm(TkinterDnD.Tk):
 
     def clear_filter(self):
         self.filter_var.set("")
-        self.apply_filter()
-        self.apply_filter()
+        self.apply_filter_legacy()
 
-    def apply_filter(self):
-        filter_text = self.filter_var.get().strip().lower()
-        
-        # Wenn ein Filtertext vorhanden ist und noch nicht in der History, zur History hinzufügen
-        if filter_text and filter_text not in self.filter_history:
-            self.filter_history.append(filter_text)
-            # Setze die Combobox-Werte auf die umgekehrte History (letzte Einträge oben)
-            self.filter_combo['values'] = list(reversed(self.filter_history))
-        
+    def apply_filter_legacy(self):
+        filter_text_raw = self.filter_var.get().strip().lower()
+
+        if filter_text_raw and filter_text_raw not in self.filter_history_list:
+            self.filter_history_list.insert(0, filter_text_raw)
+            self.filter_history_list = self.filter_history_list[:10]  # Max. 10 Einträge
+            self.filter_combo['values'] = self.filter_history_list
+            save_history(self.folder_history, self.filter_history_list)
+
+
+        keywords = [f.strip() for f in filter_text_raw.split(",") if f.strip()] if filter_text_raw else []
+
         self.filtered_images = []
-        
-        # Wenn kein Filtertext, nimm alle Bilder
-        if not filter_text:
+
+        if not keywords:
             self.filtered_images = self.folder_images.copy()
         else:
             for file_path in self.folder_images:
@@ -838,96 +1196,182 @@ class ImageManagerForm(TkinterDnD.Tk):
                 if file_path not in self.text_chunks_cache:
                     self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
                 prompt, negativ, settings = self.text_chunks_cache[file_path]
-                # Suche immer in der Kleinbuchstabenversion
-                if self.filter_filename_var.get() and filter_text in filename:
-                    include = True
-                if self.filter_prompt_var.get() and filter_text in prompt.lower():
-                    include = True
-                if self.filter_negativ_var.get() and filter_text in negativ.lower():
-                    include = True
-                if self.filter_settings_var.get() and filter_text in settings.lower():
-                    include = True
-                
+                for keyword in keywords:
+                    if self.filter_filename_var.get() and keyword in filename:
+                        include = True
+                    if self.filter_prompt_var.get() and keyword in prompt.lower():
+                        include = True
+                    if self.filter_negativ_var.get() and keyword in negativ.lower():
+                        include = True
+                    if self.filter_settings_var.get() and keyword in settings.lower():
+                        include = True
+                    if include:
+                        break  # kein weiterer Begriff nötig
                 if include:
                     self.filtered_images.append(file_path)
-        
-        # Falls kein Bild gefunden wird, füge zumindest das erste Bild hinzu
+
         if not self.filtered_images and self.folder_images:
             self.filtered_images.append(self.folder_images[0])
-        
-        # Aktualisiere den aktuellen Index und zeige das entsprechende Bild an
+
         if self.current_index != -1 and hasattr(self, 'current_image_path') and self.current_image_path in self.filtered_images:
             self.current_index = self.filtered_images.index(self.current_image_path)
         else:
             self.current_index = 0 if self.filtered_images else -1
+            self.current_index = validate_index(self.current_index, self.filtered_images)
+
             if self.current_index != -1:
-                self.display_image(self.filtered_images[self.current_index])
+                self.display_image_safe_async(self.filtered_images[self.current_index])
                 self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
-        
+
         self.populate_preview_table_lazy()
         total_images = len(self.folder_images)
         filtered_images = len(self.filtered_images)
-        self.image_counter_label.config(text=f"Ordner: {total_images} Bilder gefiltert ")
+        self.image_counter_label.config(text=f"Folder: {total_images} images filtered ")
         self.filtered_counter_label.config(text=f"{filtered_images}")
-        self.image_counter_suffix_label.config(text=" Bilder")
-        self.status(f"Filter angewendet: {filtered_images} Bilder gefunden.")
+        self.image_counter_suffix_label.config(text=" images")
+        self.status(f"Filter applied: {filtered_images} images found.")
 
-    def highlight_text(self, text_widget, text, filter_text):
+
+    def highlight_text(self, text_widget, text, filter_text_raw):
         text_widget.delete("1.0", tk.END)
         text_widget.insert("1.0", text)
-        if filter_text:
-            filter_text = filter_text.lower()
-            text_lower = text.lower()
+        text_widget.tag_remove("highlight", "1.0", tk.END)
+
+        if not filter_text_raw:
+            return
+
+        keywords = [f.strip().lower() for f in filter_text_raw.split(",") if f.strip()]
+        text_lower = text.lower()
+
+        for keyword in keywords:
             start_pos = 0
             while True:
-                pos = text_lower.find(filter_text, start_pos)
+                pos = text_lower.find(keyword, start_pos)
                 if pos == -1:
                     break
                 start = f"1.0 + {pos} chars"
-                end = f"1.0 + {pos + len(filter_text)} chars"
+                end = f"1.0 + {pos + len(keyword)} chars"
                 text_widget.tag_add("highlight", start, end)
-                start_pos = pos + len(filter_text)
-            text_widget.tag_config("highlight", foreground=HIGHLIGHT_COLOR)
+                start_pos = pos + len(keyword)
+
+        text_widget.tag_config("highlight", foreground=HIGHLIGHT_COLOR)
+
 
     def load_folder_async(self, folder, file_path=None):
-        self.status("Lade Ordner im Hintergrund...")
+        self.status("Loading folder in background...")
         self.folder_images = []
         self.ctime_cache.clear()
         self.text_chunks_cache.clear()
+        self.abort_loading = False  # NEU: Abbruch-Marker
+
+        def check_abort():
+            return self.abort_loading
+
+        def on_key(event):
+            if event.keysym == 'Escape':
+                self.abort_loading = True
+                self.status("Loading aborted by user.")
+
+        self.bind("<KeyPress>", on_key)
+
+        image_paths = []
         if self.search_subfolders_var.get():
-            self.folder_images = [os.path.normpath(str(p)) for p in Path(folder).rglob("*") if p.suffix.lower() in IMAGE_EXTENSIONS]
+            image_paths = list(Path(folder).rglob("*"))
         else:
-            self.folder_images = [os.path.normpath(os.path.join(folder, f)) for f in os.listdir(folder) if f.lower().endswith(IMAGE_EXTENSIONS)]
-        
-        for img_path in self.folder_images:
-            self.ctime_cache[img_path] = os.path.getctime(img_path)
-        
+            image_paths = [Path(folder) / f for f in os.listdir(folder)]
+
+        total = len(image_paths)
+        for idx, p in enumerate(image_paths):
+            if check_abort():
+                break
+            if p.suffix.lower() in IMAGE_EXTENSIONS:
+                norm_path = os.path.normpath(str(p))
+                self.folder_images.append(norm_path)
+                self.ctime_cache[norm_path] = os.path.getctime(norm_path)
+
+            if idx % 50 == 0 or idx == total - 1:
+                percent = int((idx+1) / total * 100)
+                self.status(f"Reading files... {idx+1}/{total} ({percent}%)")
+
+        self.unbind("<KeyPress>")
         self.folder_images.sort(key=lambda x: self.ctime_cache[x], reverse=(self.sort_order == "DESC"))
         self.after(0, lambda: self.on_folder_loaded(folder, file_path))
+
 
     def on_folder_loaded(self, folder, file_path):
         if self.folder_images:
             if file_path:
                 file_path = os.path.normpath(file_path)
-                self.status(f"Debug: Ausgewählter Pfad: {file_path}")
-                self.status(f"Debug: Erster Pfad in folder_images: {self.folder_images[0] if self.folder_images else 'Leer'}")
+                self.status(f"Debug: Selected path: {file_path}")
+                self.status(f"Debug: First path in folder_images: {self.folder_images[0] if self.folder_images else 'Empty'}")
             
             if file_path and file_path in self.folder_images:
                 self.current_index = self.folder_images.index(file_path)
-                self.status(f"Debug: Bild gefunden, Index: {self.current_index}")
+                self.status(f"Debug: Image found, Index: {self.current_index}")
             else:
                 self.current_index = 0 if len(self.folder_images) > 0 else -1
                 if file_path:
-                    self.status(f"Debug: Bild nicht in folder_images gefunden, setze Index auf {self.current_index}")
+                    self.status(f"Debug: Image not found in folder_images, setting index to {self.current_index}")
 
             if self.current_index != -1:
-                self.display_image(self.folder_images[self.current_index], default_scale=True)
+
+                # 📌 Filter anwenden (Dateigröße – Min/Max KB)
+                min_size = self.min_size_var.get().strip() if hasattr(self, 'min_size_var') else ""
+                max_size = self.max_size_var.get().strip() if hasattr(self, 'max_size_var') else ""
+
+                if min_size.isdigit() or max_size.isdigit():
+                    filtered_list = []
+                    for path in self.folder_images:
+                        try:
+                            size_kb = os.path.getsize(path) // 1024
+                            if min_size and size_kb < int(min_size):
+                                continue
+                            if max_size and size_kb > int(max_size):
+                                continue
+                            filtered_list.append(path)
+                        except:
+                            continue
+                    self.folder_images = filtered_list
+                    self.status(f"Dateigrößenfilter aktiv: {len(self.folder_images)} Bilder nach Filter")
+                # Promptfilter aktiv?
+                if self.prompt_all_words.get() or self.prompt_any_word.get() or self.prompt_exclude.get() or self.prompt_none_of.get():
+                    new_list = []
+                    prompt_keywords = self.filter_prompt_keywords if hasattr(self, "filter_prompt_keywords") else []
+
+                    for img_path in self.folder_images:
+                        try:
+                            with open(img_path, "rb") as f:
+                                data = f.read()
+                                text = data.decode(errors="ignore").lower()
+
+                            match = True
+                            if self.prompt_all_words.get():
+                                match &= all(kw.lower() in text for kw in prompt_keywords)
+                            if self.prompt_any_word.get():
+                                match &= any(kw.lower() in text for kw in prompt_keywords)
+                            if self.prompt_exclude.get():
+                                match &= not any(kw.lower() in text for kw in prompt_keywords)
+                            if self.prompt_none_of.get():
+                                match &= all(kw.lower() not in text for kw in prompt_keywords)
+
+                            if match:
+                                new_list.append(img_path)
+
+                        except Exception as e:
+                            continue
+
+                    self.folder_images = new_list
+                    self.status(f"Promptfilter aktiv: {len(self.folder_images)} Bilder nach Filter")
+
+
+
+                self.display_image_safe_async(self.folder_images[self.current_index], default_scale=True)
                 self.extract_and_display_text_chunks(self.folder_images[self.current_index])
             
-            self.apply_filter()
-            self.status(f"Ordner geladen: {folder} ({len(self.folder_images)} Bilder, {len(self.filtered_images)} gefiltert)")
+            self.apply_filter_legacy()
+            self.status(f"Folder loaded: {folder} ({len(self.folder_images)} images, {len(self.filtered_images)} filtered)")
         else:
-            self.status("Keine Bilder im ausgewählten Ordner gefunden.")
+            self.status("No images found in the selected folder.")
 
     def handle_drop(self, event):
         file_path = event.data.strip("{}")
@@ -937,13 +1381,21 @@ class ImageManagerForm(TkinterDnD.Tk):
             threading.Thread(target=self.load_folder_async, args=(folder, file_path), daemon=True).start()
 
     def choose_folder(self):
-        folder = filedialog.askdirectory(title="Ordner auswählen")
-        if folder:
-            self.folder_path_var.set(folder)
-            threading.Thread(target=self.load_folder_async, args=(folder,), daemon=True).start()
+            folder = filedialog.askdirectory(title="Select folder")
+            if folder:
+                self.folder_path_var.set(folder)
+                threading.Thread(target=self.load_folder_async, args=(folder,), daemon=True).start()
+
+                # Verlauf für Ordnerpfad aktualisieren und speichern
+                if folder not in self.folder_history:
+                    self.folder_history.insert(0, folder)
+                    self.folder_history = self.folder_history[:10]  # Max. 10 Einträge
+                    self.folder_combo['values'] = self.folder_history
+                    save_history(self.folder_history, list(self.filter_history))
+
 
     def select_image_from_folder(self):
-        file_path = filedialog.askopenfilename(title="Bild auswählen", filetypes=[("Images", "*.png *.jpg *.jpeg")])
+        file_path = filedialog.askopenfilename(title="Select image", filetypes=[("Images", "*.png *.jpg *.jpeg")])
         if file_path:
             folder = os.path.dirname(file_path)
             self.folder_path_var.set(folder)
@@ -954,43 +1406,43 @@ class ImageManagerForm(TkinterDnD.Tk):
         info_win.title("Information")
         info_win.configure(bg=BG_COLOR)
         info_text = (
-            "ImagePromptViewer - Gebrauchsanweisung:\n\n"
-            "Überblick:\n"
-            "Dieses Programm dient als Bildbetrachter für PNG- und JPEG-Bilder, der eingebettete Texte ausliest. PNGs nutzen info['parameters'] und JPEGs den EXIF-Tag 'UserComment' (mit UNICODE-Präfix), um den Text in Prompt, Negativ Prompt und Settings aufzuteilen.\n\n"
-            "Hauptfunktionen:\n"
-            "- Bildanzeige und Navigation:\n"
-            "  • Das aktuelle Bild wird im Hauptfenster angezeigt.\n"
-            "  • Mit den Pfeiltasten oder dem Mausrad können Sie vor- und zurücknavigieren.\n"
-            "  • Ein per Drag & Drop eingefügtes Bild lädt automatisch den gesamten Ordner.\n\n"
-            "- Filterung:\n"
-            "  • Geben Sie einen Suchbegriff ein und wählen Sie mittels der Checkboxen, ob Dateiname, Prompt, Negativ Prompt oder Settings durchsucht werden sollen.\n"
-            "  • Klicken Sie auf 'Filter', um den Suchbegriff anzuwenden, oder auf 'Clear', um den Filter zu entfernen.\n\n"
-            "- Ordner- und Bildauswahl:\n"
-            "  • 'Ordner auswählen' öffnet einen Dialog zur Auswahl eines Bildordners.\n"
-            "  • 'Bild auswählen' erlaubt die direkte Auswahl einer Bilddatei, wobei der zugehörige Ordner geladen wird.\n"
-            "  • 'Bild anzeigen' öffnet das aktuell ausgewählte Bild im Standard-Systembetrachter.\n\n"
-            "- Löschen:\n"
-            "  • 'Bild löschen' verschiebt das aktuell angezeigte Bild in den Papierkorb.\n"
-            "  • Mit dem 'sofort löschen'-Kontrollkästchen (Button wechselt zu Rot, wenn aktiv) wird das Bild ohne Rückfrage gelöscht.\n\n"
-            "- Vollbildmodus:\n"
-            "  • Über den 'Vollbild'-Button wird das Bild im Vollbildmodus angezeigt, inklusive Textfeldern für Prompt, Negativ Prompt und Settings.\n"
-            "  • Weitere Buttons im Vollbildmodus ermöglichen das Kopieren des Bildnamens oder -pfads, das Löschen des Bildes sowie das Ein- bzw. Ausblenden des Prompt-Bereichs.\n\n"
-            "- Weitere Funktionen:\n"
-            "  • Die 'Always on Top'-Option sorgt dafür, dass das Fenster immer im Vordergrund bleibt (Standard: deaktiviert).\n"
-            "  • Der 'Debug'-Button öffnet ein Fenster mit erweiterten System- und Debug-Informationen (Betriebssystem, Python-Version, Monitorauflösung etc.).\n"
-            "  • Schriftgrößen und Layout passen sich dynamisch der Monitorauflösung an.\n\n"
-            "Bedienungshinweise:\n"
-            "  • Nutzen Sie die Navigation per Mausrad oder Pfeiltasten über dem Bild.\n"
-            "  • Ziehen Sie ein Bild in den markierten Bereich ('Drop Image Here'), um den zugehörigen Ordner zu laden.\n"
-            "  • Verwenden Sie die Filteroptionen, um gezielt nach Bildinhalten zu suchen.\n\n"
-            "Viel Spaß beim Arbeiten mit ImagePromptViewer!"
+            "ImagePromptViewer - User Guide:\n\n"
+            "Overview:\n"
+            "This program serves as an image viewer for PNG and JPEG images, reading embedded texts. PNGs use info['parameters'] and JPEGs use the EXIF tag 'UserComment' (with UNICODE prefix) to split the text into Prompt, Negative Prompt, and Settings.\n\n"
+            "Main Functions:\n"
+            "- Image Display and Navigation:\n"
+            "  • The current image is displayed in the main window.\n"
+            "  • Use arrow keys or mouse wheel to navigate forward and backward.\n"
+            "  • A dropped image automatically loads the entire folder.\n\n"
+            "- Filtering:\n"
+            "  • Enter a search term and select via checkboxes whether to search in Filename, Prompt, Negative Prompt, or Settings.\n"
+            "  • Click 'Filter' to apply the search term or 'Clear' to remove the filter.\n\n"
+            "- Folder and Image Selection:\n"
+            "  • 'Select folder' opens a dialog to choose an image folder.\n"
+            "  • 'Select image' allows direct selection of an image file, loading the associated folder.\n"
+            "  • 'View image' opens the currently selected image in the default system viewer.\n\n"
+            "- Deletion:\n"
+            "  • 'Delete image' moves the currently displayed image to the trash.\n"
+            "  • With the 'delete immediately' checkbox (button turns red when active), the image is deleted without confirmation.\n\n"
+            "- Fullscreen Mode:\n"
+            "  • Via the 'Fullscreen' button, the image is displayed in fullscreen mode, including text fields for Prompt, Negative Prompt, and Settings.\n"
+            "  • Additional buttons in fullscreen mode allow copying the image name or path, deleting the image, and showing/hiding the prompt area.\n\n"
+            "- Additional Features:\n"
+            "  • The 'Always on Top' option keeps the window always in the foreground (default: disabled).\n"
+            "  • The 'Debug' button opens a window with extended system and debug information (operating system, Python version, monitor resolution, etc.).\n"
+            "  • Font sizes and layout adjust dynamically to the monitor resolution.\n\n"
+            "Usage Tips:\n"
+            "  • Use navigation via mouse wheel or arrow keys over the image.\n"
+            "  • Drag an image into the marked area ('Drop Image Here') to load the associated folder.\n"
+            "  • Use the filter options to search specifically for image content.\n\n"
+            "Enjoy working with ImagePromptViewer!"
         )
 
         st = ScrolledText(info_win, width=80, height=20, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
         st.insert(tk.END, info_text)
         st.config(state=tk.DISABLED)
         st.pack(padx=self.button_padding, pady=self.button_padding)
-        close_btn = tk.Button(info_win, text="Schließen", command=info_win.destroy,
+        close_btn = tk.Button(info_win, text="Close", command=info_win.destroy,
                               bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         close_btn.pack(pady=self.button_padding)
 
@@ -1007,18 +1459,14 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.update_preview_visible()
 
     def toggle_folder_list(self):
-        # Prüfe, ob der Preview-Frame aktuell angezeigt wird.
         if self.preview_frame.winfo_ismapped():
-            # Wenn ja: Ausblenden und Button-Text auf "Ordner‑Liste laden" setzen.
             self.preview_frame.pack_forget()
-            self.load_list_button.config(text="Ordner‑Liste laden")
+            self.load_list_button.config(text="Load folder list")
         else:
-            # Andernfalls: Frame einblenden, Tabelle aufbauen und Button-Text ändern.
             self.preview_frame.pack(fill="both", padx=self.button_padding, pady=self.button_padding, expand=True)
             self.populate_preview_table_lazy()
-            self.load_list_button.config(text="Ordner‑Liste ausblenden")
+            self.load_list_button.config(text="Hide folder list")
 
-    
     def update_preview_visible(self):
         canvas_height = self.preview_canvas.winfo_height()
         scroll_region = self.preview_canvas.bbox("all")
@@ -1033,16 +1481,18 @@ class ImageManagerForm(TkinterDnD.Tk):
             frame = self.preview_items[i]
             if not frame.winfo_children() or len(frame.winfo_children()) == 1:
                 file_path = self.filtered_images[i]
-                if file_path not in self.preview_images:
-                    try:
-                        img = Image.open(file_path)
-                        img.thumbnail((int(100 * self.scaling_factor), int(100 * self.scaling_factor)))
-                        tk_img = ImageTk.PhotoImage(img)
+                try:
+                    img = load_image_with_cache(file_path, self.image_cache, self.cache_limit)
+                    if img:
+                        thumb = img.copy()
+                        thumb.thumbnail((int(100 * self.scaling_factor), int(100 * self.scaling_factor)))
+                        tk_img = ImageTk.PhotoImage(thumb)
                         self.preview_images[file_path] = tk_img
-                    except Exception:
+                    else:
                         tk_img = None
-                else:
-                    tk_img = self.preview_images[file_path]
+                except Exception:
+                    tk_img = None
+
                 if tk_img:
                     img_label = tk.Label(frame, image=tk_img, bg=BG_COLOR)
                     img_label.image = tk_img
@@ -1052,16 +1502,71 @@ class ImageManagerForm(TkinterDnD.Tk):
     def on_preview_click(self, index):
         if 0 <= index < len(self.filtered_images):
             self.current_index = index
-            self.display_image(self.filtered_images[self.current_index])
+            self.display_image_safe_async(self.filtered_images[self.current_index])
             self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
 
     def display_image(self, file_path, default_scale=False):
-        try:
-            self.current_image = Image.open(file_path)
-        except Exception as e:
-            self.status(f"Fehler beim Öffnen des Bildes: {e}")
+        self.current_image = load_image_with_cache(file_path, self.image_cache, self.cache_limit)
+        self.current_image_path = file_path
+        if not self.current_image:
+            self.status(f"Fehler beim Laden von Bild: {file_path}")
             return
-        
+        # dein restlicher Code zur Bildanzeige kommt hier...
+
+    def display_image_safe_async(self, file_path, default_scale=False):
+        def task():
+            img = load_image_with_cache(file_path, self.image_cache, self.cache_limit)
+            if img:
+                self.current_image = img
+                self.current_image_path = file_path
+                self.after(0, lambda: self._finalize_display_image(file_path, default_scale))
+            else:
+                self.status(f"Fehler beim Laden von Bild: {file_path}")
+        threading.Thread(target=task, daemon=True).start()
+
+    def _finalize_display_image(self, file_path, default_scale=False):
+        self.image_frame.update_idletasks()
+        avail_width = self.image_frame.winfo_width() - 2 * self.button_padding
+        avail_height = self.image_frame.winfo_height() - 2 * self.button_padding
+        if avail_width < 10 or avail_height < 10:
+            avail_width = 800
+            avail_height = 600
+
+        orig_width, orig_height = self.current_image.size
+
+        if default_scale or (self.scale_var.get() == "Default"):
+            default_scale_factor = get_default_image_scale(self.scaling_factor)
+        else:
+            default_scale_factor = int(self.scale_var.get().replace("%", "")) / 100
+
+        new_width = int(orig_width * default_scale_factor)
+        new_height = int(orig_height * default_scale_factor)
+
+        max_width = int(avail_width * 0.8)
+        max_height = int(avail_height * 0.8)
+
+        width_factor = max_width / orig_width
+        height_factor = max_height / orig_height
+        fit_factor = min(width_factor, height_factor)
+
+        if fit_factor < default_scale_factor:
+            new_width = int(orig_width * fit_factor)
+            new_height = int(orig_height * fit_factor)
+
+        self.resized_image = self.current_image.resize((new_width, new_height), Image.LANCZOS)
+        self.tk_image = ImageTk.PhotoImage(self.resized_image)
+        self.image_label.config(image=self.tk_image)
+        self.status(f"Image loaded: {os.path.basename(file_path)}")
+
+        try:
+            ctime = self.ctime_cache[file_path]
+            created_str = datetime.fromtimestamp(ctime).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            created_str = "Unknown"
+        info_text = f"Filename: {os.path.basename(file_path)}\nPath: {file_path}\nCreated: {created_str}"
+
+        self.image_info_label.config(text=info_text)
+
         self.image_frame.update_idletasks()
         avail_width = self.image_frame.winfo_width() - 2 * self.button_padding
         avail_height = self.image_frame.winfo_height() - 2 * self.button_padding
@@ -1094,13 +1599,13 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.tk_image = ImageTk.PhotoImage(self.resized_image)
         self.image_label.config(image=self.tk_image)
         self.current_image_path = file_path
-        self.status(f"Bild geladen: {os.path.basename(file_path)}")
+        self.status(f"Image loaded: {os.path.basename(file_path)}")
         try:
             ctime = self.ctime_cache[file_path]
             created_str = datetime.fromtimestamp(ctime).strftime("%Y-%m-%d %H:%M:%S")
         except Exception:
-            created_str = "Unbekannt"
-        info_text = f"Dateiname: {os.path.basename(file_path)}\nPfad: {file_path}\nErstellt: {created_str}"
+            created_str = "Unknown"
+        info_text = f"Filename: {os.path.basename(file_path)}\nPath: {file_path}\nCreated: {created_str}"
         self.image_info_label.config(text=info_text)
 
     def rescale_image(self, value):
@@ -1116,35 +1621,33 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.highlight_text(self.negativ_text, negativ, filter_text)
         self.highlight_text(self.settings_text, settings, filter_text)
 
-    def show_next_image(self):
-        if self.filtered_images and self.current_index < len(self.filtered_images) - 1:
+    def show_next_image(self): 
+        if self.filtered_images:
             self.current_index += 1
-            self.display_image(self.filtered_images[self.current_index])
+            self.current_index = validate_index(self.current_index, self.filtered_images)
+            self.display_image_safe_async(self.filtered_images[self.current_index])
             self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
 
-
-
     def show_previous_image(self):
-        if self.filtered_images and self.current_index > 0:
+        if self.filtered_images:
             self.current_index -= 1
-            self.display_image(self.filtered_images[self.current_index])
+            self.current_index = validate_index(self.current_index, self.filtered_images)
+            self.display_image_safe_async(self.filtered_images[self.current_index])
             self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
 
     def delete_current_image(self):
         if not hasattr(self, "current_image_path") or not self.current_image_path:
-            self.status("Kein Bild zum Löschen ausgewählt.")
+            self.status("No image selected to delete.")
             return
 
         normalized_path = os.path.normpath(self.current_image_path)
         if not os.path.exists(normalized_path):
-            self.status("Datei nicht gefunden.")
+            self.status("File not found.")
             return
 
         def continue_after_delete():
             try:
                 delete_index = self.filtered_images.index(normalized_path)
-
-                # Zielindex vorbereiten
                 next_index = delete_index
                 if next_index >= len(self.filtered_images) - 1:
                     next_index = len(self.filtered_images) - 2
@@ -1158,41 +1661,49 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.text_chunks_cache.pop(normalized_path, None)
                 self.preview_images.pop(normalized_path, None)
 
-                self.apply_filter()
+                self.apply_filter_legacy()
 
                 if self.filtered_images:
                     self.current_index = next_index
-                    self.display_image(self.filtered_images[self.current_index])
+                    self.display_image_safe_async(self.filtered_images[self.current_index])
                     self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
                 else:
                     self.current_index = -1
-                    self.status("Kein Bild mehr vorhanden.")
+                    self.status("No images remaining.")
             except Exception as e:
-                self.status(f"Fehler beim Löschen: {e}")
+                self.status(f"Error deleting: {e}")
 
-        # Prüfe, ob sofort gelöscht werden soll
         if self.delete_immediately_main_var.get():
             continue_after_delete()
         else:
-            confirm = messagebox.askyesno("Bild löschen", f"Möchten Sie das Bild '{os.path.basename(normalized_path)}' löschen?")
+            confirm = messagebox.askyesno("Delete image", f"Do you want to delete the image '{os.path.basename(normalized_path)}'?")
             if confirm:
                 continue_after_delete()
 
-
-
     def show_fullscreen(self):
+        if not hasattr(self, "current_image_path") or not self.current_image_path:
+            self.status("No image available for fullscreen.")
+            return
 
-        # Falls bereits ein Vollbildfenster existiert, schließe es zuerst.
+        if self.current_index != -1 and self.current_index < len(self.filtered_images):
+            self.fs_current_index = self.current_index
+            self.fs_image_path = self.filtered_images[self.fs_current_index]
+        else:
+            self.status("No valid image index for fullscreen mode.")
+            return
+
+
         if self.fullscreen_win and self.fullscreen_win.winfo_exists():
             self.safe_close_fullscreen(update_main=False)
         if not hasattr(self, "current_image") or not self.current_image:
-            self.status("Kein Bild zum Vollbild verfügbar.")
+            self.status("No image available for fullscreen.")
             return
+        self.fs_current_index = self.current_index
         self.fs_image_path = self.filtered_images[self.fs_current_index]
         try:
-            self.fs_image = Image.open(self.fs_image_path)
+            self.fs_image = load_image_with_cache(self.fs_image_path, self.image_cache, self.cache_limit)
         except Exception as e:
-            self.status(f"Fehler im Vollbild: {e}")
+            self.status(f"Error in fullscreen: {e}")
             return
         self.fullscreen_win = tk.Toplevel(self)
         self.fullscreen_win.configure(bg=BG_COLOR)
@@ -1204,6 +1715,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
         self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
         self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
+        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
         self.fullscreen_win.focus_force()
         self.fs_text_focus = False
 
@@ -1215,27 +1727,27 @@ class ImageManagerForm(TkinterDnD.Tk):
 
         top_buttons = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
         top_buttons.pack(anchor="nw", padx=self.button_padding, pady=self.button_padding)
-        self.fs_delete_button = tk.Button(top_buttons, text="Bild löschen", command=self.fs_delete_current_image,
+        self.fs_delete_button = tk.Button(top_buttons, text="Delete image", command=self.fs_delete_current_image,
                                           bg="red" if self.delete_immediately_fs_var.get() else BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.fs_delete_button.pack(side="left", padx=self.button_padding)
-        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="sofort löschen", variable=self.delete_immediately_fs_var,
+        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="delete immediately", variable=self.delete_immediately_fs_var,
                                                        command=self.update_delete_button_color_fs, fg=TEXT_FG_COLOR,
                                                        bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.delete_immediately_fs_cb.pack(side="left", padx=self.button_padding)
-        self.fs_close_button = tk.Button(top_buttons, text="Schließen", command=self.safe_close_fullscreen,
+        self.fs_close_button = tk.Button(top_buttons, text="Close", command=self.safe_close_fullscreen,
                                          bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.fs_close_button.pack(side="left", padx=self.button_padding)
-        btn_fs_open = tk.Button(top_buttons, text="Bild anzeigen", command=self.open_image_fs,
+        btn_fs_open = tk.Button(top_buttons, text="View image", command=self.open_image_fs,
                                 bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         btn_fs_open.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_name = tk.Button(top_buttons, text="Bildname kopieren", command=self.copy_filename_fs,
+        btn_fs_copy_name = tk.Button(top_buttons, text="Copy image name", command=self.copy_filename_fs,
                                      bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         btn_fs_copy_name.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_path = tk.Button(top_buttons, text="Bild-Pfad kopieren", command=self.copy_full_path_fs,
+        btn_fs_copy_path = tk.Button(top_buttons, text="Copy image path", command=self.copy_full_path_fs,
                                      bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         btn_fs_copy_path.pack(side="left", padx=self.button_padding)
 
-        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Prompt ausblenden", command=self.toggle_fs_prompt,
+        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Hide prompt", command=self.toggle_fs_prompt,
                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
         self.prompt_toggle.pack(anchor="ne", padx=self.button_padding, pady=self.button_padding)
         self.fullscreen_win.bind("p", lambda e: self.toggle_fs_prompt())
@@ -1256,44 +1768,39 @@ class ImageManagerForm(TkinterDnD.Tk):
         try:
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
                 self.fullscreen_win.destroy()
-                self.fullscreen_win = None  # Verhindert, dass das Toplevel noch referenziert wird
-            # Setze den Fokus zurück auf das Hauptfenster
+                self.fullscreen_win = None
             self.focus_force()
-            # Nur wenn update_main True ist (d.h. beim normalen Schließen des Vollbilds)
-            # wird das zuletzt im Vollbild gezeigte Bild im Hauptfenster aktualisiert.
             if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
-                self.current_index = self.filtered_images.index(self.fs_image_path)
-                self.display_image(self.fs_image_path)
+                self.current_index = validate_index(self.filtered_images.index(self.fs_image_path), self.filtered_images)
+                self.display_image_safe_async(self.fs_image_path)
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
             pass
 
     def show_preview_table(self):
-        # Packe den Preview-Frame, falls er noch nicht sichtbar ist
         if not self.preview_frame.winfo_ismapped():
             self.preview_frame.pack(fill="both", padx=self.button_padding, pady=self.button_padding, expand=True)
-        # Baue die Vorschautabelle auf
         self.populate_preview_table_lazy()
 
     def update_fs_info_fullscreen(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:
-            self.fs_info_label.config(text="Kein Bild ausgewählt")
+            self.fs_info_label.config(text="No image selected")
             return
         try:
             ctime = self.ctime_cache[self.fs_image_path]
             created_str = datetime.fromtimestamp(ctime).strftime("%Y-%m-%d %H:%M:%S")
         except Exception:
-            created_str = "Unbekannt"
+            created_str = "Unknown"
         try:
             dimensions = f"{self.fs_image.width}x{self.fs_image.height}"
         except Exception:
-            dimensions = "Unbekannt"
-        info = (f"Dateiname: {os.path.basename(self.fs_image_path)}\n"
-                f"Pfad: {self.fs_image_path}\n"
-                f"Erstellt: {created_str}\n"
-                f"Auflösung: {dimensions}")
+            dimensions = "Unknown"
+        info = (f"Filename: {os.path.basename(self.fs_image_path)}\n"
+                f"Path: {self.fs_image_path}\n"
+                f"Created: {created_str}\n"
+                f"Resolution: {dimensions}")
         if len(self.filtered_images) < len(self.folder_images):
-            info += "\nFILTER AKTIV!"
+            info += "\nFILTER ACTIVE!"
         self.fs_info_label.config(text=info)
 
     def update_fs_image(self):
@@ -1337,28 +1844,28 @@ class ImageManagerForm(TkinterDnD.Tk):
         return "break"
 
     def fs_show_next(self):
-        if self.filtered_images and self.fs_current_index < len(self.filtered_images) - 1:
+        if self.filtered_images:
             self.fs_current_index += 1
+            self.fs_current_index = validate_index(self.fs_current_index, self.filtered_images)
             self.fs_image_path = self.filtered_images[self.fs_current_index]
             try:
                 self.fs_image = Image.open(self.fs_image_path)
             except Exception as e:
-                self.status(f"Fehler im Vollbild: {e}")
+                self.status(f"Error in fullscreen: {e}")
                 return
             self.update_fs_image()
             self.update_fs_info_fullscreen()
             self.update_fs_texts()
 
-
     def fs_show_previous(self):
-        if self.filtered_images and self.fs_current_index > 0:
+        if self.filtered_images:
             self.fs_current_index -= 1
+            self.fs_current_index = validate_index(self.fs_current_index, self.filtered_images)
             self.fs_image_path = self.filtered_images[self.fs_current_index]
-
             try:
                 self.fs_image = Image.open(self.fs_image_path)
             except Exception as e:
-                self.status(f"Fehler im Vollbild: {e}")
+                self.status(f"Error in fullscreen: {e}")
                 return
             self.update_fs_image()
             self.update_fs_info_fullscreen()
@@ -1368,82 +1875,53 @@ class ImageManagerForm(TkinterDnD.Tk):
         if self.fs_text_visible:
             self.fs_text_frame.pack_forget()
             self.fs_text_visible = False
-            self.prompt_toggle.config(text="Prompt anzeigen")
+            self.prompt_toggle.config(text="Show prompt")
         else:
             self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
             self.fs_text_visible = True
-            self.prompt_toggle.config(text="Prompt ausblenden")
+            self.prompt_toggle.config(text="Hide prompt")
             self.update_fs_texts()
         self.fullscreen_win.after(100, self.update_fs_image)
 
-    # 🛠 PATCH für Version 1.0.36.3o: Fix für Bildnavigation nach Löschen im Vollbild
     def fs_delete_current_image(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:
-            self.status("Kein Bild zum Löschen ausgewählt.")
+            self.status("No image selected to delete.")
             return
         normalized_path = os.path.normpath(self.fs_image_path)
         if not os.path.exists(normalized_path):
-            self.status("Datei nicht gefunden.")
+            self.status("File not found.")
             return
 
         def continue_after_delete():
             try:
                 delete_index = self.filtered_images.index(normalized_path)
-
-                # Datei wirklich löschen
                 send2trash(normalized_path)
                 self.folder_images.remove(normalized_path)
                 self.ctime_cache.pop(normalized_path, None)
                 self.text_chunks_cache.pop(normalized_path, None)
                 self.preview_images.pop(normalized_path, None)
+                self.apply_filter_legacy()
 
-                # Nach Filter löschen (wichtig!)
-                self.apply_filter()
-
-                # Korrekte Bildauswahl danach
                 if len(self.filtered_images) == 0:
                     self.safe_close_fullscreen()
                     return
 
-                # Nächsten Index bestimmen (bleibt auf gleicher Position oder letzte)
-                next_index = delete_index if delete_index < len(self.filtered_images) else len(self.filtered_images) - 1
-                self.fs_current_index = next_index
+                next_index = delete_index
+                self.fs_current_index = validate_index(next_index, self.filtered_images)
                 self.fs_image_path = self.filtered_images[self.fs_current_index]
                 self.fs_image = Image.open(self.fs_image_path)
                 self.update_fs_image()
                 self.update_fs_info_fullscreen()
                 self.update_fs_texts()
             except Exception as e:
-                self.status(f"Fehler beim Löschen: {e}")
+                self.status(f"Error deleting: {e}")
 
         if self.delete_immediately_fs_var.get():
             continue_after_delete()
         else:
-            confirm = messagebox.askyesno("Bild löschen", f"Möchten Sie das Bild '{os.path.basename(normalized_path)}' löschen?")
+            confirm = messagebox.askyesno("Delete image", f"Do you want to delete the image '{os.path.basename(normalized_path)}'?")
             if confirm:
                 continue_after_delete()
-
-                try:
-                    send2trash(normalized_path)
-                    self.folder_images.pop(self.folder_images.index(normalized_path))
-                    if normalized_path in self.ctime_cache:
-                        del self.ctime_cache[normalized_path]
-                    if normalized_path in self.text_chunks_cache:
-                        del self.text_chunks_cache[normalized_path]
-                    if normalized_path in self.preview_images:
-                        del self.preview_images[normalized_path]
-                    self.apply_filter()
-                    self.status("Bild in den Papierkorb verschoben.")
-                    if self.current_index >= len(self.filtered_images):
-                        self.current_index = len(self.filtered_images) - 1
-                    if self.filtered_images:
-                        self.fs_image_path = self.filtered_images[self.current_index]
-                        self.fs_image = Image.open(self.fs_image_path)
-                        self.update_fs_image()
-                        self.update_fs_info_fullscreen()
-                        self.update_fs_texts()
-                except Exception as e:
-                    self.status(f"Fehler beim Löschen: {e}")
 
     def open_image_in_system(self):
         if hasattr(self, "current_image_path") and self.current_image_path:
@@ -1452,7 +1930,7 @@ class ImageManagerForm(TkinterDnD.Tk):
             else:
                 os.system(f'xdg-open "{self.current_image_path}"')
         else:
-            self.status("Kein Bild ausgewählt.")
+            self.status("No image selected.")
 
     def open_image_fs(self):
         if hasattr(self, "fs_image_path") and self.fs_image_path:
@@ -1461,22 +1939,22 @@ class ImageManagerForm(TkinterDnD.Tk):
             else:
                 os.system(f'xdg-open "{self.fs_image_path}"')
         else:
-            self.status("Kein Bild zum Öffnen vorhanden.")
+            self.status("No image available to open.")
 
     def copy_filename_fs(self):
         if hasattr(self, "fs_image_path") and self.fs_image_path:
             filename = os.path.basename(self.fs_image_path)
             copy_to_clipboard(self, filename)
-            self.status("Bildname kopiert.")
+            self.status("Image name copied.")
         else:
-            self.status("Kein Bild ausgewählt.")
+            self.status("No image selected.")
 
     def copy_full_path_fs(self):
         if hasattr(self, "fs_image_path") and self.fs_image_path:
             copy_to_clipboard(self, self.fs_image_path)
-            self.status("Bild-Pfad kopiert.")
+            self.status("Image path copied.")
         else:
-            self.status("Kein Bild ausgewählt.")
+            self.status("No image selected.")
 
     def update_fs_texts(self):
         for widget in self.fs_text_frame.winfo_children():
@@ -1498,7 +1976,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
         self.highlight_text(fs_negativ_text, negativ, filter_text)
         fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, fs_negativ_text))
-        tk.Button(self.fs_text_frame, text="copy Negativ",
+        tk.Button(self.fs_text_frame, text="copy Negative",
                   command=lambda: copy_to_clipboard(self, fs_negativ_text.get("1.0", tk.END)),
                   bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)).grid(row=1, column=1, padx=self.button_padding)
         fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
@@ -1513,6 +1991,27 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.fs_text_frame.grid_columnconfigure(i, weight=1)
         self.fs_text_frame.grid_rowconfigure(0, weight=1)
         self.fs_text_frame.grid_rowconfigure(2, weight=0)
+import json
+
+def save_history(folder_list, filter_list):
+    data = {
+        "folder_history": folder_list[:10],
+        "filter_history": filter_list[:10]
+    }
+    try:
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Fehler beim Speichern der History: {e}")
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Fehler beim Laden der History: {e}")
+    return {"folder_history": [], "filter_history": []}
 
 if __name__ == "__main__":
     app = ImageManagerForm()

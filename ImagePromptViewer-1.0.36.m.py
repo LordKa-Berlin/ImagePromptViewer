@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Datum: 2025-03-27
-Versionsnummer: 1.0.36.3k
+Versionsnummer: 1.0.36.3m
 Interne Bezeichnung: Master8 Alpha7
 
 Änderungen in Version 1.0.36.2:
@@ -14,7 +14,7 @@ Interne Bezeichnung: Master8 Alpha7
 Zusammenfassung:
 Ein Bildbetrachter für PNG- und JPEG-Dateien, der Textchunks auswertet (PNG: info['parameters'], JPEG: EXIF-Tag 37510) und in Prompt, Negativen Prompt und Settings aufteilt.
 """
-VERSION = "1.0.36.3k"
+VERSION = "1.0.36.3m"
 
 import subprocess, sys
 import os
@@ -1137,21 +1137,25 @@ class ImageManagerForm(TkinterDnD.Tk):
             return
         if self.delete_immediately_main_var.get():
             try:
+                delete_index = self.filtered_images.index(normalized_path)
                 send2trash(normalized_path)
-                self.folder_images.pop(self.folder_images.index(normalized_path))
-                if normalized_path in self.ctime_cache:
-                    del self.ctime_cache[normalized_path]
-                if normalized_path in self.text_chunks_cache:
-                    del self.text_chunks_cache[normalized_path]
-                if normalized_path in self.preview_images:
-                    del self.preview_images[normalized_path]
+
+                self.folder_images.remove(normalized_path)
+                self.ctime_cache.pop(normalized_path, None)
+                self.text_chunks_cache.pop(normalized_path, None)
+                self.preview_images.pop(normalized_path, None)
+
                 self.apply_filter()
-                self.status("Bild in den Papierkorb verschoben.")
-                if self.current_index >= len(self.filtered_images):
-                    self.current_index = len(self.filtered_images) - 1
-                if self.filtered_images:
+
+                # Neuen Index setzen: bleibe auf dem nächsten Bild
+                if delete_index >= len(self.filtered_images):
+                    delete_index = len(self.filtered_images) - 1
+                self.current_index = delete_index
+
+                if self.filtered_images and self.current_index >= 0:
                     self.display_image(self.filtered_images[self.current_index])
                     self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
+
             except Exception as e:
                 self.status(f"Fehler beim Löschen: {e}")
         else:

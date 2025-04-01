@@ -154,3 +154,26 @@ Einstellungen: ab "Steps:" (inklusive, da dieser Marker Teil der Einstellungen i
 Die drei Textsegmente werden in jeweils eigenen Textfeldern in einem Tkinter-Formular angezeigt
 
 ###############################################################
+
+Prompt: Enthält alles bis zum Marker „Negative prompt:“ (Marker selbst nicht enthalten).
+
+Negativer Prompt: Enthält den Text nach „Negative prompt:“ bis vor dem Marker „Steps:“.
+
+Settings: Beginnt mit dem Marker „Steps:“ (daher ist dieser Marker inklusive) und umfasst alle folgenden Zeichen.
+
+
+20250330
+
+Bildanzeige vorgaben
+
+Wenn ich im Hauptformular auf ein Bild klicke, dann öffnet sich das bild in der vollansicht
+WWenn ich in der Vollansicht durch die bilder scrolle und die vollansicht schließe, dann wird das letzte in der vollansicht angezeigte Bild auch im Hauptformular angezeigt.
+Wenn ich im Hauptformular ein Bild lösche, dann wird ds folgende Bild im hauptformular angezeigt.
+Wenn ich im Vollbild ein bild lösche, dann wird das Bild im Vollbild gelöscht NICHT das was gerade im hauptfenster angezeigt wird!
+Wenn ich im Vollbild ein Bild gelöscht habe, dann wird im Vollbild das folgende Bild aus dem ordner angezeigt!
+
+
+20250331
+1. Füge in dem Filter Im Hauptformular noch vor dem Kontrollfeld Filename noch ein Kontrollfeld ganzes Word (bitte englische Bezeichnung dafür verwenden) mit ein, mit dem entschieden wird, ob die Einträge im Filter Combo Feld als ganzes Wort gefunden werden sollen oder nur als teil eines wortes! Die default einstellung soll "false" sein.
+2. Die Date Filter im Filter Settings scheinen nicht zu funktionieren. ich habe Created this wekk und es wurden trotzdem alle bilder angezeigt, auch die älter als eine Woche sind, ich denke ds funktioniert bei den andern Date Filtern dann auch nicht
+3. füge hinter die versionsnummer eine Hinweis auf englisch ein das Lordka der ersteller dieses Programs ist.

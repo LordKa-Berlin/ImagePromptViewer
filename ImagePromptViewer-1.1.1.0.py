@@ -15,6 +15,7 @@ Zusammenfassung:
 Ein Bildbetrachter für PNG- und JPEG-Dateien, der Textchunks auswertet (PNG: info['parameters'], JPEG: EXIF-Tag 37510) und in Prompt, Negativen Prompt und Settings aufteilt.
 """
 VERSION = "1.1.1.0."
+HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys
 import os
@@ -354,6 +355,11 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fullscreen_win = None
         self.debug_info = ""
         self.filter_history = deque(maxlen=10)
+        self.folder_history = []
+        self.filter_history_list = []
+        history_data = load_history()
+        self.folder_history = history_data.get("folder_history", [])
+        self.filter_history_list = history_data.get("filter_history", [])
 
         self.ctime_cache = {}
         self.text_chunks_cache = {}
@@ -459,6 +465,8 @@ class ImageManagerForm(TkinterDnD.Tk):
         style = ttk.Style()
         style.configure("Custom.TCombobox", font=("Arial", combo_font_size))
         self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=25)
+        self.filter_combo['values'] = self.filter_history_list
+        
 
         self.filter_combo.pack(side="left", padx=self.button_padding)
         self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
@@ -491,6 +499,23 @@ class ImageManagerForm(TkinterDnD.Tk):
         folder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         folder_label = tk.Label(folder_frame, text="Folder path:", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
         folder_label.pack(side="left", padx=self.button_padding)
+        # Entry für Ordnerpfad
+        self.folder_path_var = tk.StringVar()
+        self.folder_entry = tk.Entry(
+            folder_frame,
+            textvariable=self.folder_path_var,
+            fg=TEXT_FG_COLOR,
+            bg=TEXT_BG_COLOR,
+            font=("Arial", self.main_font_size),
+            width=int(50 * self.scaling_factor)
+        )
+        self.folder_entry.pack(side="left", padx=self.button_padding)
+
+        # Combobox (History) – wird später optional angezeigt oder intern verwendet
+        self.folder_combo = ttk.Combobox(folder_frame, values=self.folder_history)
+        self.folder_combo.set("")  # Startwert leer
+        self.folder_combo.pack_forget()  # Nicht anzeigen (optional für später)
+
         self.folder_path_var = tk.StringVar()
         self.folder_entry = tk.Entry(folder_frame, textvariable=self.folder_path_var,
                                      fg=TEXT_FG_COLOR, bg=TEXT_BG_COLOR, font=("Arial", self.main_font_size), width=int(50 * self.scaling_factor))
@@ -1586,6 +1611,28 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.fs_text_frame.grid_columnconfigure(i, weight=1)
         self.fs_text_frame.grid_rowconfigure(0, weight=1)
         self.fs_text_frame.grid_rowconfigure(2, weight=0)
+import json
+
+def save_history(folder_list, filter_list):
+    data = {
+        "folder_history": folder_list[:10],
+        "filter_history": filter_list[:10]
+    }
+    try:
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Fehler beim Speichern der History: {e}")
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Fehler beim Laden der History: {e}")
+    return {"folder_history": [], "filter_history": []}
+
 
 if __name__ == "__main__":
     app = ImageManagerForm()

@@ -1188,6 +1188,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         if not hasattr(self, "current_image") or not self.current_image:
             self.status("Kein Bild zum Vollbild verfügbar.")
             return
+        self.fs_current_index = self.current_index  # ← Synchronisierung mit Hauptfenster
         self.fs_image_path = self.filtered_images[self.fs_current_index]
         try:
             self.fs_image = Image.open(self.fs_image_path)
@@ -1204,6 +1205,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
         self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
         self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
+        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
         self.fullscreen_win.focus_force()
         self.fs_text_focus = False
 

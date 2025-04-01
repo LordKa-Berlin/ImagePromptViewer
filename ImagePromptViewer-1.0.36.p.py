@@ -28,6 +28,16 @@ from pathlib import Path
 from collections import deque
 import json
 
+# --------------------------------------------------------
+# Hilfsfunktion zur Validierung von Indexwerten
+# --------------------------------------------------------
+def validate_index(index, items):
+    if index < 0:
+        return 0
+    elif index >= len(items):
+        return len(items) - 1 if items else -1
+    return index
+
 
 try:
     from tkinterdnd2 import TkinterDnD, DND_FILES
@@ -815,7 +825,6 @@ class ImageManagerForm(TkinterDnD.Tk):
     def clear_filter(self):
         self.filter_var.set("")
         self.apply_filter()
-        self.apply_filter()
 
     def apply_filter(self):
         filter_text = self.filter_var.get().strip().lower()
@@ -860,6 +869,8 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.current_index = self.filtered_images.index(self.current_image_path)
         else:
             self.current_index = 0 if self.filtered_images else -1
+            self.current_index = validate_index(self.current_index, self.filtered_images)
+
             if self.current_index != -1:
                 self.display_image(self.filtered_images[self.current_index])
                 self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
@@ -1117,18 +1128,19 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.highlight_text(self.settings_text, settings, filter_text)
 
     def show_next_image(self):
-        if self.filtered_images and self.current_index < len(self.filtered_images) - 1:
+        if self.filtered_images:
             self.current_index += 1
+            self.current_index = validate_index(self.current_index, self.filtered_images)
             self.display_image(self.filtered_images[self.current_index])
             self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
-
-
 
     def show_previous_image(self):
-        if self.filtered_images and self.current_index > 0:
+        if self.filtered_images:
             self.current_index -= 1
+            self.current_index = validate_index(self.current_index, self.filtered_images)
             self.display_image(self.filtered_images[self.current_index])
             self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
+
 
     def delete_current_image(self):
         if not hasattr(self, "current_image_path") or not self.current_image_path:
@@ -1188,6 +1200,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         if not hasattr(self, "current_image") or not self.current_image:
             self.status("Kein Bild zum Vollbild verfügbar.")
             return
+        self.fs_current_index = self.current_index  # ← Synchronisierung mit Hauptfenster
         self.fs_image_path = self.filtered_images[self.fs_current_index]
         try:
             self.fs_image = Image.open(self.fs_image_path)
@@ -1204,6 +1217,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
         self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
         self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
+        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
         self.fullscreen_win.focus_force()
         self.fs_text_focus = False
 
@@ -1262,7 +1276,7 @@ class ImageManagerForm(TkinterDnD.Tk):
             # Nur wenn update_main True ist (d.h. beim normalen Schließen des Vollbilds)
             # wird das zuletzt im Vollbild gezeigte Bild im Hauptfenster aktualisiert.
             if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
-                self.current_index = self.filtered_images.index(self.fs_image_path)
+                self.current_index = validate_index(self.filtered_images.index(self.fs_image_path), self.filtered_images)
                 self.display_image(self.fs_image_path)
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
@@ -1337,8 +1351,9 @@ class ImageManagerForm(TkinterDnD.Tk):
         return "break"
 
     def fs_show_next(self):
-        if self.filtered_images and self.fs_current_index < len(self.filtered_images) - 1:
+        if self.filtered_images:
             self.fs_current_index += 1
+            self.fs_current_index = validate_index(self.fs_current_index, self.filtered_images)
             self.fs_image_path = self.filtered_images[self.fs_current_index]
             try:
                 self.fs_image = Image.open(self.fs_image_path)
@@ -1349,12 +1364,11 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.update_fs_info_fullscreen()
             self.update_fs_texts()
 
-
     def fs_show_previous(self):
-        if self.filtered_images and self.fs_current_index > 0:
+        if self.filtered_images:
             self.fs_current_index -= 1
+            self.fs_current_index = validate_index(self.fs_current_index, self.filtered_images)
             self.fs_image_path = self.filtered_images[self.fs_current_index]
-
             try:
                 self.fs_image = Image.open(self.fs_image_path)
             except Exception as e:
@@ -1406,8 +1420,8 @@ class ImageManagerForm(TkinterDnD.Tk):
                     return
 
                 # Nächsten Index bestimmen (bleibt auf gleicher Position oder letzte)
-                next_index = delete_index if delete_index < len(self.filtered_images) else len(self.filtered_images) - 1
-                self.fs_current_index = next_index
+                next_index = delete_index
+                self.fs_current_index = validate_index(next_index, self.filtered_images)
                 self.fs_image_path = self.filtered_images[self.fs_current_index]
                 self.fs_image = Image.open(self.fs_image_path)
                 self.update_fs_image()

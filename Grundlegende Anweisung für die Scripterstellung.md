@@ -44,3 +44,9 @@ LordKa-Berlin
 ## Sonstige Informationen:
 - Git-Remote-Name: origin (Standard)
 - Branch `main` wurde erfolgreich als Standard gesetzt
+
+Die Git-Anweisungen bitte als ausführbaren Code in einem separaten Codeblock
+
+
+
+Hier ist der aktuelle Code, analysiere ihn und verwende ihn als Grundlage für alle weiteren Aktionen! Achte darauf, dass du keine bestehenden Funktionen, Buttons oder Ähnliches aus dem Projekt entfernst, Integriere die zusätzlichen Anforderungen , sodass  alle anderen Funktionalitäten erhalten bleiben.:

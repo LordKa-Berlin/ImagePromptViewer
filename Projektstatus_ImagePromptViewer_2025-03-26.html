@@ -112,3 +112,130 @@ Zusätzliche Hinweise
 Beispielbild: Ein JPEG-Bild einer Krankenschwester wurde bereitgestellt, um die Textchunk-Extraction zu testen.
 Erwarteter Prompt: Sollte etwa wie score_9,score_8_up,score_7_up, BREAK 1girl being choked, ArielXL, (hot... aussehen, typisch für KI-generierte Bilder.
 Bitte an dich: Teste den Code mit dem Beispielbild, teile mir die neue Debug-Ausgabe mit und schlage eine Lösung für das Kodierungsproblem vor, falls der Prompt weiterhin unlesbar ist.
+
+
+#########################################################################
+1. JSON-Parsingschritt
+Ziel: Versuche, den gesamten Text als JSON zu interpretieren und direkt die gewünschten Werte aus dem JSON zu entnehmen.
+
+Positive Prompt:
+
+Direkter Schlüssel:
+
+Sucht nach dem Schlüssel "prompt" im Top-Level des JSON‑Objekts.
+
+Extraktion: Der gesamte Wert des Schlüssels "prompt" wird übernommen.
+
+Verschachtelte Suche (Fallback):
+
+Iteriere über alle Top-Level-Einträge, die Dictionaries sind.
+
+Prüfe in jedem Dictionary, ob der Schlüssel "class_type" den Wert "CLIPTextEncode" (ohne Berücksichtigung der Groß-/Kleinschreibung) enthält und ob ein "inputs"‑Dictionary vorhanden ist.
+
+Erster Eintrag:
+
+Der erste Eintrag, bei dem in "inputs" der Schlüssel "text" existiert, liefert den Wert für den positiven Prompt.
+
+Negative Prompt:
+
+Direkter Schlüssel:
+
+Sucht nach dem Schlüssel "negativePrompt" im Top-Level des JSON‑Objekts.
+
+Extraktion: Der gesamte Wert des Schlüssels "negativePrompt" wird übernommen.
+
+Verschachtelte Suche (Fallback):
+
+Bei den Dictionaries mit "class_type": "CLIPTextEncode" (siehe oben) wird – wenn bereits ein Eintrag für den positiven Prompt gefunden wurde – der zweite Eintrag (mit einem vorhandenen "text" in "inputs") als negativer Prompt genutzt.
+
+Settings (Steps):
+
+Direkter Schlüssel:
+
+Sucht nach dem Schlüssel "steps" im Top-Level des JSON‑Objekts.
+
+Extraktion: Der Wert (z. B. 25) wird als Settings übernommen.
+
+Verschachtelte Suche (Fallback):
+
+Falls der Schlüssel nicht direkt vorhanden ist, wird in einem Eintrag mit "class_type": "KSampler" im entsprechenden "inputs"‑Dictionary der Schlüssel "steps" gesucht und dessen Wert übernommen.
+
+2. Neue Marker per String-Suche
+Ziel: Falls das JSON-Parsingschritt fehlschlägt oder nicht die erwarteten Schlüssel liefert, wird der normalisierte Text (in Kleinbuchstaben) nach bestimmten Substrings durchsucht.
+
+Positive Prompt:
+
+Marker:
+
+Sucht nach dem Substring '"prompt":' (in Kleinbuchstaben, d. h. "prompt":).
+
+Extraktion:
+
+Der Text wird ab dem Ende des Substrings '"prompt":' bis zum Beginn des nächsten Markers, nämlich '"negativeprompt":', extrahiert.
+
+Negative Prompt:
+
+Marker:
+
+Sucht nach dem Substring '"negativeprompt":'.
+
+Extraktion:
+
+Der Text wird ab dem Ende von '"negativeprompt":' bis zum Beginn des Markers '"steps":' extrahiert.
+
+Settings:
+
+Marker:
+
+Sucht nach dem Substring '"steps":'.
+
+Extraktion:
+
+Der Text wird ab dem Ende von '"steps":' bis zum Ende des normalisierten Textes extrahiert.
+
+3. Fallback mit alten Markern
+Ziel: Wenn weder JSON noch die neue Marker-Suche Erfolg haben, wird die bisherige Logik verwendet.
+
+Positive Prompt:
+
+Marker:
+
+Sucht nach dem String "Negative prompt:" im normalisierten Text.
+
+Extraktion:
+
+Wenn "Negative prompt:" gefunden wird, wird der Positive Prompt als der gesamte Text von Beginn bis direkt vor "Negative prompt:" definiert.
+
+Falls "Negative prompt:" nicht gefunden wird, aber "Steps:" vorhanden ist, wird der Text von Beginn bis zu "Steps:" übernommen.
+
+Falls keiner der Marker vorhanden ist, wird der gesamte normalisierte Text als Positive Prompt genutzt.
+
+Negative Prompt:
+
+Marker:
+
+Sucht nach dem String "Negative prompt:".
+
+Extraktion:
+
+Wenn "Negative prompt:" gefunden wird und auch "Steps:" danach existiert, wird der Text zwischen diesen beiden Markern extrahiert.
+
+Falls "Steps:" nicht vorhanden ist, wird der Text von "Negative prompt:" bis zum Ende verwendet.
+
+Wenn "Negative prompt:" überhaupt nicht gefunden wird, bleibt der Negative Prompt leer.
+
+Settings:
+
+Marker:
+
+Sucht nach dem String "Steps:".
+
+Extraktion:
+
+Wenn "Steps:" gefunden wird, wird der Text ab dem Beginn von "Steps:" bis zum Ende des Textes übernommen.
+
+Falls "Steps:" nicht vorhanden ist, bleiben die Settings leer.
+
+Diese Aufstellung zeigt, wie die Funktion schrittweise vorgeht: Zuerst wird versucht, den gesamten Text als JSON zu interpretieren und die relevanten Schlüssel direkt oder verschachtelt zu extrahieren. Scheitert das, so wird mittels String-Suche nach den neuen Markern ("prompt":, "negativeprompt":, "steps":) vorgegangen, und als letzter Ausweg wird die bisherige Methode mit den alten Markern ("Negative prompt:" und "Steps:") verwendet.
+
+#########################################################################################
