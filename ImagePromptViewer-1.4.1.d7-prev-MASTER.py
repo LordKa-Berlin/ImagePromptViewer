@@ -3,21 +3,19 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.4.0.d4
-Interne Bezeichnung: Master8 Alpha10
+Versionsnummer: 1.4.0.d7
+Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
 - Integration der Filter Settings in das Hauptformular: Das separate Filter Settings Formular wurde entfernt. 
-  Stattdessen erscheint ein neues Panel (Frame) rechts im oberen Steuerungsbereich, direkt unter dem Kontrollfeld "Search subfolders".
-- Der alte Button "Filter Settings" wurde entfernt.
-- Alle Filter-Elemente (Prompt Filter, Date Filter, File Size Filter und die zugehörigen Buttons "Apply Filter", "Clear" und "Reset All") sind nun im Hauptformular integriert.
-- Die übrigen Funktionen, Layouts und Buttons bleiben unverändert.
-
-Zusammenfassung:
-Ein Bildbetrachter für PNG- und JPEG-Dateien, der Textchunks auswertet (PNG: info['parameters'], JPEG: EXIF-Tag 37510) und in Prompt, Negative Prompt und Settings aufteilt. Neu: Erweiterte Filterfunktionen (inklusive integrierter Filter Settings im Hauptformular), dynamische Fenstergröße, Filter-History und visuelle Rückmeldung bei aktivem Filter.
+  Stattdessen erscheint ein neues Panel (Frame) im linken Bereich des Hauptfensters.
+- Alle Filter-Elemente (Prompt Filter, Date Filter, File Size Filter und die zugehörigen Buttons "Apply Filter", "Clear" und "Reset All") sind nun direkt integriert.
+- Erweiterung der Datum‑Filter: Neben den festen Checkbox‑Filtern werden jetzt auch benutzerdefinierte Eingaben (Not older than, Older than, Between dates) ermöglicht.
+- Die Unterordner‑Suche wird nachträglich aktualisiert, wenn das Kontrollkästchen "Search subfolders" umgeschaltet wird.
+- Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.4.0.d4"
+VERSION = "1.4.0.d7"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -352,6 +350,8 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.current_index = -1
         self.fs_current_index = -1
         self.search_subfolders_var = tk.BooleanVar(value=False)
+        # Aktualisiere die Subfolder-Suche auch nachträglich
+        self.search_subfolders_var.trace("w", lambda *args: threading.Thread(target=self.load_folder_async, args=(self.folder_path_var.get(),), daemon=True).start())
         self.sort_order = "DESC"
         self.preview_images = {}
         self.fullscreen_win = None
@@ -428,458 +428,478 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.update_scaling()
         self.last_window_pos = (self.winfo_x(), self.winfo_y())
         self.last_window_size = (self.winfo_width(), self.winfo_height())
-    # def setup_ui Anfang 
-def setup_ui(self):
-    # Alle vorhandenen Widgets löschen
-    for widget in self.winfo_children():
-        widget.destroy()
 
-    # Header und Status
-    header_font = ("Arial", self.main_font_size)
-    header_text = f"ImagePromptViewer\nVersion: {VERSION} - Created by Lordka."
-    self.header_label = tk.Label(self, text=header_text, fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                 font=header_font, justify="left")
-    self.header_label.pack(anchor="w", padx=self.button_padding, pady=self.button_padding)
+    # ------------------ setup_ui() ------------------
+    def setup_ui(self):
+        # Alle vorhandenen Widgets löschen
+        for widget in self.winfo_children():
+            widget.destroy()
 
-    status_font = ("Arial", self.main_font_size)
-    self.status_text = ScrolledText(self, height=2, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=status_font)
-    self.status_text.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-    self.status("Form started.")
+        # Header und Status
+        header_font = ("Arial", self.main_font_size)
+        header_text = f"ImagePromptViewer\nVersion: {VERSION} - Created by Lordka."
+        self.header_label = tk.Label(self, text=header_text, fg=TEXT_FG_COLOR, bg=BG_COLOR,
+                                    font=header_font, justify="left")
+        self.header_label.pack(anchor="w", padx=self.button_padding, pady=self.button_padding)
 
-    self.always_on_top_var = tk.BooleanVar(value=False)
-    self.top_checkbox = tk.Checkbutton(self, text="Always on Top", variable=self.always_on_top_var,
-                                       command=self.update_topmost, fg=TEXT_FG_COLOR,
-                                       bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.top_checkbox.place(relx=1.0, y=self.button_padding, anchor="ne")
+        status_font = ("Arial", self.main_font_size)
+        self.status_text = ScrolledText(self, height=2, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=status_font)
+        self.status_text.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
+        self.status("Form started.")
 
-    self.debug_button = tk.Button(self, text="Debug", command=self.show_debug_info,
-                                  bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
-    self.debug_button.place(relx=0.85, y=self.button_padding, anchor="ne")
+        self.always_on_top_var = tk.BooleanVar(value=False)
+        self.top_checkbox = tk.Checkbutton(self, text="Always on Top", variable=self.always_on_top_var,
+                                        command=self.update_topmost, fg=TEXT_FG_COLOR,
+                                        bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.top_checkbox.place(relx=1.0, y=self.button_padding, anchor="ne")
 
-    self.info_button = tk.Button(self, text="?", command=self.show_info,
-                                 bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=2)
-    self.info_button.place(relx=0.90, y=self.button_padding, anchor="ne")
+        self.debug_button = tk.Button(self, text="Debug", command=self.show_debug_info,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
+        self.debug_button.place(relx=0.85, y=self.button_padding, anchor="ne")
 
-    small_info_font = ("Arial", int(self.main_font_size * 0.9))
-    self.image_info_label = tk.Label(self, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                     font=small_info_font, justify="left")
-    self.image_info_label.pack(side="top", anchor="w", pady=self.button_padding)
+        self.info_button = tk.Button(self, text="?", command=self.show_info,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=2)
+        self.info_button.place(relx=0.90, y=self.button_padding, anchor="ne")
 
-    # Hauptcontainer: zwei Spalten (links: neuer Filterbereich, rechts: bestehende Steuerelemente & Bildanzeige)
-    main_container = tk.Frame(self, bg=BG_COLOR)
-    main_container.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
+        small_info_font = ("Arial", int(self.main_font_size * 0.9))
+        self.image_info_label = tk.Label(self, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
+                                        font=small_info_font, justify="left")
+        self.image_info_label.pack(side="top", anchor="w", pady=self.button_padding)
 
-    # ── Linke Spalte: Neuer integrierter Filter Settings Bereich ──
-    filter_settings_panel = tk.Frame(main_container, bg=BG_COLOR)
-    filter_settings_panel.pack(side="left", fill="y", padx=self.button_padding, pady=self.button_padding)
+        # Hauptcontainer: zwei Spalten (links: neuer Filterbereich, rechts: bestehende Steuerelemente & Bildanzeige)
+        main_container = tk.Frame(self, bg=BG_COLOR)
+        main_container.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
 
-    # --- Date Filter Section mit Eingabefeldern ---
-    date_frame = tk.LabelFrame(filter_settings_panel, text="Date Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                               font=("Arial", int(self.main_font_size * 1.2), "bold"))
-    date_frame.pack(fill="x", padx=10, pady=5)
-    # Between two dates: Checkbox und zwei Entry-Felder
-    tk.Checkbutton(date_frame, text="Between two dates", variable=self.date_between,
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).grid(row=0, column=0, sticky="w", padx=10, pady=2)
-    tk.Label(date_frame, text="Start (YYYY-MM-DD):", bg=BG_COLOR, fg=TEXT_FG_COLOR,
-             font=("Arial", self.main_font_size)).grid(row=0, column=1, sticky="e", padx=5, pady=2)
-    self.entry_between_start = tk.Entry(date_frame, width=10, bg="#000000", fg=TEXT_FG_COLOR,
-                                        insertbackground=TEXT_FG_COLOR)
-    self.entry_between_start.grid(row=0, column=2, padx=5, pady=2)
-    tk.Label(date_frame, text="End (YYYY-MM-DD):", bg=BG_COLOR, fg=TEXT_FG_COLOR,
-             font=("Arial", self.main_font_size)).grid(row=0, column=3, sticky="e", padx=5, pady=2)
-    self.entry_between_end = tk.Entry(date_frame, width=10, bg="#000000", fg=TEXT_FG_COLOR,
-                                      insertbackground=TEXT_FG_COLOR)
-    self.entry_between_end.grid(row=0, column=4, padx=5, pady=2)
-    # Not older than X days
-    tk.Checkbutton(date_frame, text="Not older than X days", variable=self.date_not_older_than,
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).grid(row=1, column=0, sticky="w", padx=10, pady=2)
-    self.entry_not_older = tk.Entry(date_frame, width=5, bg="#000000", fg=TEXT_FG_COLOR,
-                                    insertbackground=TEXT_FG_COLOR)
-    self.entry_not_older.grid(row=1, column=1, padx=5, pady=2)
-    # Older than X days
-    tk.Checkbutton(date_frame, text="Older than X days", variable=self.date_older_than,
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).grid(row=2, column=0, sticky="w", padx=10, pady=2)
-    self.entry_older = tk.Entry(date_frame, width=5, bg="#000000", fg=TEXT_FG_COLOR,
-                                insertbackground=TEXT_FG_COLOR)
-    self.entry_older.grid(row=2, column=1, padx=5, pady=2)
+        # Linke Spalte: Neuer integrierter Filter Settings Bereich
+        filter_settings_panel = tk.Frame(main_container, bg=BG_COLOR)
+        filter_settings_panel.pack(side="left", fill="y", padx=self.button_padding, pady=self.button_padding)
+        
+        # --- In diesen Panel werden alle Filter-Optionen integriert ---
+        # Prompt Filter Section
+        prompt_frame = tk.LabelFrame(filter_settings_panel, text="Prompt Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
+                                    font=("Arial", int(self.main_font_size * 1.2), "bold"))
+        prompt_frame.pack(fill="x", padx=10, pady=5)
+        tk.Radiobutton(prompt_frame, text="All words must match", variable=self.prompt_filter_mode, value="all",
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Radiobutton(prompt_frame, text="Any word", variable=self.prompt_filter_mode, value="any",
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Radiobutton(prompt_frame, text="Exclude word", variable=self.prompt_filter_mode, value="exclude",
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Radiobutton(prompt_frame, text="None of the words", variable=self.prompt_filter_mode, value="none",
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        
+        # Date Filter Section
+        date_frame = tk.LabelFrame(filter_settings_panel, text="Date Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
+                                font=("Arial", int(self.main_font_size * 1.2), "bold"))
+        date_frame.pack(fill="x", padx=10, pady=5)
+        tk.Checkbutton(date_frame, text="Created this week", variable=self.date_this_week,
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Checkbutton(date_frame, text="Within 2 weeks", variable=self.date_two_weeks,
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Checkbutton(date_frame, text="Within 4 weeks", variable=self.date_four_weeks,
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Checkbutton(date_frame, text="Within 1 month", variable=self.date_one_month,
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        tk.Checkbutton(date_frame, text="Within 1 year", variable=self.date_one_year,
+                    bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
+                    ).pack(anchor="w", padx=10)
+        # Neue benutzerdefinierte Datumseingaben:
+        custom_date_frame1 = tk.Frame(date_frame, bg=BG_COLOR)
+        custom_date_frame1.pack(fill="x", padx=10, pady=2)
+        tk.Label(custom_date_frame1, text="Not older  than (days):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)).pack(side="left")
+        self.entry_not_older = tk.Entry(custom_date_frame1, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_not_older.pack(side="left", padx=5)
+        
+        custom_date_frame2 = tk.Frame(date_frame, bg=BG_COLOR)
+        custom_date_frame2.pack(fill="x", padx=10, pady=2)
+        tk.Label(custom_date_frame2, text="Older    than   (days):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)).pack(side="left")
+        self.entry_older = tk.Entry(custom_date_frame2, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_older.pack(side="left", padx=5)
+        
+        # Zeile 1: Label
+        tk.Label(date_frame, text="Between dates (YYYY‑MM‑DD):", bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                font=("Arial", self.main_font_size)).pack(anchor="w", padx=10, pady=2)
+        # Zeile 2: Eingabefelder in einem eigenen Frame (unter dem Label)
+        entry_frame = tk.Frame(date_frame, bg=BG_COLOR)
+        entry_frame.pack(fill="x", padx=10, pady=2)
+        self.entry_start_date = tk.Entry(entry_frame, bg="#000000", fg=TEXT_FG_COLOR,
+                                        insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_start_date.pack(side="left", padx=5)
+        tk.Label(entry_frame, text="and", bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                font=("Arial", self.main_font_size)).pack(side="left", padx=5)
+        self.entry_end_date = tk.Entry(entry_frame, bg="#000000", fg=TEXT_FG_COLOR,
+                                    insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_end_date.pack(side="left", padx=5)
 
-    # --- Prompt Filter Section (wie gehabt) ---
-    prompt_frame = tk.LabelFrame(filter_settings_panel, text="Prompt Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                 font=("Arial", int(self.main_font_size * 1.2), "bold"))
-    prompt_frame.pack(fill="x", padx=10, pady=5)
-    tk.Radiobutton(prompt_frame, text="All words must match", variable=self.prompt_filter_mode, value="all",
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).pack(anchor="w", padx=10)
-    tk.Radiobutton(prompt_frame, text="Any word", variable=self.prompt_filter_mode, value="any",
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).pack(anchor="w", padx=10)
-    tk.Radiobutton(prompt_frame, text="Exclude word", variable=self.prompt_filter_mode, value="exclude",
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).pack(anchor="w", padx=10)
-    tk.Radiobutton(prompt_frame, text="None of the words", variable=self.prompt_filter_mode, value="none",
-                   bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR,
-                   font=("Arial", self.main_font_size)).pack(anchor="w", padx=10)
+        
+        # File Size Filter Section
+        size_frame = tk.LabelFrame(filter_settings_panel, text="File Size (KB)", fg=TEXT_FG_COLOR, bg=BG_COLOR,
+                                font=("Arial", int(self.main_font_size * 1.2), "bold"))
+        size_frame.pack(fill="x", padx=10, pady=5)
+        tk.Label(size_frame, text="Min:", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)
+                ).grid(row=0, column=0, sticky="e", padx=5, pady=5)
+        self.entry_min_size = tk.Entry(size_frame, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_min_size.grid(row=0, column=1, padx=5, pady=5)
+        tk.Label(size_frame, text="Max:", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)
+                ).grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        self.entry_max_size = tk.Entry(size_frame, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
+        self.entry_max_size.grid(row=1, column=1, padx=5, pady=5)
+        
+        # Button Panel im Filter Settings Bereich
+        btn_panel = tk.Frame(filter_settings_panel, bg=BG_COLOR)
+        btn_panel.pack(fill="x", pady=15)
+        apply_btn = tk.Button(btn_panel, text="Apply Filter", command=self.apply_filters,
+                            bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
+        apply_btn.pack(side="left", padx=(20, 10))
+        clear_btn = tk.Button(btn_panel, text="Clear", command=self.clear_filter_inputs,
+                            bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
+        clear_btn.pack(side="left", padx=(10, 10))
+        reset_btn = tk.Button(btn_panel, text="Reset All", command=self.reset_all_filters,
+                            bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
+        reset_btn.pack(side="left", padx=(10, 10))
+        # Linke Spalte (Filter Settings Panel) fertig
 
-    # --- File Size Filter Section (wie gehabt) ---
-    size_frame = tk.LabelFrame(filter_settings_panel, text="File Size (KB)", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                               font=("Arial", int(self.main_font_size * 1.2), "bold"))
-    size_frame.pack(fill="x", padx=10, pady=5)
-    tk.Label(size_frame, text="Min:", bg=BG_COLOR, fg=TEXT_FG_COLOR,
-             font=("Arial", self.main_font_size)).grid(row=0, column=0, sticky="e", padx=5, pady=5)
-    self.entry_min_size = tk.Entry(size_frame, bg="#000000", fg=TEXT_FG_COLOR,
-                                   insertbackground=TEXT_FG_COLOR, width=10)
-    self.entry_min_size.grid(row=0, column=1, padx=5, pady=5)
-    tk.Label(size_frame, text="Max:", bg=BG_COLOR, fg=TEXT_FG_COLOR,
-             font=("Arial", self.main_font_size)).grid(row=1, column=0, sticky="e", padx=5, pady=5)
-    self.entry_max_size = tk.Entry(size_frame, bg="#000000", fg=TEXT_FG_COLOR,
-                                   insertbackground=TEXT_FG_COLOR, width=10)
-    self.entry_max_size.grid(row=1, column=1, padx=5, pady=5)
-
-    # --- Button Panel im Filter Settings Bereich ---
-    btn_panel = tk.Frame(filter_settings_panel, bg=BG_COLOR)
-    btn_panel.pack(fill="x", pady=15)
-    apply_btn = tk.Button(btn_panel, text="Apply Filter", command=self.apply_filters,
-                          bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
-    apply_btn.pack(side="left", padx=(20, 10))
-    clear_btn = tk.Button(btn_panel, text="Clear", command=self.clear_filter_inputs,
-                          bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
-    clear_btn.pack(side="left", padx=(10, 10))
-    reset_btn = tk.Button(btn_panel, text="Reset All", command=self.reset_all_filters,
-                          bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
-    reset_btn.pack(side="left", padx=(10, 10))
-    # Linke Spalte fertig (Filter Settings Panel)
-
-    # ── Rechte Spalte: Bestehende Steuerelemente (Filter-Button, Folder path, Subfolder, Bildanzeige) ──
-    right_controls = tk.Frame(main_container, bg=BG_COLOR)
-    right_controls.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-    
-    # Filter Frame (ohne alten Filter Settings Button)
-    filter_frame = tk.Frame(right_controls, bg=BG_COLOR)
-    filter_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-    self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_filter,
-                                   bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
-    self.filter_button.pack(side="left", padx=self.button_padding)
-    style = ttk.Style()
-    combo_font_size = int(self.main_font_size * 2.2)
-    style.configure("Custom.TCombobox", font=("Arial", combo_font_size))
-    folder_combo_font_size = int(self.main_font_size * 0.9)
-    style.configure("Folder.TCombobox", font=("Arial", folder_combo_font_size))
-    self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=25)
-    self.filter_combo['values'] = self.filter_history_list  # Filter History
-    self.filter_combo.pack(side="left", padx=self.button_padding)
-    self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
-    self.clear_button = tk.Button(filter_frame, text="Clear", command=self.clear_filter,
-                                  bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=5)
-    self.clear_button.pack(side="left", padx=self.button_padding)
-    self.whole_word_cb = tk.Checkbutton(filter_frame, text="Whole Word", variable=self.whole_word_var,
-                                         fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.whole_word_cb.pack(side="left", padx=self.button_padding)
-    self.filter_filename_cb = tk.Checkbutton(filter_frame, text="Filename", variable=self.filter_filename_var,
-                                             command=self.apply_filter, fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                             selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.filter_filename_cb.pack(side="left", padx=self.button_padding)
-    self.filter_prompt_cb = tk.Checkbutton(filter_frame, text="Prompt", variable=self.filter_prompt_var,
-                                           command=self.apply_filter, fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                           selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.filter_prompt_cb.pack(side="left", padx=self.button_padding)
-    self.filter_negativ_cb = tk.Checkbutton(filter_frame, text="Negative Prompt", variable=self.filter_negativ_var,
-                                            command=self.apply_filter, fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                            selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.filter_negativ_cb.pack(side="left", padx=self.button_padding)
-    self.filter_settings_cb = tk.Checkbutton(filter_frame, text="Settings", variable=self.filter_settings_var,
-                                             command=self.apply_filter, fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                             selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-    self.filter_settings_cb.pack(side="left", padx=self.button_padding)
-    
-    self.image_counter_frame = tk.Frame(filter_frame, bg=BG_COLOR)
-    self.image_counter_frame.pack(side="left", padx=self.button_padding)
-    self.image_counter_label = tk.Label(self.image_counter_frame, text="Folder: 0 images filtered ",
-                                         fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
-    self.image_counter_label.pack(side="left")
-    self.filtered_counter_label = tk.Label(self.image_counter_frame, text="0",
-                                            fg="red", bg=BG_COLOR, font=("Arial", self.main_font_size))
-    self.filtered_counter_label.pack(side="left")
-    self.image_counter_suffix_label = tk.Label(self.image_counter_frame, text=" images",
-                                                fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
-    self.image_counter_suffix_label.pack(side="left")
-    
-    # Folder Frame
-    folder_frame = tk.Frame(right_controls, bg=BG_COLOR)
-    folder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-    folder_label = tk.Label(folder_frame, text="Folder path:", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                            font=("Arial", self.main_font_size))
-    folder_label.pack(side="left", padx=self.button_padding)
-    self.folder_path_var = tk.StringVar()
-    visible_chars = max(20, int(50 * self.scaling_factor))
-    self.folder_combo = ttk.Combobox(folder_frame, textvariable=self.folder_path_var,
-                                     values=self.folder_history, width=visible_chars,
-                                     style="Folder.TCombobox")
-    self.folder_combo.set("")
-    self.folder_combo.pack(side="left", padx=self.button_padding)
-    self.folder_combo.bind("<<ComboboxSelected>>", lambda e: threading.Thread(
-        target=self.load_folder_async, args=(self.folder_path_var.get(),), daemon=True).start())
-    self.choose_folder_button = tk.Button(folder_frame, text="Select folder", command=self.choose_folder,
-                                          bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.choose_folder_button.pack(side="left", padx=self.button_padding)
-    self.select_image_button = tk.Button(folder_frame, text="Select image", command=self.select_image_from_folder,
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.select_image_button.pack(side="left", padx=self.button_padding)
-    self.open_image_button = tk.Button(folder_frame, text="View image", command=self.open_image_in_system,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.open_image_button.pack(side="left", padx=self.button_padding)
-    self.delete_button_main = tk.Button(folder_frame, text="Delete image", command=self.delete_current_image,
-                                        bg=BTN_BG_COLOR if not self.delete_immediately_main_var.get() else "red",
-                                        fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.delete_button_main.pack(side="right", padx=self.button_padding)
-    self.delete_immediately_main_cb = tk.Checkbutton(folder_frame, text="delete immediately",
-                                                     variable=self.delete_immediately_main_var,
-                                                     command=self.update_delete_button_color_main,
-                                                     fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR,
-                                                     font=("Arial", self.main_font_size))
-    self.delete_immediately_main_cb.pack(side="right", padx=self.button_padding)
-    
-    # Subfolder Frame (mit Aktualisierung beim Umschalten)
-    subfolder_frame = tk.Frame(right_controls, bg=BG_COLOR)
-    subfolder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-    self.subfolder_cb = tk.Checkbutton(subfolder_frame, text="Search subfolders",
-                                       variable=self.search_subfolders_var,
-                                       fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR,
-                                       font=("Arial", self.main_font_size),
-                                       command=lambda: threading.Thread(
-                                           target=self.load_folder_async, args=(self.folder_path_var.get(),), daemon=True).start() if self.folder_path_var.get() else None)
-    self.subfolder_cb.pack(side="left", padx=self.button_padding)
-    self.sort_button = tk.Button(subfolder_frame, text="ASC" if self.sort_order == "DESC" else "DESC",
-                                 command=self.toggle_sort_order, bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
-                                 font=("Arial", self.main_font_size), width=5)
-    self.sort_button.pack(side="left", padx=self.button_padding)
-    
-    # Bildanzeige: Dieser Frame wird im rechten Bereich platziert
-    self.image_frame = tk.Frame(right_controls, bg=BG_COLOR)
-    self.image_frame.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-    self.image_label = tk.Label(self.image_frame, bg=BG_COLOR)
-    self.image_label.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
-    self.image_label.bind("<Button-1>", lambda e: self.show_fullscreen())
-    self.image_label.bind("<MouseWheel>", self.on_image_mousewheel)
-    self.drop_canvas = tk.Canvas(self.image_frame, width=int(150 * self.scaling_factor),
-                                  height=int(112 * self.scaling_factor),
-                                  bg="#555555", highlightthickness=2, highlightbackground="white")
-    self.drop_canvas.create_text(int(75 * self.scaling_factor), int(56 * self.scaling_factor),
-                                  text="Drop Image Here", fill="white", font=("Arial", self.main_font_size))
-    self.drop_canvas.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="e")
-    self.drop_canvas.drop_target_register(DND_FILES)
-    self.drop_canvas.dnd_bind('<<Drop>>', self.handle_drop)
-    self.image_frame.grid_columnconfigure(0, weight=1)
-    self.image_frame.grid_columnconfigure(1, weight=0)
-    
-    # Restliche Elemente unterhalb des Hauptcontainers
-    nav_frame = tk.Frame(self, bg=BG_COLOR)
-    nav_frame.pack(pady=self.button_padding)
-    self.back_button = tk.Button(nav_frame, text="Back", command=self.show_previous_image,
-                                 bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
-    self.back_button.pack(side="left", padx=self.button_padding)
-    self.next_button = tk.Button(nav_frame, text="Next", command=self.show_next_image,
-                                 bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
-    self.next_button.pack(side="left", padx=self.button_padding)
-    controls_frame = tk.Frame(self, bg=BG_COLOR)
-    controls_frame.pack(pady=self.button_padding)
-    self.scale_var = tk.StringVar(value=DEFAULT_SCALE)
-    self.scale_dropdown = tk.OptionMenu(controls_frame, self.scale_var, *SCALE_OPTIONS, command=lambda value: self.rescale_image(value))
-    self.scale_dropdown.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
-                                  font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
-    self.scale_dropdown.pack(side="left", padx=self.button_padding)
-    self.fullscreen_button = tk.Button(controls_frame, text="Fullscreen", command=self.show_fullscreen,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.fullscreen_button.pack(side="left", padx=self.button_padding)
-    if len(self.monitor_list) > 1:
-        self.monitor_choice = tk.StringVar()
-        monitor_names = [f"Monitor {i}: {mon.width}x{mon.height}" for i, mon in enumerate(self.monitor_list)]
-        self.monitor_choice.set(monitor_names[0])
-        self.monitor_menu = tk.OptionMenu(controls_frame, self.monitor_choice, *monitor_names,
-                                          command=self.update_fullscreen_monitor)
-        self.monitor_menu.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
-                                    font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
-        self.monitor_menu.pack(side="left", padx=self.button_padding)
-    textchunks_frame = tk.Frame(self, bg=BG_COLOR)
-    textchunks_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
-    self.prompt_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
-                                    fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
-    self.prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
-    self.copy_prompt_button = tk.Button(textchunks_frame, text="copy Prompt",
-                                        command=lambda: copy_to_clipboard(self, self.prompt_text.get("1.0", tk.END)),
-                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.copy_prompt_button.grid(row=1, column=0, padx=self.button_padding, pady=self.button_padding)
-    self.negativ_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
-                                     fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
-    self.negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
-    self.copy_negativ_button = tk.Button(textchunks_frame, text="copy Negative",
-                                         command=lambda: copy_to_clipboard(self, self.negativ_text.get("1.0", tk.END)),
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.copy_negativ_button.grid(row=1, column=1, padx=self.button_padding, pady=self.button_padding)
-    self.settings_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
-                                      fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
-    self.settings_text.grid(row=0, column=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
-    self.copy_settings_button = tk.Button(textchunks_frame, text="copy Settings",
-                                          command=lambda: copy_to_clipboard(self, self.settings_text.get("1.0", tk.END)),
-                                          bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.copy_settings_button.grid(row=1, column=2, padx=self.button_padding, pady=self.button_padding)
-    for i in range(3):
-        textchunks_frame.grid_columnconfigure(i, weight=1)
-    self.load_list_button = tk.Button(self, text="Load folder list", command=self.toggle_folder_list,
-                                      bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-    self.load_list_button.pack(pady=self.button_padding)
-    self.preview_frame = tk.Frame(self, bg=BG_COLOR)
-    self.preview_canvas = tk.Canvas(self.preview_frame, bg=BG_COLOR, highlightthickness=0)
-    self.preview_canvas.pack(side="left", fill="both", expand=True)
-    self.preview_scrollbar = tk.Scrollbar(self.preview_frame, orient="vertical", command=self.preview_canvas.yview)
-    self.preview_scrollbar.pack(side="right", fill="y")
-    self.preview_canvas.configure(yscrollcommand=self.preview_scrollbar.set)
-    self.preview_inner_frame = tk.Frame(self.preview_canvas, bg=BG_COLOR)
-    self.preview_canvas.create_window((0, 0), window=self.preview_inner_frame, anchor="nw")
-    self.preview_inner_frame.bind("<Configure>", lambda event: self.preview_canvas.configure(
-        scrollregion=self.preview_canvas.bbox("all")
-    ))
-    self.preview_canvas.bind("<Enter>", lambda e: self.preview_canvas.bind_all("<MouseWheel>", self.on_preview_mousewheel))
-    self.preview_canvas.bind("<Leave>", lambda e: self.preview_canvas.unbind_all("<MouseWheel>"))
-    self.preview_items = []
-    self.status("Form loaded.")
-
-# Ende von setup_ui
-
-    ### apply_filterS ANFANG
-def apply_filters(self):
-    filter_text_raw = self.filter_var.get().strip().lower()
-    keywords = [f.strip() for f in filter_text_raw.split(",") if f.strip()] if filter_text_raw else []
-    self.filtered_images = []
-    for file_path in self.folder_images:
-        passes = True
-        filename = os.path.basename(file_path).lower()
-        if file_path not in self.text_chunks_cache:
-            self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
-        prompt, negativ, settings = self.text_chunks_cache[file_path]
-        # Prompt Filter
-        if self.filter_prompt_var.get():
-            prompt_lower = prompt.lower()
-            mode = self.prompt_filter_mode.get()
-            if mode == "all":
-                for keyword in keywords:
-                    if not match_keyword(prompt_lower, keyword, self.whole_word_var.get()):
-                        passes = False
-                        break
-            elif mode == "any":
-                if not any(match_keyword(prompt_lower, keyword, self.whole_word_var.get()) for keyword in keywords):
-                    passes = False
-            elif mode in ("exclude", "none"):
-                if any(match_keyword(prompt_lower, keyword, self.whole_word_var.get()) for keyword in keywords):
-                    passes = False
-        # Filename Filter
-        if passes and self.filter_filename_var.get():
-            if not any(match_keyword(filename, keyword, self.whole_word_var.get()) for keyword in keywords):
-                passes = False
-        # Negative Prompt Filter
-        if passes and self.filter_negativ_var.get():
-            if not any(match_keyword(negativ.lower(), keyword, self.whole_word_var.get()) for keyword in keywords):
-                passes = False
-        # Settings Filter
-        if passes and self.filter_settings_var.get():
-            if not any(match_keyword(settings.lower(), keyword, self.whole_word_var.get()) for keyword in keywords):
-                passes = False
-
-        # File Size Filter
-        if passes and ((hasattr(self, "entry_min_size") and self.entry_min_size.get().strip()) or 
-                       (hasattr(self, "entry_max_size") and self.entry_max_size.get().strip())):
-            try:
-                file_size_kb = os.path.getsize(file_path) / 1024
-            except Exception:
-                file_size_kb = 0
-            if self.entry_min_size.get().strip():
-                if file_size_kb < int(self.entry_min_size.get().strip()):
-                    passes = False
-            if passes and self.entry_max_size.get().strip():
-                if file_size_kb > int(self.entry_max_size.get().strip()):
-                    passes = False
-
-        # Date Filter: zuerst ctime auslesen
-        try:
-            ctime = os.path.getctime(file_path)
-        except Exception:
-            ctime = 0
-        file_date = datetime.fromtimestamp(ctime)
-
-        # Between two dates
-        if passes and self.date_between.get():
-            start_str = self.entry_between_start.get().strip()
-            end_str = self.entry_between_end.get().strip()
-            if start_str and end_str:
-                try:
-                    start_date = datetime.strptime(start_str, "%Y-%m-%d")
-                    end_date = datetime.strptime(end_str, "%Y-%m-%d")
-                    if not (start_date <= file_date <= end_date):
-                        passes = False
-                except Exception as e:
-                    print(f"Datumformatfehler (Between two dates): {e}")
-            else:
-                passes = False  # wenn keine Daten eingegeben wurden
-
-        # Not older than X days
-        if passes and self.date_not_older_than.get():
-            days_str = self.entry_not_older.get().strip()
-            if days_str:
-                try:
-                    days = int(days_str)
-                    if (datetime.now() - file_date).total_seconds() > days * 24 * 3600:
-                        passes = False
-                except Exception as e:
-                    print(f"Fehler bei 'Not older than X days': {e}")
-            else:
-                passes = False
-
-        # Older than X days
-        if passes and self.date_older_than.get():
-            days_str = self.entry_older.get().strip()
-            if days_str:
-                try:
-                    days = int(days_str)
-                    if (datetime.now() - file_date).total_seconds() < days * 24 * 3600:
-                        passes = False
-                except Exception as e:
-                    print(f"Fehler bei 'Older than X days': {e}")
-            else:
-                passes = False
-
-        if passes:
-            self.filtered_images.append(file_path)
-
-    # Auswahl des aktuellen Indexes und Anzeige anpassen
-    if self.filtered_images:
-        if self.current_index != -1 and hasattr(self, 'current_image_path') and self.current_image_path in self.filtered_images:
-            self.current_index = self.filtered_images.index(self.current_image_path)
-        else:
-            self.current_index = 0
-            self.current_index = validate_index(self.current_index, self.filtered_images)
-            if self.current_index != -1:
-                self.display_image_safe_async(self.filtered_images[self.current_index])
-                self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
-    else:
-        self.current_index = -1
-        self.status("Filter applied: 0 images found.")
-    self.populate_preview_table_lazy()
-    total_images = len(self.folder_images)
-    filtered_images = len(self.filtered_images)
-    self.image_counter_label.config(text=f"Folder: {total_images} images filtered ")
-    self.filtered_counter_label.config(text=f"{filtered_images}")
-    self.image_counter_suffix_label.config(text=" images")
-    self.status(f"Filter applied: {filtered_images} images found.")
-    if filter_text_raw and filter_text_raw not in self.filter_history_list:
-        self.filter_history_list.insert(0, filter_text_raw)
-        self.filter_history_list = self.filter_history_list[:10]
+        # Rechte Spalte: Bestehende Steuerelemente (Filter-Button, Folderpath, Subfolder, Bildanzeige)
+        right_controls = tk.Frame(main_container, bg=BG_COLOR)
+        right_controls.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
+        
+        # Filter Frame (ohne alten Filter Settings Button)
+        filter_frame = tk.Frame(right_controls, bg=BG_COLOR)
+        filter_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
+        self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_filter,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
+        self.filter_button.pack(side="left", padx=self.button_padding)
+        style = ttk.Style()
+        combo_font_size = int(self.main_font_size * 2.2)
+        style.configure("Custom.TCombobox", font=("Arial", combo_font_size))
+        folder_combo_font_size = int(self.main_font_size * 0.9)
+        style.configure("Folder.TCombobox", font=("Arial", folder_combo_font_size))
+        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, style="Custom.TCombobox", width=25)
         self.filter_combo['values'] = self.filter_history_list
-        save_history(self.folder_history, self.filter_history_list)
-    self.update_filter_button_color()
+        self.filter_combo.pack(side="left", padx=self.button_padding)
+        self.filter_combo.bind("<Return>", lambda e: self.apply_filter())
+        self.clear_button = tk.Button(filter_frame, text="Clear", command=self.clear_filter,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=5)
+        self.clear_button.pack(side="left", padx=self.button_padding)
+        self.whole_word_cb = tk.Checkbutton(filter_frame, text="Whole Word", variable=self.whole_word_var,
+                                            fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.whole_word_cb.pack(side="left", padx=self.button_padding)
+        self.filter_filename_cb = tk.Checkbutton(filter_frame, text="Filename", variable=self.filter_filename_var, command=self.apply_filter,
+                                                fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.filter_filename_cb.pack(side="left", padx=self.button_padding)
+        self.filter_prompt_cb = tk.Checkbutton(filter_frame, text="Prompt", variable=self.filter_prompt_var, command=self.apply_filter,
+                                            fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.filter_prompt_cb.pack(side="left", padx=self.button_padding)
+        self.filter_negativ_cb = tk.Checkbutton(filter_frame, text="Negative Prompt", variable=self.filter_negativ_var, command=self.apply_filter,
+                                                fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.filter_negativ_cb.pack(side="left", padx=self.button_padding)
+        self.filter_settings_cb = tk.Checkbutton(filter_frame, text="Settings", variable=self.filter_settings_var, command=self.apply_filter,
+                                                fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.filter_settings_cb.pack(side="left", padx=self.button_padding)
+        
+        self.image_counter_frame = tk.Frame(filter_frame, bg=BG_COLOR)
+        self.image_counter_frame.pack(side="left", padx=self.button_padding)
+        self.image_counter_label = tk.Label(self.image_counter_frame, text="Folder: 0 images filtered ", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
+        self.image_counter_label.pack(side="left")
+        self.filtered_counter_label = tk.Label(self.image_counter_frame, text="0", fg="red", bg=BG_COLOR, font=("Arial", self.main_font_size))
+        self.filtered_counter_label.pack(side="left")
+        self.image_counter_suffix_label = tk.Label(self.image_counter_frame, text=" images", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
+        self.image_counter_suffix_label.pack(side="left")
+        
+        # Folder Frame
+        folder_frame = tk.Frame(right_controls, bg=BG_COLOR)
+        folder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
+        folder_label = tk.Label(folder_frame, text="Folder path:", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
+        folder_label.pack(side="left", padx=self.button_padding)
+        self.folder_path_var = tk.StringVar()
+        visible_chars = max(20, int(50 * self.scaling_factor))
+        self.folder_combo = ttk.Combobox(folder_frame, textvariable=self.folder_path_var,
+                                        values=self.folder_history, width=visible_chars,
+                                        style="Folder.TCombobox")
+        self.folder_combo.set("")
+        self.folder_combo.pack(side="left", padx=self.button_padding)
+        self.folder_combo.bind("<<ComboboxSelected>>", lambda e: threading.Thread(
+            target=self.load_folder_async, args=(self.folder_path_var.get(),), daemon=True).start())
+        self.choose_folder_button = tk.Button(folder_frame, text="Select folder", command=self.choose_folder,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.choose_folder_button.pack(side="left", padx=self.button_padding)
+        self.select_image_button = tk.Button(folder_frame, text="Select image", command=self.select_image_from_folder,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.select_image_button.pack(side="left", padx=self.button_padding)
+        self.open_image_button = tk.Button(folder_frame, text="View image", command=self.open_image_in_system,
+                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.open_image_button.pack(side="left", padx=self.button_padding)
+        self.delete_button_main = tk.Button(folder_frame, text="Delete image", command=self.delete_current_image,
+                                            bg=BTN_BG_COLOR if not self.delete_immediately_main_var.get() else "red", fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.delete_button_main.pack(side="right", padx=self.button_padding)
+        self.delete_immediately_main_cb = tk.Checkbutton(folder_frame, text="delete immediately", variable=self.delete_immediately_main_var,
+                                                        command=self.update_delete_button_color_main, fg=TEXT_FG_COLOR,
+                                                        bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.delete_immediately_main_cb.pack(side="right", padx=self.button_padding)
+        
+        # Subfolder Frame
+        subfolder_frame = tk.Frame(right_controls, bg=BG_COLOR)
+        subfolder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
+        self.subfolder_cb = tk.Checkbutton(subfolder_frame, text="Search subfolders", variable=self.search_subfolders_var,
+                                        fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
+        self.subfolder_cb.pack(side="left", padx=self.button_padding)
+        self.sort_button = tk.Button(subfolder_frame, text="ASC" if self.sort_order == "DESC" else "DESC",
+                                    command=self.toggle_sort_order, bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                    font=("Arial", self.main_font_size), width=5)
+        self.sort_button.pack(side="left", padx=self.button_padding)
+        
+        # Bildanzeige: Dieser Frame wird im rechten Bereich platziert
+        self.image_frame = tk.Frame(right_controls, bg=BG_COLOR)
+        self.image_frame.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
+        self.image_label = tk.Label(self.image_frame, bg=BG_COLOR)
+        self.image_label.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+        self.image_label.bind("<Button-1>", lambda e: self.show_fullscreen())
+        self.image_label.bind("<MouseWheel>", self.on_image_mousewheel)
+        self.drop_canvas = tk.Canvas(self.image_frame, width=int(150 * self.scaling_factor), height=int(112 * self.scaling_factor),
+                                    bg="#555555", highlightthickness=2, highlightbackground="white")
+        self.drop_canvas.create_text(int(75 * self.scaling_factor), int(56 * self.scaling_factor),
+                                    text="Drop Image Here", fill="white", font=("Arial", self.main_font_size))
+        self.drop_canvas.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="e")
+        self.drop_canvas.drop_target_register(DND_FILES)
+        self.drop_canvas.dnd_bind('<<Drop>>', self.handle_drop)
+        self.image_frame.grid_columnconfigure(0, weight=1)
+        self.image_frame.grid_columnconfigure(1, weight=0)
+        
+        # Restliche Elemente unterhalb des Hauptcontainers
+        nav_frame = tk.Frame(self, bg=BG_COLOR)
+        nav_frame.pack(pady=self.button_padding)
+        self.back_button = tk.Button(nav_frame, text="Back", command=self.show_previous_image,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
+        self.back_button.pack(side="left", padx=self.button_padding)
+        self.next_button = tk.Button(nav_frame, text="Next", command=self.show_next_image,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
+        self.next_button.pack(side="left", padx=self.button_padding)
+        controls_frame = tk.Frame(self, bg=BG_COLOR)
+        controls_frame.pack(pady=self.button_padding)
+        self.scale_var = tk.StringVar(value=DEFAULT_SCALE)
+        self.scale_dropdown = tk.OptionMenu(controls_frame, self.scale_var, *SCALE_OPTIONS, command=lambda value: self.rescale_image(value))
+        self.scale_dropdown.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
+        self.scale_dropdown.pack(side="left", padx=self.button_padding)
+        self.fullscreen_button = tk.Button(controls_frame, text="Fullscreen", command=self.show_fullscreen,
+                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.fullscreen_button.pack(side="left", padx=self.button_padding)
+        if len(self.monitor_list) > 1:
+            self.monitor_choice = tk.StringVar()
+            monitor_names = [f"Monitor {i}: {mon.width}x{mon.height}" for i, mon in enumerate(self.monitor_list)]
+            self.monitor_choice.set(monitor_names[0])
+            self.monitor_menu = tk.OptionMenu(controls_frame, self.monitor_choice, *monitor_names,
+                                            command=self.update_fullscreen_monitor)
+            self.monitor_menu.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
+            self.monitor_menu.pack(side="left", padx=self.button_padding)
+        textchunks_frame = tk.Frame(self, bg=BG_COLOR)
+        textchunks_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
+        self.prompt_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
+                                        fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+        self.prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+        self.copy_prompt_button = tk.Button(textchunks_frame, text="copy Prompt",
+                                            command=lambda: copy_to_clipboard(self, self.prompt_text.get("1.0", tk.END)),
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.copy_prompt_button.grid(row=1, column=0, padx=self.button_padding, pady=self.button_padding)
+        self.negativ_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
+                                        fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+        self.negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+        self.copy_negativ_button = tk.Button(textchunks_frame, text="copy Negative",
+                                            command=lambda: copy_to_clipboard(self, self.negativ_text.get("1.0", tk.END)),
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.copy_negativ_button.grid(row=1, column=1, padx=self.button_padding, pady=self.button_padding)
+        self.settings_text = ScrolledText(textchunks_frame, height=8, bg=TEXT_BG_COLOR,
+                                        fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+        self.settings_text.grid(row=0, column=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+        self.copy_settings_button = tk.Button(textchunks_frame, text="copy Settings",
+                                            command=lambda: copy_to_clipboard(self, self.settings_text.get("1.0", tk.END)),
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.copy_settings_button.grid(row=1, column=2, padx=self.button_padding, pady=self.button_padding)
+        for i in range(3):
+            textchunks_frame.grid_columnconfigure(i, weight=1)
+        self.load_list_button = tk.Button(self, text="Load folder list", command=self.toggle_folder_list,
+                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.load_list_button.pack(pady=self.button_padding)
+        self.preview_frame = tk.Frame(self, bg=BG_COLOR)
+        self.preview_canvas = tk.Canvas(self.preview_frame, bg=BG_COLOR, highlightthickness=0)
+        self.preview_canvas.pack(side="left", fill="both", expand=True)
+        self.preview_scrollbar = tk.Scrollbar(self.preview_frame, orient="vertical", command=self.preview_canvas.yview)
+        self.preview_scrollbar.pack(side="right", fill="y")
+        self.preview_canvas.configure(yscrollcommand=self.preview_scrollbar.set)
+        self.preview_inner_frame = tk.Frame(self.preview_canvas, bg=BG_COLOR)
+        self.preview_canvas.create_window((0, 0), window=self.preview_inner_frame, anchor="nw")
+        self.preview_inner_frame.bind("<Configure>", lambda event: self.preview_canvas.configure(
+            scrollregion=self.preview_canvas.bbox("all")
+        ))
+        self.preview_canvas.bind("<Enter>", lambda e: self.preview_canvas.bind_all("<MouseWheel>", self.on_preview_mousewheel))
+        self.preview_canvas.bind("<Leave>", lambda e: self.preview_canvas.unbind_all("<MouseWheel>"))
+        self.preview_items = []
+        self.status("Form loaded.")
 
-        # apply_filterS ENDE
+    # ------------------ Ende setup_ui() ------------------
+
+    def clear_filter_inputs(self):
+        if hasattr(self, 'prompt_filter_mode'):
+            self.prompt_filter_mode.set("all")
+        for var in [self.date_between, self.date_not_older_than, self.date_older_than, 
+                    self.date_this_week, self.date_two_weeks, self.date_four_weeks, 
+                    self.date_one_month, self.date_one_year]:
+            var.set(False)
+        if hasattr(self, 'entry_min_size'):
+            self.entry_min_size.delete(0, tk.END)
+        if hasattr(self, 'entry_max_size'):
+            self.entry_max_size.delete(0, tk.END)
+        if hasattr(self, 'entry_not_older'):
+            self.entry_not_older.delete(0, tk.END)
+        if hasattr(self, 'entry_older'):
+            self.entry_older.delete(0, tk.END)
+        if hasattr(self, 'entry_start_date'):
+            self.entry_start_date.delete(0, tk.END)
+        if hasattr(self, 'entry_end_date'):
+            self.entry_end_date.delete(0, tk.END)
+
+    def reset_all_filters(self):
+        self.filter_var.set("")
+        self.filter_filename_var.set(False)
+        self.filter_prompt_var.set(True)
+        self.filter_negativ_var.set(False)
+        self.filter_settings_var.set(False)
+        self.whole_word_var.set(False)
+        self.clear_filter_inputs()
+        self.apply_filters()
+
+    def apply_filters(self):
+        filter_text_raw = self.filter_var.get().strip().lower()
+        keywords = [f.strip() for f in filter_text_raw.split(",") if f.strip()] if filter_text_raw else []
+        self.filtered_images = []
+        for file_path in self.folder_images:
+            passes = True
+            filename = os.path.basename(file_path).lower()
+            if file_path not in self.text_chunks_cache:
+                self.text_chunks_cache[file_path] = extract_text_chunks(file_path)
+            prompt, negativ, settings = self.text_chunks_cache[file_path]
+            if self.filter_prompt_var.get():
+                prompt_lower = prompt.lower()
+                mode = self.prompt_filter_mode.get()
+                if mode == "all":
+                    for keyword in keywords:
+                        if not match_keyword(prompt_lower, keyword, self.whole_word_var.get()):
+                            passes = False
+                            break
+                elif mode == "any":
+                    if not any(match_keyword(prompt_lower, keyword, self.whole_word_var.get()) for keyword in keywords):
+                        passes = False
+                elif mode in ("exclude", "none"):
+                    if any(match_keyword(prompt_lower, keyword, self.whole_word_var.get()) for keyword in keywords):
+                        passes = False
+            if passes and self.filter_filename_var.get():
+                if not any(match_keyword(filename, keyword, self.whole_word_var.get()) for keyword in keywords):
+                    passes = False
+            if passes and self.filter_negativ_var.get():
+                if not any(match_keyword(negativ.lower(), keyword, self.whole_word_var.get()) for keyword in keywords):
+                    passes = False
+            if passes and self.filter_settings_var.get():
+                if not any(match_keyword(settings.lower(), keyword, self.whole_word_var.get()) for keyword in keywords):
+                    passes = False
+            if passes and ((hasattr(self, "entry_min_size") and self.entry_min_size.get().strip()) or 
+                           (hasattr(self, "entry_max_size") and self.entry_max_size.get().strip())):
+                try:
+                    file_size_kb = os.path.getsize(file_path) / 1024
+                except Exception:
+                    file_size_kb = 0
+                if self.entry_min_size.get().strip():
+                    if file_size_kb < int(self.entry_min_size.get().strip()):
+                        passes = False
+                if passes and self.entry_max_size.get().strip():
+                    if file_size_kb > int(self.entry_max_size.get().strip()):
+                        passes = False
+            if passes:
+                now_ts = datetime.now().timestamp()
+                try:
+                    ctime = os.path.getctime(file_path)
+                except Exception:
+                    ctime = 0
+                if self.date_this_week.get():
+                    if (now_ts - ctime) > 7 * 24 * 3600:
+                        passes = False
+                if passes and self.date_two_weeks.get():
+                    if (now_ts - ctime) > 14 * 24 * 3600:
+                        passes = False
+                if passes and self.date_four_weeks.get():
+                    if (now_ts - ctime) > 28 * 24 * 3600:
+                        passes = False
+                if passes and self.date_one_month.get():
+                    if (now_ts - ctime) > 30 * 24 * 3600:
+                        passes = False
+                if passes and self.date_one_year.get():
+                    if (now_ts - ctime) > 365 * 24 * 3600:
+                        passes = False
+
+                # Neue benutzerdefinierte Datumseingaben auswerten:
+                # Not older than (days)
+                not_older = self.entry_not_older.get().strip() if hasattr(self, 'entry_not_older') else ""
+                if not_older:
+                    try:
+                        not_older_days = int(not_older)
+                        if (now_ts - ctime) > not_older_days * 24 * 3600:
+                            passes = False
+                    except ValueError:
+                        pass
+                # Older than (days)
+                older = self.entry_older.get().strip() if hasattr(self, 'entry_older') else ""
+                if older:
+                    try:
+                        older_days = int(older)
+                        if (now_ts - ctime) < older_days * 24 * 3600:
+                            passes = False
+                    except ValueError:
+                        pass
+                # Between two dates
+                start_date_str = self.entry_start_date.get().strip() if hasattr(self, 'entry_start_date') else ""
+                end_date_str = self.entry_end_date.get().strip() if hasattr(self, 'entry_end_date') else ""
+                if start_date_str and end_date_str:
+                    try:
+                        start_ts = datetime.strptime(start_date_str, "%Y-%m-%d").timestamp()
+                        end_ts = datetime.strptime(end_date_str, "%Y-%m-%d").timestamp()
+                        if not (start_ts <= ctime <= end_ts):
+                            passes = False
+                    except ValueError:
+                        pass
+
+            if passes:
+                self.filtered_images.append(file_path)
+        if self.filtered_images:
+            if self.current_index != -1 and hasattr(self, 'current_image_path') and self.current_image_path in self.filtered_images:
+                self.current_index = self.filtered_images.index(self.current_image_path)
+            else:
+                self.current_index = 0
+                self.current_index = validate_index(self.current_index, self.filtered_images)
+                if self.current_index != -1:
+                    self.display_image_safe_async(self.filtered_images[self.current_index])
+                    self.extract_and_display_text_chunks(self.filtered_images[self.current_index])
+        else:
+            self.current_index = -1
+            self.status("Filter applied: 0 images found.")
+        self.populate_preview_table_lazy()
+        total_images = len(self.folder_images)
+        filtered_images = len(self.filtered_images)
+        self.image_counter_label.config(text=f"Folder: {total_images} images filtered ")
+        self.filtered_counter_label.config(text=f"{filtered_images}")
+        self.image_counter_suffix_label.config(text=" images")
+        self.status(f"Filter applied: {filtered_images} images found.")
+        if filter_text_raw and filter_text_raw not in self.filter_history_list:
+            self.filter_history_list.insert(0, filter_text_raw)
+            self.filter_history_list = self.filter_history_list[:10]
+            self.filter_combo['values'] = self.filter_history_list
+            save_history(self.folder_history, self.filter_history_list)
+        self.update_filter_button_color()
 
     def update_filter_button_color(self):
         filter_active = False
@@ -890,7 +910,10 @@ def apply_filters(self):
             self.date_one_month.get() or self.date_one_year.get()):
             filter_active = True
         if ((hasattr(self, "entry_min_size") and self.entry_min_size.get().strip()) or 
-            (hasattr(self, "entry_max_size") and self.entry_max_size.get().strip())):
+            (hasattr(self, "entry_max_size") and self.entry_max_size.get().strip()) or
+            (hasattr(self, "entry_not_older") and self.entry_not_older.get().strip()) or
+            (hasattr(self, "entry_older") and self.entry_older.get().strip()) or
+            (hasattr(self, "entry_start_date") and self.entry_start_date.get().strip() and hasattr(self, "entry_end_date") and self.entry_end_date.get().strip())):
             filter_active = True
         if filter_active:
             self.filter_button.config(bg="red")
@@ -1336,11 +1359,7 @@ def apply_filters(self):
         info_text = f"Filename: {os.path.basename(file_path)}\nPath: {file_path}\nCreated: {created_str}"
         self.image_info_label.config(text=info_text)
         self.image_frame.update_idletasks()
-        avail_width = self.image_frame.winfo_width() - 2 * self.button_padding
-        avail_height = self.image_frame.winfo_height() - 2 * self.button_padding
-        if avail_width < 10 or avail_height < 10:
-            avail_width = 800
-            avail_height = 600
+        # (Die Berechnung wird ggf. ein zweites Mal durchgeführt, um die Darstellung zu aktualisieren)
         orig_width, orig_height = self.current_image.size
         if default_scale or (self.scale_var.get() == "Default"):
             default_scale_factor = get_default_image_scale(self.scaling_factor)
@@ -1661,9 +1680,14 @@ def apply_filters(self):
         if self.delete_immediately_fs_var.get():
             continue_after_delete()
         else:
-            confirm = messagebox.askyesno("Delete image", f"Do you want to delete the image '{os.path.basename(normalized_path)}'?")
+            confirm = messagebox.askyesno(
+                "Delete image",
+                f"Do you want to delete the image '{os.path.basename(normalized_path)}'?",
+                parent=self.fullscreen_win
+            )
             if confirm:
                 continue_after_delete()
+
 
     def open_image_in_system(self):
         if hasattr(self, "current_image_path") and self.current_image_path:
