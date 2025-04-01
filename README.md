@@ -17,13 +17,23 @@ This version of `ImagePromptViewer` is currently in the development branch `entw
 
 ### Main Features
 - **Image Display**: Dynamic display of PNG and JPEG images with scalable previews.
-- **Metadata Extraction**:
+- **Metadata Extraction**: 
   - PNG: From `info['parameters']` or fallback keys (`prompt`, `metadata`, `description`).
   - JPEG: From EXIF tag 37510 (`UserComment`) with support for UNICODE decoding.
 - **Filtering**: Advanced filter options for Prompt, Filename, Negative Prompt, Settings, File Date, and File Size.
 - **Fullscreen Mode**: Display of the current image with metadata and control options.
 - **Folder Management**: Supports loading folders and subfolders with history functionality.
 - **Deletion**: Moves images to the recycle bin with an optional immediate delete feature.
+
+---
+
+## Screenshots
+
+### 🖼️ Main Program Window
+![ImagePromptViewer Main Window](imagepromptviewer-mainscreen.png)
+
+### 🖼️ Fullscreen Mode
+![ImagePromptViewer Fullscreen View](imagepromptviewer-fullscreen.png)
 
 ---
 
@@ -76,7 +86,7 @@ pip install tkinterdnd2 Pillow screeninfo send2trash piexif
   - **Settings**: Generation parameters (e.g., "Steps:").
 
 ### Filtering
-- **Prompt Filter**:
+- **Prompt Filter**: 
   - Modes: "All words must match", "Any word", "Exclude word", "None of the words".
   - Supports "Whole Word" option.
 - **File Filter**: Filtering by Filename, Negative Prompt, and Settings.
@@ -105,7 +115,7 @@ pip install tkinterdnd2 Pillow screeninfo send2trash piexif
   - Background: Dark Gray (`#1F1F1F`)
   - Buttons: Orange (`#FFA500`)
   - Text: Orange (`#FFA500`) on Black (`#000000`)
-- **Layout**:
+- **Layout**: 
   - Left: Filter Settings Panel (Prompt, Date, File Size).
   - Right: Image display, control elements, and metadata fields.
 - **Dynamic Sizing**: Adjusts to 90% of the monitor resolution.
@@ -113,7 +123,7 @@ pip install tkinterdnd2 Pillow screeninfo send2trash piexif
 ---
 
 ## Known Issues
-- **Filter Functions**:
+- **Filter Functions**: 
   - Not all date filters (e.g., "Between two dates", "Not older than X days") are fully functional yet. These are currently being implemented.
 - **Large Folders**: Folders or subfolders with more than 4000 image files may cause performance issues or crashes. Optimization is in progress.
 - **Stability**: As a preview version, unexpected errors may occur.
