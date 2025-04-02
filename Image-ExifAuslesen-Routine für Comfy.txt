@@ -1,0 +1,146 @@
+1. Auslesen der EXIF-Daten
+Primäre Quelle:
+Das Skript versucht zunächst, das EXIF-Feld UserComment aus der JPEG-Datei auszulesen.
+
+Vorgehen:
+
+Mithilfe der Bibliothek piexif wird die JPEG-Datei geladen.
+
+Über den Schlüssel piexif.ExifIFD.UserComment wird der kommentierte Text extrahiert.
+
+Fallback:
+
+Falls kein EXIF-UserComment vorhanden ist, wird der gesamte Dateiinhalt als Text eingelesen (mit UTF-8-Encoding und Fehlerignorierung).
+
+Ergebnis:
+Der gesamte Text (sei es aus dem EXIF-UserComment oder aus der Datei) wird in der Variable full_text gespeichert.
+
+2. Definition der Marker
+Um gezielt den interessanten Teil des Textes zu extrahieren, wurden zwei Marker definiert:
+
+MARKER_START:
+
+python
+Kopieren
+MARKER_START = '"inputs":{"text":"'
+Bedeutung:
+Dieser Marker kennzeichnet den Beginn eines Textsegments, das in einem JSON-Block enthalten ist. In den EXIF-Metadaten wird dieser Teil beispielsweise so aufgebaut, dass direkt nach diesem Marker der tatsächliche Inhalt (der gesuchte Text) folgt.
+
+MARKER_END:
+
+python
+Kopieren
+MARKER_END = '"parser":'
+Bedeutung:
+Dieser Marker signalisiert das Ende des Textsegments. Alles zwischen MARKER_START und MARKER_END gehört zu dem interessanten Block.
+
+3. Extraktionslogik mit Regex
+Regex-Suche:
+Das Skript verwendet die Funktion re.findall mit dem folgenden Muster:
+
+python
+Kopieren
+pattern = re.escape(MARKER_START) + r'(.*?)' + re.escape(MARKER_END)
+Erklärung:
+
+re.escape(MARKER_START) und re.escape(MARKER_END) sorgen dafür, dass Sonderzeichen in den Markern korrekt behandelt werden.
+
+Der Ausdruck (.*?) fängt alle Zeichen zwischen den beiden Markern ein – und zwar in einer "non-greedy" Weise, sodass immer das jeweils kürzeste passende Segment gefunden wird.
+
+Das Flag re.DOTALL sorgt dafür, dass auch Zeilenumbrüche in die Suche einbezogen werden.
+
+Ergebnis der Suche:
+
+Die Regex-Suche gibt eine Liste aller gefundenen Segmente zurück.
+
+Anzahl der Treffer:
+
+Wenn mindestens ein Treffer vorliegt, wird das erste gefundene Segment als erstes Textsegment verwendet.
+
+Wenn mindestens zwei Treffer vorliegen, wird das zweite gefundene Segment als zweites Textsegment verwendet.
+
+4. Zuordnung der extrahierten Textsegmente zu den Textfeldern
+Prompt-Feld (erstes Textfeld):
+
+Bedingung:
+
+Wenn mindestens ein Segment gefunden wurde, wird das erste gefundene Segment verwendet.
+
+Inhalt:
+
+Das Segment entspricht dem Text, der unmittelbar nach dem ersten Vorkommen von MARKER_START und bis kurz vor dem ersten Vorkommen von MARKER_END im JSON-Block steht.
+
+Verwendung:
+
+Dieser Text wird in das Textfeld für den Prompt (das erste Textfeld) eingefügt.
+
+Negative Prompt-Feld (zweites Textfeld):
+
+Bedingung:
+
+Falls ein zweites Segment vorhanden ist (also mindestens zwei Treffer gefunden wurden), wird das zweite Segment extrahiert.
+
+Inhalt:
+
+Dieses Segment entspricht dem Text, der direkt nach dem zweiten Vorkommen von MARKER_START und vor dem nächsten MARKER_END gefunden wird.
+
+Verwendung:
+
+Dieser Text wird in das Textfeld für den Negative Prompt (das zweite Textfeld) eingefügt.
+
+Settings-Feld (drittes Textfeld):
+
+Bedingung:
+
+Für diesen Fall wird aktuell keine Extraktion vorgenommen.
+
+Inhalt:
+
+Das Settings-Feld bleibt leer, da die Extraktion der Settings nicht Teil dieses Test-Skripts ist.
+
+5. Debugging und Rückmeldung
+Debug-Informationen:
+Während der Extraktion werden verschiedene Debug-Meldungen gesammelt:
+
+Details über den Dateipfad, den ausgelesenen Textauszug und die Anzahl der gefundenen Segmente.
+
+Hinweise, ob der erste bzw. zweite Marker gefunden wurde oder nicht.
+
+Zweck:
+Diese Debug-Informationen helfen, den Ablauf der Extraktion nachzuvollziehen und eventuelle Fehlerquellen zu identifizieren. Die gesammelten Debug-Daten können in einem separaten Debug-Fenster angezeigt oder in eine Datei geschrieben werden.
+
+Zusammenfassung
+Textquelle:
+
+EXIF UserComment oder kompletter Dateiinhalt.
+
+Marker:
+
+Startmarker: "inputs":{"text":"
+
+Endmarker: "parser":
+
+Extraktionslogik:
+
+Mit Regex wird nach allen Vorkommen gesucht, die zwischen diesen Markern liegen.
+
+Erstes Segment:
+
+Wird in das Prompt-Feld eingefügt.
+
+Zweites Segment:
+
+Wird in das Negative Prompt-Feld eingefügt.
+
+Settings-Feld:
+
+Bleibt leer.
+
+Diese Logik erlaubt es, gezielt zwei unterschiedliche Textsegmente aus den EXIF-Metadaten zu extrahieren und in separate Felder einzufügen – was dir bei der Integration in dein anderes Script helfen sollte.
+
+
+
+
+
+
+

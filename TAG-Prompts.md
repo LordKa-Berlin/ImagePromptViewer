@@ -177,3 +177,7 @@ Wenn ich im Vollbild ein Bild gelöscht habe, dann wird im Vollbild das folgende
 1. Füge in dem Filter Im Hauptformular noch vor dem Kontrollfeld Filename noch ein Kontrollfeld ganzes Word (bitte englische Bezeichnung dafür verwenden) mit ein, mit dem entschieden wird, ob die Einträge im Filter Combo Feld als ganzes Wort gefunden werden sollen oder nur als teil eines wortes! Die default einstellung soll "false" sein.
 2. Die Date Filter im Filter Settings scheinen nicht zu funktionieren. ich habe Created this wekk und es wurden trotzdem alle bilder angezeigt, auch die älter als eine Woche sind, ich denke ds funktioniert bei den andern Date Filtern dann auch nicht
 3. füge hinter die versionsnummer eine Hinweis auf englisch ein das Lordka der ersteller dieses Programs ist.
+
+
+Ich möchte das neben dem ASC/DESC Button ein Kontrollfeld angelegt wird mit dem Namen "Lora highlight", wenn er aktiviert wird, sollen jeder String,  der mit "<" anfängt und mit ">"  endet eine weiße Schrift haben, inklusive der "<>" zeichen. Das soll in den Promptfeldern im Hauptfenster und im Vollbild passieren.
+Daneben legst du noch mal ein Kontrollfeld an mit dem Namen  "Weighting highlight" wenn er aktiviert wird, sollen jeder String,  der mit "(" anfängt und mit ")"  endet eine hellblaue Schrift haben, inklusive der "()" zeichen. Das soll in den Promptfeldern im Hauptfenster und im Vollbild passieren.

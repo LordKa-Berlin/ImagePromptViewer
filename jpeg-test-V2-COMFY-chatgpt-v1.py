@@ -5,23 +5,23 @@ import re
 from datetime import datetime
 import piexif
 from piexif import helper
+import json  # falls du später den JSON-String parsen möchtest
 
 # Globale Variablen
 VERSION = "v1.0.0"
 last_debug_info = ""    # Debug-Log
-last_full_block = ""    # Vollständiger Text (aus EXIF oder Datei)
+last_full_block = ""    # Vollständiger Text (EXIF oder Datei)
 
-# Marker-Definitionen (mit Leerzeichen zwischen jedem Zeichen, wie gewünscht)
-MARKER_START = '" i n p u t s " : { " t e x t " : "'
-MARKER_END = '" p a r s e r " :'
+# Angepasste Marker (entsprechen dem tatsächlichen JSON-Aufbau)
+MARKER_START = '"inputs":{"text":"'
+MARKER_END = '"parser":'
 
 def extract_prompt_data(file_path):
     """
     Liest aus den EXIF-Daten (UserComment) oder – falls nicht vorhanden –
-    aus dem kompletten Dateiinhalt. Sucht nach zwei Vorkommen von MARKER_START
-    und jeweils dem darauffolgenden MARKER_END.
-    
-    Gibt ein Tupel (prompt_text, negative_text, settings_text) zurück.
+    aus dem kompletten Dateiinhalt. Sucht mittels Regex nach allen Vorkommen
+    von MARKER_START bis MARKER_END. Das erste gefundene Segment wird in das
+    Prompt-Feld eingefügt, das zweite in das Negative Prompt-Feld.
     """
     global last_debug_info, last_full_block
 
@@ -48,55 +48,40 @@ def extract_prompt_data(file_path):
 
     last_full_block = full_text
 
-    # Debug: Ausschnitt des Textes (ersten 2000 Zeichen)
+    # Debug: Auszug aus dem gelesenen Text (ersten 2000 Zeichen)
     preview_length = 2000
     debug_lines.append(f"🔎 Auszug aus dem gelesenen Text (ersten {preview_length} Zeichen):\n"
                        + full_text[:preview_length] + "\n...")
 
-    # ========== EXTRAKTION ==========
+    # Verwende Regex, um alle Vorkommen zwischen MARKER_START und MARKER_END zu finden
+    pattern = re.escape(MARKER_START) + r'(.*?)' + re.escape(MARKER_END)
+    matches = re.findall(pattern, full_text, flags=re.DOTALL)
+    debug_lines.append(f"🔍 Anzahl gefundener Textsegmente: {len(matches)}")
+
     prompt_text = ""
     negative_text = ""
     settings_text = ""  # bleibt leer
 
-    # 1. Vorkommen von MARKER_START
-    first_start_idx = full_text.find(MARKER_START)
-    if first_start_idx != -1:
-        debug_lines.append(f"✅ Erstes Vorkommen von MARKER_START gefunden bei Index {first_start_idx}.")
-        first_end_idx = full_text.find(MARKER_END, first_start_idx + len(MARKER_START))
-        if first_end_idx != -1:
-            prompt_text = full_text[first_start_idx + len(MARKER_START):first_end_idx]
-            debug_lines.append("✅ Text für das Prompt-Feld extrahiert.")
-        else:
-            debug_lines.append("⚠️ MARKER_END wurde nach dem ersten MARKER_START nicht gefunden.")
+    if len(matches) >= 1:
+        prompt_text = matches[0]
+        debug_lines.append("✅ Erster Textabschnitt (Prompt) extrahiert.")
     else:
-        debug_lines.append("⚠️ Kein erstes Vorkommen von MARKER_START gefunden.")
+        debug_lines.append("⚠️ Erster Marker nicht gefunden.")
 
-    # 2. Vorkommen von MARKER_START (Suche ab dem Ende des ersten Fundes)
-    if first_start_idx != -1:
-        second_start_idx = full_text.find(MARKER_START, first_start_idx + len(MARKER_START))
+    if len(matches) >= 2:
+        negative_text = matches[1]
+        debug_lines.append("✅ Zweiter Textabschnitt (Negative Prompt) extrahiert.")
     else:
-        second_start_idx = -1
+        debug_lines.append("⚠️ Zweiter Marker nicht gefunden.")
 
-    if second_start_idx != -1:
-        debug_lines.append(f"✅ Zweites Vorkommen von MARKER_START gefunden bei Index {second_start_idx}.")
-        second_end_idx = full_text.find(MARKER_END, second_start_idx + len(MARKER_START))
-        if second_end_idx != -1:
-            negative_text = full_text[second_start_idx + len(MARKER_START):second_end_idx]
-            debug_lines.append("✅ Text für das Negative Prompt-Feld extrahiert.")
-        else:
-            debug_lines.append("⚠️ MARKER_END wurde nach dem zweiten MARKER_START nicht gefunden.")
-    else:
-        debug_lines.append("⚠️ Kein zweites Vorkommen von MARKER_START gefunden.")
-
-    # Debug-Info final
     debug_lines.append("\n===== Ergebnis der Extraktion =====")
     debug_lines.append(f"Prompt: (ersten 100 Zeichen) {prompt_text[:100]}")
     debug_lines.append(f"Negativ: (ersten 100 Zeichen) {negative_text[:100]}")
-    debug_lines.append(f"Settings: (leer)")
+    debug_lines.append("Settings: (leer)")
 
     last_debug_info = "\n".join(debug_lines)
 
-    # Wenn beide Strings leer sind, geben wir None zurück, damit im GUI eine Warnung erscheint
+    # Falls beide Segmente nicht gefunden wurden, gebe None zurück
     if not prompt_text and not negative_text:
         return None, None, None
 

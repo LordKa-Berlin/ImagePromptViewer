@@ -1,0 +1,1612 @@
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\43566139 - Kopie.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 43566139 - Kopie.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\44205397.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 44205397.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\43566139.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 43566139.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\39783484.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 39783484.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\44093405.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 44093405.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\66730789.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 66730789.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\66720982.jpeg
+Zeit: 2025-04-02 22:40:33
+Debug: Bild geladen: 66720982.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\3\44093405 - Kopie.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 44093405 - Kopie.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\43566139 - Kopie.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 43566139 - Kopie.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\1\44205397.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 44205397.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\44205397.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 44205397.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\BAB22B8324C23C44914B8ED5E31886596F1672717EBEB8EA90300340DAB43A94.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: BAB22B8324C23C44914B8ED5E31886596F1672717EBEB8EA90300340DAB43A94.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020003c006c006f00720061003a0041004e0049004d0045005f00530065006b0069007200650069005f...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '<lora:ANIME_Sekirei_Kazehana_ownwaifu:0.8>, ANIME_Sekirei_Kazehana_ownwaifu, 1girl 25yo, dark purpl...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\2DC69DBBD297D991A0260DCA8512F7D8B8AC87351483E66B76B03B6DF6A47370.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 2DC69DBBD297D991A0260DCA8512F7D8B8AC87351483E66B76B03B6DF6A47370.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000620065007300740020007100750061006c006900740079002c0020006100620073007500720064...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'best quality, absurdres, uncensored,((score_9, score_8_up, score_7_up, photo of vixx,<lora:vixx_vir...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\39E57D1024C6DECF1AC4B28D347EC24479D054A16E00167268DF56BF83F4CB18.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 39E57D1024C6DECF1AC4B28D347EC24479D054A16E00167268DF56BF83F4CB18.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000620065007300740020007100750061006c006900740079002c0020006100620073007500720064...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'best quality, absurdres, uncensored,((score_9, score_8_up, score_7_up, 1girl, natural lighting, pho...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\91D2B5E507B9F463A3791090402D67EE58E7AD95D78F210E485E4EE07FB8C357.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 91D2B5E507B9F463A3791090402D67EE58E7AD95D78F210E485E4EE07FB8C357.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000620065007300740020007100750061006c006900740079002c0020006100620073007500720064...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'best quality, absurdres, uncensored, score_9, score_8_up, score_7_up, (best quality:1.4), (ultra hi...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\48FE003152EA67C2BF2F12CE8757CE4ACAEA062E29613C85CA78272EDF5F0508.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 48FE003152EA67C2BF2F12CE8757CE4ACAEA062E29613C85CA78272EDF5F0508.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000620065007300740020007100750061006c006900740079002c0020006100620073007500720064...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'best quality, absurdres, uncensored, score_9, score_8_up, score_7_up, (best quality:1.4), (ultra hi...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\303F9A3219A6076E5727E4036944770D4CF4C54A1255DD569D2241BF1BBFCB95.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 303F9A3219A6076E5727E4036944770D4CF4C54A1255DD569D2241BF1BBFCB95.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000620065007300740020007100750061006c006900740079002c0020006100620073007500720064...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'best quality, absurdres, uncensored, score_9, score_8_up, score_7_up, (best quality:1.4), (ultra hi...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\BA17995230A56FEDFBECCDEA6CACFCA7A4AE45E81613300BE86F346650CA24A0.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: BA17995230A56FEDFBECCDEA6CACFCA7A4AE45E81613300BE86F346650CA24A0.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, ((3futas, 1girl)), pretty ebony futas with long brunette hair, vag...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\8A6BAF1E150CE3D40736FB4BE36BD76DDC078F9F0A2B48195E4DA5F1A73D254C.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 8A6BAF1E150CE3D40736FB4BE36BD76DDC078F9F0A2B48195E4DA5F1A73D254C.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_9,1girl, sexy latex nun outfit, dark church, red god rays, l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\931493E0031AECE625F6908DE30B5A3217BA777319AC5913276F05F62874282B.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 931493E0031AECE625F6908DE30B5A3217BA777319AC5913276F05F62874282B.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_9,1girl, sexy latex nun outfit, dark church, red god rays, l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\0527613E0DCBA16339E510C5FC407B1E0C445498E4271CA39A4DF11A2CD75E32.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 0527613E0DCBA16339E510C5FC407B1E0C445498E4271CA39A4DF11A2CD75E32.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_9,1girl, sexy latex nun outfit, pregnant belly, dark church,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\58A66C53C0A023020C17E0EA75B84B1D730094DCA5F74692737DC415FB817050.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 58A66C53C0A023020C17E0EA75B84B1D730094DCA5F74692737DC415FB817050.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_9,1girl, sexy latex nun outfit, dark church, red god rays, l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00032-88166190.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00032-88166190.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_9, (2 girl, beautiful face, nude, slutty girl, sexy girl, blush...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00055-2872360763.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00055-2872360763.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_6_up, <lora:3m0t3XLP:1>3m0t3, pale red hair, blush, 1girl, f...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00391-3084808754.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00391-3084808754.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c00730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,rating_questionable,21yo sexy girl spreading her pussy with both hand...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00398-669381790.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00398-669381790.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c00730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,rating_questionable,20yo sexy maid spreading her pussy with both hand...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00403-3788387124.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00403-3788387124.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c00730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,rating_questionable,20yo sexy girl,idol,spreading her pussy with both...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00400-3037376689.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00400-3037376689.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c00730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,rating_questionable,20yo sexy girl,princess,spreading her pussy with ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\C4243AC353DACB78E598CD7FB3D042531D2F59F0E87029F8767B7AC308761648.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: C4243AC353DACB78E598CD7FB3D042531D2F59F0E87029F8767B7AC308761648.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000530063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, Score_8_up, Score_7, Score_6_up, Score_5_up, Score_4_up, Score_8, (masterpiece, best quali...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\67C346C49F684026A2120CF13F94D69D197032B1386946AAD55FD087ED325CAD.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 67C346C49F684026A2120CF13F94D69D197032B1386946AAD55FD087ED325CAD.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000530063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, Score_8_up, Score_7, Score_6_up, Score_5_up, Score_4_up, Score_8, (masterpiece, best quali...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\FA7506FAC8BB8D65E01A231365E1DE7282670A443986492D2A144F3A2A47302E.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: FA7506FAC8BB8D65E01A231365E1DE7282670A443986492D2A144F3A2A47302E.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000530063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, Score_8_up, Score_7, Score_6_up, Score_5_up, Score_4_up, Score_8, (masterpiece, best quali...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\7436A9104C1906B41D1CB3D74ACDFD6E04D210E006A2F79A42F3613C855E8C80.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 7436A9104C1906B41D1CB3D74ACDFD6E04D210E006A2F79A42F3613C855E8C80.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, realistic, 2girl, 20 years old, japanese, looks far more younger than her age,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\31DFF83D20C4161E8009D720A7CA00F32BC0EC176D505DCC10661608F4FA6001.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 31DFF83D20C4161E8009D720A7CA00F32BC0EC176D505DCC10661608F4FA6001.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039005f00750070002c002000730063006f00720065005f0039002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9_up, score_9, score_8_up, score_7_up, 1girl,1man, focus, full body, gym, detailed gym, prett...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\E3CD98D1CD4E544E95F49973235FDD4E833FA73BD03309C1BFFA036C19922D30.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: E3CD98D1CD4E544E95F49973235FDD4E833FA73BD03309C1BFFA036C19922D30.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, girl, 20...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1873DC9E46E02C083E8BC352C5C2482DA0572EFD6761FCB64C172DB4ACC376D7.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1873DC9E46E02C083E8BC352C5C2482DA0572EFD6761FCB64C172DB4ACC376D7.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, girl, 20...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\85B7F00242FF2A10DB9215F28D989FF6A02CA65E3DEF430CC2026F70C79891D5.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 85B7F00242FF2A10DB9215F28D989FF6A02CA65E3DEF430CC2026F70C79891D5.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, 1girl, 2...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\47789A5CCFD994ACF33C02B347D6D0079E859784E2D3D11AA0DFE6C5D46F1343.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 47789A5CCFD994ACF33C02B347D6D0079E859784E2D3D11AA0DFE6C5D46F1343.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, 1girl, 2...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\286FAD87ADE57CCFEDC9C48F30DF300A2B408F12734C8FEBC4E18E18DE6CBC71.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 286FAD87ADE57CCFEDC9C48F30DF300A2B408F12734C8FEBC4E18E18DE6CBC71.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, 1girl, 2...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3BDD968E77705E576E81F246D8CA44A405C2973CD91AB9D8A74993013B5FFAD6.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3BDD968E77705E576E81F246D8CA44A405C2973CD91AB9D8A74993013B5FFAD6.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554, 1girl, 2...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\FAB063EB35253D7960DD069853402BA03A888FB83290B35AC9CD36B730C7DFE2.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: FAB063EB35253D7960DD069853402BA03A888FB83290B35AC9CD36B730C7DFE2.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200028002800730063006f00720065005f0039002c002000730063006f00720065005f0038005f0075...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '((score_9, score_8_up, score_7_up, source_photo, ((top view)), realistic, ,8k,hd,ruanyi0554,)) (sco...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\2C6ADAFAC12096EC3540135843EE09C208BDB5CD4365DD8661DBA97C108BC65E.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 2C6ADAFAC12096EC3540135843EE09C208BDB5CD4365DD8661DBA97C108BC65E.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, realistic, girl, 20 years old, japanese, looks far more younger than her age, ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\D95BA873FC83652C540177BF7A06F74E5AB29C3514463F135C5203D231CABCF4.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: D95BA873FC83652C540177BF7A06F74E5AB29C3514463F135C5203D231CABCF4.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, 1boy, breeding slave, a...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00143-1675366889.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00143-1675366889.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, 1man, , maid of honor sucking groom\'s penis, cheating, one...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\57E5C8221C007062EC2BB1CF31AF8CB1D3A8A78221CE134265F8729B8426D5A7.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 57E5C8221C007062EC2BB1CF31AF8CB1D3A8A78221CE134265F8729B8426D5A7.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000410053004300490049002000420075007300740079002c00200028006c00610072006700650020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCII Busty, (large breasts), macromastia, score_9, score_8_up, score_7_up, score_7, score_6_up, (n...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\C545B757B84425B5E510C3A5B606AEE55E126859497899129BA8056E7E0D4848.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: C545B757B84425B5E510C3A5B606AEE55E126859497899129BA8056E7E0D4848.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000410053004300490049002000420075007300740079002c00200028006c00610072006700650020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCII Busty, (large breasts), macromastia, score_9, score_8_up, score_7_up, score_7, score_6_up, (n...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\0DC911D2D421F29F747F5C280C1762E0EB80EBA373DCF182F6EB4BDDE3F4355D.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 0DC911D2D421F29F747F5C280C1762E0EB80EBA373DCF182F6EB4BDDE3F4355D.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up, score_8, sexy 24 year old black girl, kneeling,looking up, eye contact, open mo...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1849C36CEBB8BA03710C8B2012AB3C947AA9ADE2EC85E840CBDF3191260F8B1B.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1849C36CEBB8BA03710C8B2012AB3C947AA9ADE2EC85E840CBDF3191260F8B1B.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8_up, 1girl, 1boy, sexy 18yo white caucasian girl, gwen tennyson from be...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1645499BAB99B4B07066297B39D80FFEAF5FE676192FC60A90A4F9C4121374E6.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1645499BAB99B4B07066297B39D80FFEAF5FE676192FC60A90A4F9C4121374E6.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8_up, 1girl, sexy, milf, detailed gorgeous cute face, source comic book,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\4A7AC753B63880F18513EC634B84B04FAA17EED3921BE5FF929AE57FE52E5B8E.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 4A7AC753B63880F18513EC634B84B04FAA17EED3921BE5FF929AE57FE52E5B8E.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up, score_8, Best quality, Beautiful, clean lines, high resolution, sharp focus, de...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\9ED071699FCD0B38A97F069EB3A96351D87E0B3E14DDE5C2E4C536C769B548B1.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 9ED071699FCD0B38A97F069EB3A96351D87E0B3E14DDE5C2E4C536C769B548B1.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, sexy 24 year old college girl, petite body, full body view, on bed kn...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3EBD892B95FB3725E01C099D037F8E64DF5C102642C5F489D5BC9D8F270A0723.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3EBD892B95FB3725E01C099D037F8E64DF5C102642C5F489D5BC9D8F270A0723.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, Expressiveh, 1girl, beautiful 25yo woman, detailed face, side view...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\FCA8BB1953D830D5E529D1317D94A2D8CE1C156015A8F46BDE0443160D957557.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: FCA8BB1953D830D5E529D1317D94A2D8CE1C156015A8F46BDE0443160D957557.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200028002800730063006f00720065005f003900290029002c002000730063006f00720065005f0038...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '((score_9)), score_8_up, score_8, cute, 20yo girl, (DV_Manuela_Vicious, jewelry), ((skinny)), naked...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\C9036B08AB9BE7D9D9D2AC21BDE10C09EAF16610E08221F1794104DD4D212934.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: C9036B08AB9BE7D9D9D2AC21BDE10C09EAF16610E08221F1794104DD4D212934.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200028002800730063006f00720065005f003900290029002c002000730063006f00720065005f0038...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '((score_9)), score_8_up, score_8, cute, 20yo girl, (DV_Manuela_Vicious, jewelry), ((skinny)), naked...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\AC09D58DEB4A31C41BFF2A7BDC3517E0240361285CA1729617CA397CC6A32B98.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: AC09D58DEB4A31C41BFF2A7BDC3517E0240361285CA1729617CA397CC6A32B98.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200028002800730063006f00720065005f003900290029002c002000730063006f00720065005f0038...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '((score_9)), score_8_up, score_8, cute, 20yo girl, (DV_Manuela_Vicious, jewelry), ((skinny)), naked...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1C1A30F9E401902082053083F379B85988B71AEE38D696F38D58B6B7D8B28DE2.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1C1A30F9E401902082053083F379B85988B71AEE38D696F38D58B6B7D8B28DE2.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_6_up, score_9, score_8_up, score_8, zPDXLrl, realistic, mast...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\81DED7CE5BE4200015F3F4383BC980BB1454D658B440E8FB253A14089E2191F2.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 81DED7CE5BE4200015F3F4383BC980BB1454D658B440E8FB253A14089E2191F2.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, volumetric lighting, zPDXL2, zPDXLxxx, rating_explicit, rating_questi...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\518B5964B91F9E6C2A9FF78D48A10205DA6D38AA9A05B7BE898C7B4282B6C173.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 518B5964B91F9E6C2A9FF78D48A10205DA6D38AA9A05B7BE898C7B4282B6C173.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, full body cunnilingus, vulva_hole opening entered by tongue, cunni...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1E5A7059BE0D8F6396D3F48137EE2E5225EBC1816C99754701D2E6202808B890.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1E5A7059BE0D8F6396D3F48137EE2E5225EBC1816C99754701D2E6202808B890.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000530063006f00720065005f0039002c002000730063006f00720065005f0038002c002000730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'Score_9, score_8, score_7, score_6. 1girl, voluptuous fairy, red latex outfit with silver embroider...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\0CCF6A06B86C091009C69BA63CD33BADDAA6E7A9C0493FF6781A043B799C3EB4.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 0CCF6A06B86C091009C69BA63CD33BADDAA6E7A9C0493FF6781A043B799C3EB4.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020007a005000440058004c0072006c002c00730063006f00720065005f0039002c002000730063006f...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'zPDXLrl,score_9, score_8_up, score_7_up, 8K, A hyper realistic ultra detailed photo of beautiful wo...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1ECF30192E357CE581329F9BB20DFB6D785C0EF007A7265DB32D59AC661BF2F0.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1ECF30192E357CE581329F9BB20DFB6D785C0EF007A7265DB32D59AC661BF2F0.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, 1boy, sexy, erotic, ((very fit supermodel)), (30 year old s...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\6AB69CD45306BCEB94D7D77C979B26BE8D78A5C454DF8032A41B4A3C05485ADF.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 6AB69CD45306BCEB94D7D77C979B26BE8D78A5C454DF8032A41B4A3C05485ADF.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000340030002500200064006500730061007400750072006100740065006400200063006f006c006f...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '40% desaturated colours, realistic photo, photorealistic, hyper realistic, intricate details, (dept...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 4 (char 3)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\D86D4A50D90B1DECE80A57A67F0AB1F30D2E45288F6A8CAFCEC02A4591DEFD43.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: D86D4A50D90B1DECE80A57A67F0AB1F30D2E45288F6A8CAFCEC02A4591DEFD43.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020002800730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '(score_9, score_8_up, score_7_up), bokeh, canon eos 5d mark iv, highly detailed, photorealistic, ra...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\029C605287E16243FEE458401102101BEA57518142E31AFA812F38B4E00A82F0.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 029C605287E16243FEE458401102101BEA57518142E31AFA812F38B4E00A82F0.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, realistic, close on face, 1girl, barista, solo, very pale skin, ((...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\CA3D3B3340334B73F740452C2DC8C1B49CFFD1C84D915A3D75353BF1C698BD43.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: CA3D3B3340334B73F740452C2DC8C1B49CFFD1C84D915A3D75353BF1C698BD43.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, realistic, close on face, 1girl, barista, solo, very pale skin, ((...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\D4B9ED2BF2363E44E8F6D7BA096830BAD4511E6A95C05EF892D50D664ECF21D5.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: D4B9ED2BF2363E44E8F6D7BA096830BAD4511E6A95C05EF892D50D664ECF21D5.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, realistic, 1girl, skinny, petite, glossy red lips, high slit china...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\43DBE047B7A397CDD4A6E4FD614492E2E4F4593ED7FD43A79262362049523C5B.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 43DBE047B7A397CDD4A6E4FD614492E2E4F4593ED7FD43A79262362049523C5B.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, realistic, 1girl, asian, long black hair, green eyes, glossy red l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00A8D27E77A1FCFC07A8F1BAE67B6520F1BDB498D220801734EBE130A74617CA.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00A8D27E77A1FCFC07A8F1BAE67B6520F1BDB498D220801734EBE130A74617CA.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, pinup girl pose, Expressiveh, aesthetic, dramatic angle, unique pe...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\4C515664965657C76D169C34B0BA496C03E5ED23D4DB467D2EB59F7E5068B5E1.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 4C515664965657C76D169C34B0BA496C03E5ED23D4DB467D2EB59F7E5068B5E1.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020006400610072006b002d0073006b0069006e006e006500640020006700690072006c002c00200073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'dark-skinned girl, skinny girl, pretty girl with long hair, small breasts, exposed breasts, pierced...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\FAB40ADB9921627B102AE6098053C0F3D7A824F3A3114B2532B19A45D8B9A8DE.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: FAB40ADB9921627B102AE6098053C0F3D7A824F3A3114B2532B19A45D8B9A8DE.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020006400610072006b002d0073006b0069006e006e006500640020006700690072006c002c00200073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'dark-skinned girl, skinny girl, pretty girl with long hair, small breasts, exposed breasts, pierced...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\AE682F45A202FC764CD91EACA63B32C185E2A7920C85D000B56D8047D6B8FEF9.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: AE682F45A202FC764CD91EACA63B32C185E2A7920C85D000B56D8047D6B8FEF9.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020002800480061006c0066002d004e0065006c0073006f006e00200061006e0061006c002000660075...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '(Half-Nelson anal fucking), dark-skinned girl, skinny girl, pretty girl with long hair, small breas...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3A080173B453AF0607199A433032CF4BF04501F70F3477AB14016A16D6453CF8.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3A080173B453AF0607199A433032CF4BF04501F70F3477AB14016A16D6453CF8.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020002800480061006c0066002d004e0065006c0073006f006e00200061006e0061006c002000660075...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '(Half-Nelson anal fucking), dark-skinned girl, skinny girl, pretty girl with long hair, small breas...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\71A8AE7D1A76A28410A5F3D69070D9D039BC7FA340EDCDDA11CA99466F5247BA.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 71A8AE7D1A76A28410A5F3D69070D9D039BC7FA340EDCDDA11CA99466F5247BA.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, white angel wings, gold jewelry, shiny skin, sweaty, blush,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\B894285F7A8D91CBF6B71FB404AB4277922704E10ABFFF3244818733362E14EF.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: B894285F7A8D91CBF6B71FB404AB4277922704E10ABFFF3244818733362E14EF.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, black angel wings, silver jewelry, shiny skin, sweaty, blus...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00006-359682291.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00006-359682291.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c00730063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,best quality, masterpiece, ultra high resolution,(photorealistic:1.5)...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\5A4A60EF92780A0F7F8F8B490B74979DFA0FD9C4E2B845F9081A3F4BE4B8ADC2.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 5A4A60EF92780A0F7F8F8B490B74979DFA0FD9C4E2B845F9081A3F4BE4B8ADC2.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200035006700690072006c0073002c00200072006f006d0061006e0074006900630020006c00650073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '5girls, romantic lesbian hug, intense orgasm, masturbating, lifting dress, grabbing breasts, strugg...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 3 (char 2)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\ED41AF75A7F49D9798F7E28ECDC590FBAA1AEDCB590E981684832BCB50511E99.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: ED41AF75A7F49D9798F7E28ECDC590FBAA1AEDCB590E981684832BCB50511E99.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200032006700690072006c0073002c00200072006f006d0061006e0074006900630020006c00650073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '2girls, romantic lesbian hug, masturbating, 30 years old, see through summer dress, wet hair, soake...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 3 (char 2)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\CA7C311ADD7130A33F2EDC60B3BCC0D8C960CFFE8B46436476D7F7D6DFA04A76.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: CA7C311ADD7130A33F2EDC60B3BCC0D8C960CFFE8B46436476D7F7D6DFA04A76.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200032006700690072006c0073002c00200072006f006d0061006e0074006900630020006c00650073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '2girls, romantic lesbian hug, masturbating, 30 years old, see through summer dress, intense orgasm,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 3 (char 2)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\E1EDBA0FE06FEB709A8048846D162412CF0DC07BC17756276965F6BD9D272F9C.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: E1EDBA0FE06FEB709A8048846D162412CF0DC07BC17756276965F6BD9D272F9C.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200032006700690072006c0073002c00200072006f006d0061006e0074006900630020006c00650073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '2girls, romantic lesbian hug, masturbating, 30 years old, see through summer dress, intense orgasm,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 3 (char 2)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\50CCC6232BA41D71C194E2C8CFA652B8847A8B06E2DD53A3544C1A1675D54FC9.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 50CCC6232BA41D71C194E2C8CFA652B8847A8B06E2DD53A3544C1A1675D54FC9.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, girl is blushing, blonde, gray eyes, detailed face, detaile...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\7A325A7C640CCCBF60A9D498DC8AB64ABE918BAD8F29116EE216878598991D2F.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 7A325A7C640CCCBF60A9D498DC8AB64ABE918BAD8F29116EE216878598991D2F.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, girl is blushing, blonde, gray eyes, detailed face, detaile...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\39BC2095D8D202202587AF491B4EBBF979BDFD75173D21FC64158E847AB8A8B6.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 39BC2095D8D202202587AF491B4EBBF979BDFD75173D21FC64158E847AB8A8B6.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8,girl, naked, medium breasts, tan all over the body, ((round) (silicone...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\754E3514811F4568C799DC151FB62AD2421FE68F2E13E708F8B1D2FCC20A222D.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 754E3514811F4568C799DC151FB62AD2421FE68F2E13E708F8B1D2FCC20A222D.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, beautiful aesthetic, skinny girl, lewd pose, mature face expressio...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\23D144612EAEBAB545CED451369326FDDEBE74CC73C618E6EEE7C6E06F90A8BA.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 23D144612EAEBAB545CED451369326FDDEBE74CC73C618E6EEE7C6E06F90A8BA.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, ((cute adorable innocent)) blonde, bed, horny, flirtatious look, b...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\tmpldjk1him.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: tmpldjk1him.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, young woman, (huge squishy sagging breasts:1.1), naked, <lora:Perf...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\95871F907857F15227BE47DC14421FB802956B43CBB90D0F556ED2EA2E9DB1D9.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 95871F907857F15227BE47DC14421FB802956B43CBB90D0F556ED2EA2E9DB1D9.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_6_up, score_9, score_8_up, score_7_up, naked, petite cute gi...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\E48A852B02196BEFFED38540330EA019D541908920C0593E8FE03DD4DB0A7E99.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: E48A852B02196BEFFED38540330EA019D541908920C0593E8FE03DD4DB0A7E99.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, solo, mature, green eyes, straight black hair, very straigh...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\884CB22D26E8C29DC6925D30862A52AA4FE2D32548145DEC60BA4C8795FFDBA5.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 884CB22D26E8C29DC6925D30862A52AA4FE2D32548145DEC60BA4C8795FFDBA5.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, goth beautiful girl, black hair, blush, perfect eyes, skimpy house...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\ABDB60EAB7479273BE75B899B51691F98C6A3AD300CF33E4002F9A80C11D0A4A.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: ABDB60EAB7479273BE75B899B51691F98C6A3AD300CF33E4002F9A80C11D0A4A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, egyptian princess, petite, cute, young, slim, gold jewelry,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\25545E35045B9272ECAD6F96357DDF80DCA0B3F57348F3F72076F3DB0C3BDB43.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 25545E35045B9272ECAD6F96357DDF80DCA0B3F57348F3F72076F3DB0C3BDB43.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, white angel wings, 1girl, 1boy, hair bun, blue eyes, obese,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\AAE1FCA07F501C945FD7A43CC145AD0E5FC51618A60ED87D7CC1AE9351EBCB9A.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: AAE1FCA07F501C945FD7A43CC145AD0E5FC51618A60ED87D7CC1AE9351EBCB9A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 8girls, (Snow White) and (Elsa), (SleepingBeauty, Aurora), (Alice)...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\A5BD201426BFAA708A9AE67D1911F3FBCBCEE8BE8CF289A8E13B4B2EF2CA8B13.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: A5BD201426BFAA708A9AE67D1911F3FBCBCEE8BE8CF289A8E13B4B2EF2CA8B13.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 8girls, (Snow White) and (Elsa), (SleepingBeauty, Aurora), (Alice)...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\97762A70F9DA6BEF3BE38F6B5505DC7E9DB392C6ABCAB5909930C833BC141216.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 97762A70F9DA6BEF3BE38F6B5505DC7E9DB392C6ABCAB5909930C833BC141216.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up,goth 30yo lady, light brown, wet hair, low tied hair to the side, l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\CB0B66C31C9D8CBFFA4BD54A7A5176FBC3C719786ADD0E9882021628EECE6E78.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: CB0B66C31C9D8CBFFA4BD54A7A5176FBC3C719786ADD0E9882021628EECE6E78.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up,goth 30yo lady, light brown, wet hair, low tied hair to the side, l...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\56413F5775061B176F781CA3F84202ADFD142FC87298A01A120E20EB46EE2CEA.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 56413F5775061B176F781CA3F84202ADFD142FC87298A01A120E20EB46EE2CEA.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, raw, realistic, solo, 2girls, elsa, pretty 20 year old girl, wearing ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\559314350CB43BFC4A8BC03B6748E81FFF81B7A6EDAEED01C13DCF072504B36D.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 559314350CB43BFC4A8BC03B6748E81FFF81B7A6EDAEED01C13DCF072504B36D.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, raw, realistic, solo, 2girls, elsa, pretty 20 year old girl, wearing ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\0CA0FD2CC327931C52E61FFE46D1F7AE71BD844056A29B57396B14E871D37C1A.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 0CA0FD2CC327931C52E61FFE46D1F7AE71BD844056A29B57396B14E871D37C1A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200041005300430049004900730063006f00720065005f0039002c00200032006700690072006c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCIIscore_9, 2girls, sofa, sitting, spreading legs, hand in panties, door behind, light makeup, de...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\DEF76F6B23B5BCB6C059974F7F8E31C18835B5A5CF75A192B982384ECA782F6D.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: DEF76F6B23B5BCB6C059974F7F8E31C18835B5A5CF75A192B982384ECA782F6D.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200041005300430049004900730063006f00720065005f0039002c00200032006700690072006c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCIIscore_9, 2girls, sofa, sitting, spreading legs, hand in panties, door behind, light makeup, de...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1A892CD3CB68A2A5AF21839267E04E19F3FF80F74BDDBA82B485F5D6C4F63C76.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1A892CD3CB68A2A5AF21839267E04E19F3FF80F74BDDBA82B485F5D6C4F63C76.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000200041005300430049004900730063006f00720065005f0039002c00200032006700690072006c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCIIscore_9, 2girls, obese, sofa, sitting, spreading legs, hand in panties, door behind, light mak...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\FF205E87B0EDCC27AD4B5C523011A590EDC6D2B45F2E6DB04148AFB342D96768.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: FF205E87B0EDCC27AD4B5C523011A590EDC6D2B45F2E6DB04148AFB342D96768.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, dark forrest, moon, 1girl, pale elf woman lying on her back, fucke...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\B2F69C2D1A346FE290B040E8E76ECA0F9304C9390B4C046F47F70E3ADC6A2066.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: B2F69C2D1A346FE290B040E8E76ECA0F9304C9390B4C046F47F70E3ADC6A2066.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, big breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realisti...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\35BF6EC237D389277EDACFB9BC50E5D312EF71F7F8085B7C3DBB330124F8BE29.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 35BF6EC237D389277EDACFB9BC50E5D312EF71F7F8085B7C3DBB330124F8BE29.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, (((Disney eyes))), ((Disney Elsa from frozen)), wearing Elsa\'s sh...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3E4526DA58D984ED4F6CE551B182487033A89F47B33049BDFE1153AA0B75C0D7.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3E4526DA58D984ED4F6CE551B182487033A89F47B33049BDFE1153AA0B75C0D7.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000280028002800620065006100750074006900660075006c002c00200070007500720065002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '(((beautiful, pure, gorgeous, skinny small short tiny petite 24yo princess bound in a pillory fucke...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3C1E3744234C8D9FFEB41765FA0E276C8021FF0F3E2A51ACE450972FD80F523F.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3C1E3744234C8D9FFEB41765FA0E276C8021FF0F3E2A51ACE450972FD80F523F.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, score_9, score_8_up, score_8, realistic, raw, hyper-realistic, pho...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\B81B3F9F69AAA5BF327560FB6CB8705ADEA862B7D6D41AD7C8C334A8B4577A69.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: B81B3F9F69AAA5BF327560FB6CB8705ADEA862B7D6D41AD7C8C334A8B4577A69.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, score_9, score_8_up, score_8, realistic, raw, hyper-realistic, pho...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\63C5FC6E72C45DAFD189F67A8F4A86B53B137509D1698B56E9AEAC4C8B2C9A1F.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 63C5FC6E72C45DAFD189F67A8F4A86B53B137509D1698B56E9AEAC4C8B2C9A1F.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\1C9E6CABF06E6ED0CBC0FF28795843C80DBF21B4EEDEF444D152F28A9B73C058.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 1C9E6CABF06E6ED0CBC0FF28795843C80DBF21B4EEDEF444D152F28A9B73C058.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\07E6B54D113CA6E9C13A518B59C59AB62926F232579FE362F068E9551AF5DFFC.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 07E6B54D113CA6E9C13A518B59C59AB62926F232579FE362F068E9551AF5DFFC.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\A110D3F9EBD974EF81D3751D3320211840E1B679F65C4EA0D1A938EEE5F43EA1.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: A110D3F9EBD974EF81D3751D3320211840E1B679F65C4EA0D1A938EEE5F43EA1.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\A7A789DC41217C895A350C756B5DAD92F694EBDA942ECE653DFEDCF9FB9C702A.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: A7A789DC41217C895A350C756B5DAD92F694EBDA942ECE653DFEDCF9FB9C702A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\CAB5FD89E33EA561899A73B67D9DB1B7144B672025D0774A65ADDCC2361F3661.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: CAB5FD89E33EA561899A73B67D9DB1B7144B672025D0774A65ADDCC2361F3661.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, sexy, cute, shy, beautiful japanese wife, asian girl, reali...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\2024-05-09_22-04-31_4339.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 2024-05-09_22-04-31_4339.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000700068006f0074006f006700720061007000680020002800730063006f00720065005f0039002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'photograph (score_9, score_8_up:1.1), score_7_up, photo, 1girl(18yo), wedding dress, jeweled tiara,...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\DFDB4DF0BE55336319D2A6F844ACD92AB737C3D30A57AA65D815D20CF4B2C9BD.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: DFDB4DF0BE55336319D2A6F844ACD92AB737C3D30A57AA65D815D20CF4B2C9BD.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, sexy, cute, shy, beautiful wife, diamond face shape, realis...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\F37AA8A801B91BB10DFA8585AF298A545A572870F337FBABFB91FD41B785B827.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: F37AA8A801B91BB10DFA8585AF298A545A572870F337FBABFB91FD41B785B827.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, photo, Photography, HDR, raw, ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3BA7F6A65DF21E4B21965B36630A1D24624CD36AE478884F9F989BEE869D11C5.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3BA7F6A65DF21E4B21965B36630A1D24624CD36AE478884F9F989BEE869D11C5.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, wet asshole, skinny Irish girl, naked , tight pussy, pink s...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\8DD9E211BE68CAE17932D0FAA8A6EC84311E5DCE6F674D89C2EADEBA6A47FC5E.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 8DD9E211BE68CAE17932D0FAA8A6EC84311E5DCE6F674D89C2EADEBA6A47FC5E.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,very aesthetic,side angle,1girl,18 years old,((beautiful)),mixed race...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\90106FA88DF2969E381EFBFCA3C02D94C1AD4D2261495D09C2FB4EBD35CB6326.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 90106FA88DF2969E381EFBFCA3C02D94C1AD4D2261495D09C2FB4EBD35CB6326.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,rating_explicit, 18 years old sexy beautiful 1girl, katara, avatar th...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\12EC2922B78FE3810D63936FBF9D98EB48B8BF612630A81DF2DC65A5943D3790.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 12EC2922B78FE3810D63936FBF9D98EB48B8BF612630A81DF2DC65A5943D3790.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, big breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realisti...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\3A9B49BF9D9D87A2E72739B32A70297FC5641A75EB1DFFC300395CCC0080CB9F.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 3A9B49BF9D9D87A2E72739B32A70297FC5641A75EB1DFFC300395CCC0080CB9F.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000640033007400340031006c00330064002c002000310064006b002c00200070006f007200740072...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'd3t41l3d, 1dk, portrait, breast, perfecteyes, blue eyes, score_9, score_8_up, score_8, realistic, r...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\001CD28E54AB9715F17167ED16049C477EE31DD7BAB08B0990A5A400649C5B8A.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 001CD28E54AB9715F17167ED16049C477EE31DD7BAB08B0990A5A400649C5B8A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_7_up, score_7, d3t41l3d, realistic, hyper-realistic, ultra deta...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\B233A09286E75BFE03B0A139E0D899CBD89AC146A054AE1E6BFD4E8AD2291AE9.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: B233A09286E75BFE03B0A139E0D899CBD89AC146A054AE1E6BFD4E8AD2291AE9.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_7_up, score_7, d3t41l3d, realistic, hyper-realistic, ultra deta...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\6BB6812FDCF249B96A0EE8FD0B07A525FC602B824E3B8DA8081A5E79D7FDDF20.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 6BB6812FDCF249B96A0EE8FD0B07A525FC602B824E3B8DA8081A5E79D7FDDF20.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_7_up, score_7, d3t41l3d, realistic, hyper-realistic, ultra deta...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\00010-3318606021.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: 00010-3318606021.jpeg
+Debug: Raw bytes from UserComment: 554e49434f44450000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c0020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, Blackcat_DG,, white hair, long hair, domino mask, fur colla...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 1 (char 0)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\BC6508B70EB365D5AC50975177326A93F2289CD8886507709356BE590F2D2874.jpeg
+Zeit: 2025-04-02 22:40:41
+Debug: Bild geladen: BC6508B70EB365D5AC50975177326A93F2289CD8886507709356BE590F2D2874.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_7_up, thin, score_7, rating_explicit, 1 girl, 27 years old, ( j...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\129416F8EA865BEAF7C9572EAFA3CDA75AC502C92E36338562394CC59C9C912C.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 129416F8EA865BEAF7C9572EAFA3CDA75AC502C92E36338562394CC59C9C912C.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, 1girl, beautiful girl, petite, black hair, long hair, glasses, blu...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\4AD93E361800AD29AF57E6F9A8CD0AB5C274B0894B43A88BFA64A52924ACBD22.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 4AD93E361800AD29AF57E6F9A8CD0AB5C274B0894B43A88BFA64A52924ACBD22.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up, ASCII, masterpiece, expressive eyes, perfect face, pureerosface_v1, ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\B277904BA035612E97D4C5808ECCBAC480E5275E919DFFC88899A36E38964A74.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: B277904BA035612E97D4C5808ECCBAC480E5275E919DFFC88899A36E38964A74.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_7_up, (1girl:2men), star butterfly, 18-year old, perfect cute face, kawa...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\640A5FCEBA4E3587BD39EC9A675D5349FB42506A5E386A0D03F87B0A2117250F.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 640A5FCEBA4E3587BD39EC9A675D5349FB42506A5E386A0D03F87B0A2117250F.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8, score_7_up, score_7, d3t41l3d, realistic, hyper-realistic, ultra deta...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\8452F8C8A332F949D57D8787181D57BFA0DBEE9F92EA60BE4E9D783465216F81.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 8452F8C8A332F949D57D8787181D57BFA0DBEE9F92EA60BE4E9D783465216F81.jpeg
+Debug: Raw bytes from UserComment: 554e49434f4445000020002800730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '(score_9, score_8_up:1.1), score_7_up, 8k, photorealistic,very detailed,epiCRealism, fcNeg, Overall...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\62D09154493C7186302A70ABE860979B6BBC1CF3123A82981058AD7F67C148B7.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 62D09154493C7186302A70ABE860979B6BBC1CF3123A82981058AD7F67C148B7.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c002000730063006f00720065005f0038005f00750070002c...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9, score_8_up, score_8_up, 1girl, 1boy, sexy mature woman, white girl, girls licking cock, ((...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\27DB2787CE592BA13788514EE356A2B5666230E100BB707E5F64D4B110EA3E3D.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 27DB2787CE592BA13788514EE356A2B5666230E100BB707E5F64D4B110EA3E3D.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000310064006b002c00200070006f007200740072006100690074002c002000770068006900740065...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '1dk, portrait, white skin, black lipstick wearing sexy skimpy outfit, sexy girl, micro skirt, shirt...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Extra data: line 1 column 3 (char 2)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\246319684EF63224BCEDFFC298AF320F1EE21C6A53DEE4591175376C5560DA6A.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 246319684EF63224BCEDFFC298AF320F1EE21C6A53DEE4591175376C5560DA6A.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000730063006f00720065005f0039002c00730063006f00720065005f0038005f00750070002c0073...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'score_9,score_8_up,score_7_up,score_6_up, 1girl, on bed, spread legs, bare legs, barefoot, chubby, ...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\normal\9DEF61483B610C30A573E4083D7D0472DEEBB46C609FBEBEDF57E335503AF1C2.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 9DEF61483B610C30A573E4083D7D0472DEEBB46C609FBEBEDF57E335503AF1C2.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500002000410053004300490049002000420075007300740079002c00200028006c00610072006700650020...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: 'ASCII Busty, (large breasts), macromastia, score_9, score_8_up, score_7_up, score_7, score_6_up, (n...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: JSON parsing failed: Expecting value: line 1 column 2 (char 1)
+Debug: Logik 5 Marker nicht gefunden oder kein Inhalt extrahiert.
+Debug: Keine der Logiken 1-5 konnte greifen. Rückgabe leer.
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\43566139.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 43566139.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\39783484.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 39783484.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\44093405.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 44093405.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022003200330022003a007b00220063006c006100730073005f00740079007000650022003a0022...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"23":{"class_type":"UpscaleModelLoader","inputs":{"model_name":"urn:air:other:upscaler:civitai:147...
+Debug: ComfyUI Marker gefunden: 0 Treffer
+Debug: USING Logik 5 (Smart JPEG Fallback)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\66730789.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 66730789.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)
+
+============================================================
+Log für: J:\AUSLESEN-Vorlagen\66720982.jpeg
+Zeit: 2025-04-02 22:40:42
+Debug: Bild geladen: 66720982.jpeg
+Debug: Raw bytes from UserComment: 554e49434f444500007b0022007200650073006f0075007200630065002d0073007400610063006b0022003a007b00220063...
+Debug: Decoding with piexif.helper successful.
+Debug: Normalized text: '{"resource-stack":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"urn:air:sdxl:checkp...
+Debug: ComfyUI Marker gefunden: 2 Treffer
+Debug: USING ComfyUI marker extraction (Logik 3)

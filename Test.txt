@@ -1,0 +1,242 @@
+ÿØÿà JFIF      ÿáAExif  II*     i‡            †’ Ú@  ,       UNICODE  { " r e s o u r c e - s t a c k " : { " c l a s s _ t y p e " : " C h e c k p o i n t L o a d e r S i m p l e " , " i n p u t s " : { " c k p t _ n a m e " : " u r n : a i r : s d x l : c h e c k p o i n t : c i v i t a i : 6 4 3 2 2 7 @ 7 7 0 3 7 5 " } } , " r e s o u r c e - s t a c k - 1 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 3 4 1 3 5 3 @ 3 8 2 1 5 2 " , " s t r e n g t h _ m o d e l " : 0 . 6 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k " , 1 ] } } , " r e s o u r c e - s t a c k - 2 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 3 5 9 5 0 6 @ 4 0 1 8 0 6 " , " s t r e n g t h _ m o d e l " : 0 . 3 5 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 1 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 1 " , 1 ] } } , " r e s o u r c e - s t a c k - 3 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 0 0 2 5 5 @ 9 9 7 4 2 6 " , " s t r e n g t h _ m o d e l " : 1 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 2 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 2 " , 1 ] } } , " r e s o u r c e - s t a c k - 4 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 5 6 2 1 1 8 @ 6 2 6 1 6 2 " , " s t r e n g t h _ m o d e l " : 0 . 7 5 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 3 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 3 " , 1 ] } } , " r e s o u r c e - s t a c k - 5 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 7 8 4 9 7 @ 3 5 8 6 9 4 " , " s t r e n g t h _ m o d e l " : 1 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 4 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 4 " , 1 ] } } , " r e s o u r c e - s t a c k - 6 " : { " c l a s s _ t y p e " : " L o r a L o a d e r " , " i n p u t s " : { " l o r a _ n a m e " : " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 6 0 8 5 2 @ 2 9 4 2 5 9 " , " s t r e n g t h _ m o d e l " : 1 , " s t r e n g t h _ c l i p " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 5 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 5 " , 1 ] } } , " 5 " : { " c l a s s _ t y p e " : " s m Z   C L I P T e x t E n c o d e " , " i n p u t s " : { " p a r s e r " : " A 1 1 1 1 " , " t e x t _ g " : " " , " t e x t _ l " : " " , " t e x t " : " e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 ,   s c o r e _ 9 ,   s c o r e _ 8 _ u p ,   s c o r e _ 7 _ u p ,   d e t a i l e d   a n i m e   m a s t e r p i e c e ,   i n t r i c a t e   d e s i g n ,   s m o o t h   s k i n ,   h i g h l y   d e t a i l e d ,   r e a l i s t i c ,   1   g i r l ,   s o l o ,   y o u n g   l a d y ,   s e x y   m o l e ,   s m a l l   h e a d ,   d e t a i l e d   e y e s ,   p e r f e c t   l i p s ,   p a r t e d   l i p s ,   s e d u c t i v e   f a c e ,   d e t a i l e d   f a c e ,   p a l e   c o l o r   s k i n ,   d e t a i l e d   s k i n ,   w a v y   h a i r ,   n a k e d ,   o p e r a   g l o v e s ,   e v e n i n g   g l o v e s ,   c u r v y ,   h o u r g l a s s   b o d y ,   n a t u r a l l y   s a g g i n g   g i g a n t i c   b r e a s t ,   h a n d s   c o v e r e d   n i p p l e s ,   w i d e   h i p s ,   n a t u r a l l y   h u g e   b u t t ,   t h i c k   t h i g h ,   p u b i c   h a i r ,   s t o c k i n g ,   l o n g   l e g s ) ) ) ,   d y n a m i c   l i g h t i n g ,   v o l u m e t r i c   l i g h t i n g ,   s h i n y   s k i n ,   l i v i n g   r o o m ,   w i n d o w ,   s u n s h i n e ,   ( ( s t a n d i n g ,   f u l l   b o d y   s h o t ,   p o s e   v a r i a t i o n ,   a l t e r n a t e   p o s e ,   h a n d s   c o v e r e d   b r e a s t s ,   h o l d i n g   b r e a s t s ,   d e t a i l e d   f i n g e r s ,   p e r f e c t   f i n g e r s ) ) ,   ( ( ( d e p t h   o f   f i e l d ) ) ) " , " a s c o r e " : 2 . 5 , " w i d t h " : 0 , " h e i g h t " : 0 , " c r o p _ w " : 0 , " c r o p _ h " : 0 , " t a r g e t _ w i d t h " : 0 , " t a r g e t _ h e i g h t " : 0 , " m e a n _ n o r m a l i z a t i o n " : t r u e , " m u l t i _ c o n d i t i o n i n g " : t r u e , " u s e _ o l d _ e m p h a s i s _ i m p l e m e n t a t i o n " : f a l s e , " w i t h _ S D X L " : f a l s e , " c l i p " : [ " r e s o u r c e - s t a c k - 6 " , 1 ] } , " _ m e t a " : { " t i t l e " : " C L I P   T e x t   E n c o d e   ( P r o m p t ) " } } , " 6 " : { " c l a s s _ t y p e " : " s m Z   C L I P T e x t E n c o d e " , " i n p u t s " : { " p a r s e r " : " A 1 1 1 1 " , " t e x t _ g " : " " , " t e x t _ l " : " " , " t e x t " : " e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   e m b e d d i n g : u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 ,   s c o r e _ 6 ,   s c o r e _ 5 ,   s c o r e _ 4 ,   s o u r c e _ p o n y ,   c e n s o r e d ,   c h i l d ,   c h i b i ,   m o n o c h r o m e ,   p a t t e r n ,   d o w n s a m p l i n g ,   a l i a s i n g ,   d i s t o r t e d ,   b l u r r y ,   j p e g   a r t i f a c t s ,   p o o r l y   d r a w n ,   l o w - r e s o l u t i o n ,   b a d ,   o r g a s m ,   d i s t o r t i o n ,   t w i s t e d ,   e x c e s s i v e ,   g l i t c h ,   b a d - c o n t r a s t ,   b a d   e y e s ,   b l u r r y   e y e s ,   s i x - f i n g e r e d " , " a s c o r e " : 2 . 5 , " w i d t h " : 0 , " h e i g h t " : 0 , " c r o p _ w " : 0 , " c r o p _ h " : 0 , " t a r g e t _ w i d t h " : 0 , " t a r g e t _ h e i g h t " : 0 , " m e a n _ n o r m a l i z a t i o n " : t r u e , " m u l t i _ c o n d i t i o n i n g " : t r u e , " u s e _ o l d _ e m p h a s i s _ i m p l e m e n t a t i o n " : f a l s e , " w i t h _ S D X L " : f a l s e , " c l i p " : [ " r e s o u r c e - s t a c k - 6 " , 1 ] } , " _ m e t a " : { " t i t l e " : " C L I P   T e x t   E n c o d e   ( P r o m p t ) " } } , " 2 9 " : { " c l a s s _ t y p e " : " E m p t y L a t e n t I m a g e " , " i n p u t s " : { " w i d t h " : 8 3 2 , " h e i g h t " : 1 2 1 6 , " b a t c h _ s i z e " : 1 } , " _ m e t a " : { " t i t l e " : " E m p t y   L a t e n t   I m a g e " } } , " 2 8 " : { " c l a s s _ t y p e " : " K S a m p l e r " , " i n p u t s " : { " s a m p l e r _ n a m e " : " d p m p p _ 2 m " , " s c h e d u l e r " : " k a r r a s " , " s e e d " : 1 7 7 4 6 3 4 5 1 3 , " s t e p s " : 5 0 , " c f g " : 1 0 , " d e n o i s e " : 1 , " m o d e l " : [ " r e s o u r c e - s t a c k - 6 " , 0 ] , " p o s i t i v e " : [ " 5 " , 0 ] , " n e g a t i v e " : [ " 6 " , 0 ] , " l a t e n t _ i m a g e " : [ " 2 9 " , 0 ] } , " _ m e t a " : { " t i t l e " : " K S a m p l e r " } } , " 3 0 " : { " c l a s s _ t y p e " : " V A E D e c o d e " , " i n p u t s " : { " s a m p l e s " : [ " 2 8 " , 0 ] , " v a e " : [ " r e s o u r c e - s t a c k " , 2 ] } , " _ m e t a " : { " t i t l e " : " V A E   D e c o d e " } } , " 5 3 " : { " c l a s s _ t y p e " : " U l t r a l y t i c s D e t e c t o r P r o v i d e r " , " i n p u t s " : { " m o d e l _ n a m e " : " u r n : a i r : o t h e r : o t h e r : c i v i t a i - r 2 : c i v i t a i - w o r k e r - a s s e t s @ f a c e _ y o l o v 8 m . p t " } , " _ m e t a " : { " t i t l e " : " U l t r a l y t i c s D e t e c t o r P r o v i d e r " } } , " 1 6 " : { " c l a s s _ t y p e " : " S A M L o a d e r " , " i n p u t s " : { " m o d e l _ n a m e " : " u r n : a i r : o t h e r : o t h e r : c i v i t a i - r 2 : c i v i t a i - w o r k e r - a s s e t s @ s a m _ v i t _ b _ 0 1 e c 6 4 . p t h " , " d e v i c e _ m o d e " : " A U T O " } , " _ m e t a " : { " t i t l e " : " S A M L o a d e r   ( I m p a c t ) " } } , " 5 1 " : { " c l a s s _ t y p e " : " F a c e D e t a i l e r " , " i n p u t s " : { " g u i d e _ s i z e _ f o r " : " b b o x " , " s a m p l e r _ n a m e " : " d p m p p _ 2 m " , " s c h e d u l e r " : " k a r r a s " , " n o i s e _ m a s k " : " e n a b l e d " , " f o r c e _ i n p a i n t " : " d i s a b l e d " , " s a m _ d e t e c t i o n _ h i n t " : " c e n t e r - 1 " , " s a m _ m a s k _ h i n t _ u s e _ n e g a t i v e " : " F a l s e " , " w i l d c a r d " : " " , " g u i d e _ s i z e " : 3 6 0 , " m a x _ s i z e " : 7 6 8 , " s e e d " : 1 7 7 4 6 3 4 5 1 3 , " s t e p s " : 5 0 , " c f g " : 1 0 , " d e n o i s e " : 0 . 4 , " f e a t h e r " : 5 , " b b o x _ t h r e s h o l d " : 0 . 5 , " b b o x _ d i l a t i o n " : 1 5 , " b b o x _ c r o p _ f a c t o r " : 3 , " s a m _ d i l a t i o n " : 0 , " s a m _ t h r e s h o l d " : 0 . 9 3 , " s a m _ b b o x _ e x p a n s i o n " : 0 , " s a m _ m a s k _ h i n t _ t h r e s h o l d " : 0 . 7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 , " d r o p _ s i z e " : 1 0 , " c y c l e " : 1 , " n o i s e _ m a s k _ f e a t h e r " : 2 0 , " i n p a i n t _ m o d e l " : f a l s e , " i m a g e " : [ " 3 0 " , 0 ] , " m o d e l " : [ " r e s o u r c e - s t a c k - 6 " , 0 ] , " c l i p " : [ " r e s o u r c e - s t a c k - 6 " , 1 ] , " v a e " : [ " r e s o u r c e - s t a c k " , 2 ] , " p o s i t i v e " : [ " 5 " , 0 ] , " n e g a t i v e " : [ " 6 " , 0 ] , " b b o x _ d e t e c t o r " : [ " 5 3 " , 0 ] , " s a m _ m o d e l _ o p t " : [ " 1 6 " , 0 ] } , " _ m e t a " : { " t i t l e " : " F a c e D e t a i l e r " } } , " 5 5 " : { " c l a s s _ t y p e " : " S a v e I m a g e " , " i n p u t s " : { " f i l e n a m e _ p r e f i x " : " C o m f y U I " , " i m a g e s " : [ " 5 1 " , 0 ] } , " _ m e t a " : { " t i t l e " : " S a v e   I m a g e " } } , " 5 6 " : { " c l a s s _ t y p e " : " S a v e I m a g e " , " i n p u t s " : { " f i l e n a m e _ p r e f i x " : " C o m f y U I " , " i m a g e s " : [ " 3 0 " , 0 ] } , " _ m e t a " : { " t i t l e " : " S a v e   I m a g e " } } , " e x t r a " : { " a i r s " : [ " u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 0 8 " , " u r n : a i r : s d 1 : e m b e d d i n g : c i v i t a i : 2 2 2 2 5 6 @ 2 5 0 7 1 2 " , " u r n : a i r : o t h e r : o t h e r : c i v i t a i - r 2 : c i v i t a i - w o r k e r - a s s e t s @ s a m _ v i t _ b _ 0 1 e c 6 4 . p t h " , " u r n : a i r : o t h e r : o t h e r : c i v i t a i - r 2 : c i v i t a i - w o r k e r - a s s e t s @ f a c e _ y o l o v 8 m . p t " , " u r n : a i r : s d x l : c h e c k p o i n t : c i v i t a i : 6 4 3 2 2 7 @ 7 7 0 3 7 5 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 3 4 1 3 5 3 @ 3 8 2 1 5 2 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 3 5 9 5 0 6 @ 4 0 1 8 0 6 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 0 0 2 5 5 @ 9 9 7 4 2 6 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 5 6 2 1 1 8 @ 6 2 6 1 6 2 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 7 8 4 9 7 @ 3 5 8 6 9 4 " , " u r n : a i r : s d x l : l o r a : c i v i t a i : 2 6 0 8 5 2 @ 2 9 4 2 5 9 " ] } , " e x t r a M e t a d a t a " : " { \ u 0 0 2 2 p r o m p t \ u 0 0 2 2 : \ u 0 0 2 2 
+s a f e _ p o s ,   s a f e _ p o s ,   s a f e _ p o s ,   s a f e _ p o s ,   s a f e _ p o s ,   s c o r e _ 9 ,   s c o r e _ 8 _ u p ,   s c o r e _ 7 _ u p ,   d e t a i l e d   a n i m e   m a s t e r p i e c e ,   i n t r i c a t e   d e s i g n ,   s m o o t h   s k i n ,   h i g h l y   d e t a i l e d ,   r e a l i s t i c ,   1   g i r l ,   s o l o ,   y o u n g   l a d y ,   m o l e ,   s m a l l   h e a d ,   d e t a i l e d   e y e s ,   p e r f e c t   l i p s ,   p a r t e d   l i p s ,   s e d u c t i v e   f a c e ,   d e t a i l e d   f a c e ,   p a l e   c o l o r   s k i n ,   d e t a i l e d   s k i n ,   w a v y   h a i r ,   o p e r a   g l o v e s ,   e v e n i n g   g l o v e s ,   c u r v y ,   h o u r g l a s s   b o d y,   h a n d s   c o v e r e d   n i p p l e s ,   w i d e   h i p s ,   n a t u r a l l y   h u g e   b u t t ,   t h i c k   t h i g h ,   p u b i c   h a i r ,   s t o c k i n g ,   l o n g   l e g s ) ) ) ,   d y n a m i c   l i g h t i n g ,   v o l u m e t r i c   l i g h t i n g ,   s h i n y   s k i n ,   l i v i n g   r o o m ,   w i n d o w ,   s u n s h i n e ,   ( ( s t a n d i n g ,   f u l l   b o d y   s h o t ,   p o s e   v a r i a t i o n ,   a l t e r n a t e   p o s e ,   h o l d i n g   b r e a s t s ,   d e t a i l e d   f i n g e r s ,   p e r f e c t   f i n g e r s ) ) ,   ( ( ( d e p t h   o f   f i e l d ) ) ) \ u 0 0 2 2 , \ u 0 0 2 2  n e g a t i v e P r o m p t \ u 0 0 2 2 : \ u 0 0 2 2 s a f e _ n e g ,   s a f e _ n e g ,   s a f e _ n e g ,   s a f e _ n e g ,   s a f e _ n e g ,   s a f e _ n e g ,   s a f e _ n e g ,   s c o r e _ 6 ,   s c o r e _ 5 ,   s c o r e _ 4 ,   s o u r c e _ p o n y ,   c e n s o r e d ,   c h i l d ,   c h i b i ,   m o n o c h r o m e ,   p a t t e r n ,   d o w n s a m p l i n g ,   a l i a s i n g ,   d i s t o r t e d ,   b l u r r y ,   j p e g   a r t i f a c t s ,   p o o r l y   d r a w n ,   l o w - r e s o l u t i o n ,   b a d ,   d i s t o r t i o n ,   t w i s t e d ,   e x c e s s i v e ,   g l i t c h ,   b a d - c o n t r a s t ,   b a d   e y e s ,   b l u r r y   e y e s ,   s i x - f i n g e r e d \ u 0 0 2 2 , \ u 0 0 2 2  s t e p s \ u 0 0 2 2 : 5 0 , \ u 0 0 2 2 c f g S c a l e \ u 0 0 2 2 : 1 0 , \ u 0 0 2 2 s a m p l e r \ u 0 0 2 2 : \ u 0 0 2 2 d p m p p _ 2 m \ u 0 0 2 2 , \ u 0 0 2 2 s e e d \ u 0 0 2 2 : 1 7 7 4 6 3 4 5 1 2 , \ u 0 0 2 2 w o r k f l o w I d \ u 0 0 2 2 : \ u 0 0 2 2 t x t 2 i m g - f a c e f i x \ u 0 0 2 2 , \ u 0 0 2 2 r e s o u r c e s \ u 0 0 2 2 : [ { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 7 7 0 3 7 5 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 1 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 7 7 0 3 7 5 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 1 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 3 8 2 1 5 2 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 0 . 6 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 4 0 1 8 0 6 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 0 . 3 5 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 9 9 7 4 2 6 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 1 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 6 2 6 1 6 2 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 0 . 7 5 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 3 5 8 6 9 4 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 1 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 2 9 4 2 5 9 , \ u 0 0 2 2 s t r e n g t h \ u 0 0 2 2 : 1 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 2 5 0 7 0 8 } , { \ u 0 0 2 2 m o d e l V e r s i o n I d \ u 0 0 2 2 : 2 5 0 7 1 2 } ] , \ u 0 0 2 2 r e m i x O f I d \ u 0 0 2 2 : 3 7 0 8 7 4 4 1 } " }ÿÀ À@" ÿÄ¢          
+
+erstelle bitte eine logig 4, die aus oben eingefügtem textstring werte ausliest nach folgendem Muster:
+Marker 1 ist p r o m p t \ u 0 0 2 2 : \ u 0 0 2 2
+Marker 2 ist n e g a t i v e P r o m p t \ u 0 0 2 2 : \ u 0 0 2 2
+Marker 3 ist das erste s t e p s nach Marker 2
+Lese den Text aus ab Marker 1 bis Marker 2 beginnt. Die Zeichenkett "   s a f e _ p o s ," muss beim einlesen ausgeschlossen werden. Es wird nur der Text zwischen diesen beiden markern verwendet. Dieser Text muss dem Textfeld "Prompt", im Hauptformular zugewiesen.
+Der Text nach Marker 2 bis zum Marker 3 wird dem Textfeld "Negativ Prompt" im Hauptformular zugewiesen. die Zeichenkett "   s a f e _ n e g ," muss beim einlesen ausgeschlossen werden
+Der Text ab Marker 3, inklusive dem Marker 3 wird bis zum ende des Text Chunks ausgelesen und dem Textfeld Setttings im Hauptformular ausgelesen
+Anbei ein Beispielbild das diesen Textchunk enthält, damit kannst du prüffen ob die Logik funktioniert.
+
+Implemetiere die Logik 5 in die definition def extract_text_chunks(img_path):  und zwar so das sie auch die chance hat, wenn adere logiken in Prompt nichts gefunden haben. Vorsicht, einige der logiken haben funktionen implementiert die, wenn sie den Prompt aus dem Textchunk nicht extrahieren könne, alles in "Settings" oder im ersten "prompt" ablegen, diese Methodik muss umgangen werden, damit logik 5 auch angewendet werden  kann.
+
+
+def extract_text_chunks(img_path):
+    try:
+        img = Image.open(img_path)
+    except Exception as e:
+        messagebox.showerror("Error", f"Error opening image:\n{e}")
+        return "", "", ""
+    
+    is_jpeg = img_path.lower().endswith((".jpg", ".jpeg"))
+    with open(img_path, "rb") as f:
+        header = f.read(8)
+    if header.startswith(b'\x89PNG'):
+        is_jpeg = False
+
+    full_text = ""
+    param_key = None
+    debug_info = []
+    
+    # Text aus dem Bild extrahieren
+    if is_jpeg:
+        try:
+            exif_dict = piexif.load(img_path)
+            user_comment = exif_dict.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+            if user_comment and isinstance(user_comment, bytes):
+                debug_info.append(f"Debug: Raw bytes from UserComment: {user_comment[:50].hex()}...")
+                if user_comment.startswith(b'UNICODE\x00\x00'):
+                    try:
+                        full_text = helper.UserComment.load(user_comment)
+                        debug_info.append("Debug: Decoding with piexif.helper successful.")
+                        param_key = "EXIF-Exif-37510"
+                    except Exception as e:
+                        debug_info.append(f"Debug: piexif.helper error: {e}")
+                        full_text = user_comment[8:].decode("utf-16le", errors="ignore")
+                        param_key = "EXIF-Exif-37510 (Fallback UTF-16LE)"
+                else:
+                    full_text = user_comment.decode("latin-1", errors="ignore")
+                    debug_info.append("Debug: No UNICODE prefix, decoded as Latin-1.")
+                    param_key = "EXIF-Exif-37510 (No UNICODE)"
+            if not full_text:
+                debug_info.append("Debug: No UserComment tag found or no byte data.")
+        except Exception as e:
+            debug_info.append(f"Debug: Error reading EXIF data: {e}")
+    else:
+        for key, value in img.info.items():
+            if "parameters" in key.lower():
+                param_key = key
+                full_text = str(value)
+                debug_info.append(f"Debug: PNG text from {param_key}: {repr(full_text)[:100]}...")
+                break
+        if not full_text:
+            for key, value in img.info.items():
+                if "prompt" in key.lower() or "metadata" in key.lower() or "description" in key.lower():
+                    param_key = key
+                    full_text = str(value)
+                    debug_info.append(f"Debug: PNG text from fallback {param_key}: {repr(full_text)[:100]}...")
+                    break
+    
+    if not full_text:
+        debug_info.append(f"Debug: No key with {'UNICODE' if is_jpeg else 'parameters/fallback'} found.")
+        if hasattr(ImageManagerForm, 'instance'):
+            ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+        return "", "", ""
+    
+    # Speichere den Originaltext für spätere Logiken
+    original_text = full_text
+    normalized = ' '.join(full_text.split())
+    debug_info.append(f"Debug: Normalized text: {repr(normalized)[:100]}...")
+    
+    # WICHTIG: LOGIK 3 zuerst prüfen - Suche nach speziellen Markern für ComfyUI-Workflow
+    try:
+        import re  # Sicherstellen, dass re importiert ist
+        
+        MARKER_START = '"inputs":{"text":"'
+        MARKER_END = '"parser":'
+        
+        debug_info.append(f"Debug: Checking ComfyUI markers first...")
+        
+        pattern = re.escape(MARKER_START) + r'(.*?)' + re.escape(MARKER_END)
+        matches = re.findall(pattern, original_text, flags=re.DOTALL)
+        
+        if matches:
+            debug_info.append(f"Debug: Found {len(matches)} matches with ComfyUI markers.")
+            
+            prompt_regex = ""
+            if len(matches) >= 1:
+                prompt_regex = matches[0]
+                debug_info.append(f"Debug (ComfyUI): First segment found (Prompt): {repr(prompt_regex)[:50]}...")
+            
+            negativ_regex = ""
+            if len(matches) >= 2:
+                negativ_regex = matches[1]
+                debug_info.append(f"Debug (ComfyUI): Second segment found (Negative): {repr(negativ_regex)[:50]}...")
+            
+            # Wenn mit Regex etwas gefunden wurde, Ergebnisse zurückgeben
+            if prompt_regex or negativ_regex:
+                settings_regex = ""  # Settings bleibt leer
+                debug_info.append("Debug: USING ComfyUI marker extraction")
+                
+                if hasattr(ImageManagerForm, 'instance'):
+                    ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+                    
+                return prompt_regex, negativ_regex, settings_regex
+            else:
+                debug_info.append("Debug: ComfyUI markers found but no valid content extracted")
+    except Exception as e:
+        debug_info.append(f"Debug: ComfyUI marker extraction failed: {e}")
+    
+    # Logik 1: JSON-Parsing
+    try:
+        data_dict = json.loads(full_text)
+        if "models" in data_dict and isinstance(data_dict["models"], list):
+            models = data_dict["models"]
+            prompt_json = ""
+            negative_json = ""
+            steps_json = ""
+            for model in models:
+                if isinstance(model, dict):
+                    if "prompt" in model:
+                        prompt_json = model["prompt"]
+                    if "negativePrompt" in model:
+                        negative_json = model["negativePrompt"]
+                    if "steps" in model:
+                        idx_steps_in_normalized = normalized.find('"steps":')
+                        if idx_steps_in_normalized != -1:
+                            steps_json = normalized[idx_steps_in_normalized:]
+                        else:
+                            steps_json = str(model["steps"])
+            if prompt_json or negative_json or steps_json:
+                debug_info.append("Debug: JSON parsing successful (models).")
+                debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
+                debug_info.append(f"Debug (Negative Prompt): {repr(negative_json)[:50]}...")
+                debug_info.append(f"Debug (Settings): {repr(steps_json)[:100]}...")
+                if hasattr(ImageManagerForm, 'instance'):
+                    ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+                return str(prompt_json), str(negative_json), steps_json
+
+        prompt_json = data_dict.get("prompt", "")
+        negative_json = data_dict.get("negativePrompt", "")
+        idx_steps_in_normalized = normalized.find('"steps":')
+        if idx_steps_in_normalized != -1:
+            settings_text = normalized[idx_steps_in_normalized:]
+        else:
+            settings_text = str(data_dict.get("steps", ""))
+        if not (prompt_json or negative_json):
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    if value.get("class_type", "").lower() == "cliptextencode":
+                        text_val = value.get("inputs", {}).get("text", "")
+                        if not prompt_json:
+                            prompt_json = text_val
+                        elif not negative_json:
+                            negative_json = text_val
+
+        if not settings_text:
+            for key, value in data_dict.items():
+                if isinstance(value, dict):
+                    if value.get("class_type", "").lower() == "ksampler":
+                        steps_val = value.get("inputs", {}).get("steps", "")
+                        if steps_val:
+                            settings_text = '"steps": ' + str(steps_val)
+                            break
+                        
+        if prompt_json or negative_json or settings_text:
+            debug_info.append("Debug: USING JSON parsing (direct).")
+            debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
+            debug_info.append(f"Debug (Negative Prompt): {repr(negative_json)[:50]}...")
+            debug_info.append(f"Debug (Settings): {repr(settings_text)[:100]}...")
+            if hasattr(ImageManagerForm, 'instance'):
+                ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+            return str(prompt_json), str(negative_json), settings_text
+    except Exception as e:
+        debug_info.append(f"Debug: JSON parsing failed: {e}")
+    
+    # Logik 2: Suche nach Markern im normalisierten Text
+    normalized_lower = normalized.lower()
+    if ('"prompt":' in normalized_lower and 
+        '"negativeprompt":' in normalized_lower and 
+        '"steps":' in normalized_lower):
+        idx_prompt_new = normalized_lower.find('"prompt":')
+        idx_negative_new = normalized_lower.find('"negativeprompt":')
+        idx_steps_new = normalized_lower.find('"steps":')
+        prompt_new = normalized[idx_prompt_new + len('"prompt":'): idx_negative_new].strip().strip('",')
+        negativ_new = normalized[idx_negative_new + len('"negativeprompt":'): idx_steps_new].strip().strip('",')
+        settings_new = normalized[idx_steps_new + len('"steps":'):].strip().strip('",')
+        debug_info.extend([
+            f"Debug (New Markers): Prompt: {repr(prompt_new)[:50]}...",
+            f"Debug (New Markers): Negative Prompt: {repr(negativ_new)[:50]}...",
+            f"Debug (New Markers): Settings: {repr(settings_new)[:50]}..."
+        ])
+        debug_info.append("Debug: USING New Markers extraction")
+        if hasattr(ImageManagerForm, 'instance'):
+            ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+        return prompt_new, negativ_new, settings_new
+    
+    # Logik 4 (Fallback): Traditionelle Marker "Negative prompt:" und "Steps:"
+    idx_neg = normalized.find("Negative prompt:")
+    idx_steps = normalized.find("Steps:")
+    if idx_neg != -1:
+        prompt = normalized[:idx_neg].strip()
+    elif idx_steps != -1:
+        prompt = normalized[:idx_steps].strip()
+    else:
+        prompt = normalized.strip()
+    
+    if idx_neg != -1:
+        if idx_steps != -1 and idx_steps > idx_neg:
+            negativ = normalized[idx_neg + len("Negative prompt:"): idx_steps].strip()
+        else:
+            negativ = normalized[idx_neg + len("Negative prompt:"):].strip()
+    else:
+        negativ = ""
+    
+    if idx_steps != -1:
+        settings = normalized[idx_steps:].strip()
+    else:
+        settings = ""
+    
+    debug_info.extend([
+        f"Debug (Old Markers): Prompt: {repr(prompt)[:50]}...",
+        f"Debug (Old Markers): Negative Prompt: {repr(negativ)[:50]}...",
+        f"Debug (Old Markers): Settings: {repr(settings)[:50]}..."
+    ])
+    debug_info.append("Debug: USING Old Markers extraction (fallback)")
+    
+    if hasattr(ImageManagerForm, 'instance'):
+        ImageManagerForm.instance.debug_info = "\n".join(debug_info)
+    
+    return prompt, negativ, settings
