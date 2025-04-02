@@ -3,7 +3,7 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.5.0.C
+Versionsnummer: 1.6.0.H-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
@@ -15,7 +15,7 @@ Interne Bezeichnung: Master9 Alpha23
 - Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.5.0.C"
+VERSION = "1.6.0.H-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
