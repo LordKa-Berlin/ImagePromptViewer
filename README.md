@@ -1,6 +1,6 @@
 # ImagePromptViewer (Preview Version)
 
-**Version**: 1.4.0.d4 (Development Branch: `entwicklung`)  
+**Version**: 1.4.0.d7 (Development Branch: `entwicklung`)  
 **Date**: 2025-04-01  
 **Internal Designation**: Master8 Alpha10  
 **Author**: LordKa-Berlin  
