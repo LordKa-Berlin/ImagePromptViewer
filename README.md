@@ -1,164 +1,120 @@
-# ImagePromptViewer (Preview Version)
+# ImagePromptViewer
 
-**Version**: 1.4.0.d4 (Development Branch: `entwicklung`)  
-**Date**: 2025-04-01  
-**Internal Designation**: Master8 Alpha10  
-**Author**: LordKa-Berlin  
-
----
-
-## Note: This is a Preview Version
-This version of `ImagePromptViewer` is currently in the development branch `entwicklung` and represents a preview release. It is not yet fully stable or feature-complete. Some features are still in progress, and there are known limitations (see [Known Issues](#known-issues)). Feedback and bug reports are welcome!
-
----
+**Version:** 1.7.3.1-MASTER
 
 ## Overview
-`ImagePromptViewer` is a Python-based tool for displaying and managing image files (PNG and JPEG). It extracts metadata from images—specifically text chunks such as Prompt, Negative Prompt, and Settings—and provides a user-friendly GUI with advanced filtering options. It was developed to efficiently analyze and organize AI-generated images (e.g., from Stable Diffusion).
-
-### Main Features
-- **Image Display**: Dynamic display of PNG and JPEG images with scalable previews.
-- **Metadata Extraction**:
-  - PNG: From `info['parameters']` or fallback keys (`prompt`, `metadata`, `description`).
-  - JPEG: From EXIF tag 37510 (`UserComment`) with support for UNICODE decoding.
-- **Filtering**: Advanced filter options for Prompt, Filename, Negative Prompt, Settings, File Date, and File Size.
-- **Fullscreen Mode**: Display of the current image with metadata and control options.
-- **Folder Management**: Supports loading folders and subfolders with history functionality.
-- **Deletion**: Moves images to the recycle bin with an optional immediate delete feature.
+ImagePromptViewer is an intuitive tool designed for viewing and managing PNG and JPEG images, extracting embedded metadata (Prompt, Negative Prompt, Settings), and filtering your image collection based on comprehensive criteria.
 
 ---
 
-## Screenshots
+## Main Features
 
-### 🖼️ Main Program Window
-![ImagePromptViewer Main Window](imagepromptviewer-mainscreen.png)
+### 📌 Top Bar
+- **Options Menu:** Adjust UI scaling (0.0-2.0, requires restart).
+- **Exit Button:** Close the application.
+- **Always on Top:** Keep the window above other applications.
+- **Help Button (?):** Open the User Guide window.
 
-### 🖼️ Fullscreen Mode
-![ImagePromptViewer Fullscreen View](imagepromptviewer-fullscreen.png)
+### 🎛️ Left Panel – Advanced Filters
+- **Prompt Filter:** Refine images based on keyword inclusion/exclusion.
+- **Date Filter:** Filter images by creation dates or specific periods.
+- **File Size Filter:** Set minimum and maximum file size thresholds.
+- **Action Buttons:**
+  - **Apply Filter:** Execute filter settings.
+  - **Clear:** Reset individual filters.
+  - **Reset All:** Return all filters to default.
+
+### 🛠️ Right Panel – Main Controls
+- **Keyword Filter:** Filter images by keywords in filename, prompt, negative prompt, or settings.
+- **Folder Management:**
+  - Browse, select, view, or delete images.
+  - "Delete immediately" option available.
+- **Subfolder & Sorting:** Search subfolders and toggle sorting by creation date.
+- **Highlighting:** Highlight special syntax like `<Lora>` or `(weights)`.
+
+### 🖼️ Image Display & Navigation
+- **Central Image Viewer:** Clickable area to enter fullscreen.
+- **Drag & Drop Canvas:** Easily load image folders.
+- **Navigation Controls:**
+  - Back, Next, and Fullscreen with intuitive keyboard shortcuts.
+- **Image Scaling:**
+  - Manual slider (10%-100%).
+  - Automatic scaling option available.
+
+### 📝 Metadata Extraction
+- Display and copy **Prompt**, **Negative Prompt**, and **Settings** metadata.
+
+### 📂 Folder List
+- Preview and manage filtered image thumbnails.
 
 ---
 
-## Installation
-
-### Prerequisites
-- **Python**: Version 3.7 or higher
-- **Operating System**: Windows, macOS, or Linux
-
-### Dependencies
-The script automatically installs missing Python libraries. Required packages:
-- `tkinterdnd2` (Drag-and-Drop)
-- `Pillow` (Image Processing)
-- `screeninfo` (Monitor Resolution)
-- `send2trash` (Recycle Bin Functionality)
-- `piexif` (EXIF Data Processing)
-
-Install these manually with:
-```bash
-pip install tkinterdnd2 Pillow screeninfo send2trash piexif
-```
-
-### Running the Program
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/LordKa-Berlin/ImagePromptViewer.git
-   cd ImagePromptViewer
-   git checkout entwicklung
-   ```
-2. Run the script:
-   ```bash
-   python ImagePromptViewer-1.4.0.d4.py
-   ```
+## 🚀 Fullscreen Mode
+- Advanced viewing experience with image navigation, metadata visibility toggling, and deletion options.
+- Quick shortcuts for efficient workflow.
 
 ---
 
-## Features in Detail
+## 🎯 Keyboard Shortcuts
 
-### Image Display and Navigation
-- **Main Window**: Displays the current image with scalable previews (25%, 50%, 75%, Default).
-- **Navigation**: Arrow keys or mouse wheel to browse through images.
-- **Preview List**: Toggleable list of all images in the folder with thumbnails.
-
-### Metadata Extraction
-- **PNG**: Extracts text from `info['parameters']` or fallback keys.
-- **JPEG**: Reads EXIF tag `UserComment`, supports UNICODE decoding (UTF-16LE, Latin-1 fallback).
-- **Text Splitting**: Divides the text into:
-  - **Prompt**: Main image description.
-  - **Negative Prompt**: Exclusion criteria.
-  - **Settings**: Generation parameters (e.g., "Steps:").
-
-### Filtering
-- **Prompt Filter**:
-  - Modes: "All words must match", "Any word", "Exclude word", "None of the words".
-  - Supports "Whole Word" option.
-- **File Filter**: Filtering by Filename, Negative Prompt, and Settings.
-- **File Size**: Min/Max in KB.
-- **Date Filter**: Options like "This week", "Within 2 weeks", etc. (see [Known Issues](#known-issues)).
-- **Visual Feedback**: Filter button turns red when a filter is active.
+### Main Window
+- **Right Arrow:** Next image  
+- **Left Arrow:** Previous image  
+- **F11:** Exit fullscreen  
+- **Delete:** Delete current image  
+- **Mouse Wheel:** Navigate through images
 
 ### Fullscreen Mode
-- **Display**: Large-scale image display with metadata.
-- **Controls**: Copy filename/path, delete, show/hide prompt.
-- **Navigation**: Arrow keys or mouse wheel.
-
-### Folder Management
-- **Folder Selection**: Via dialog or Drag-and-Drop.
-- **Subfolders**: Optionally searchable.
-- **History**: Stores the last 10 folders and filters.
-
-### Deletion
-- **Default**: Moves images to the recycle bin with confirmation.
-- **Immediate Delete**: Without confirmation (button turns red).
+- **Esc / F11:** Close fullscreen  
+- **Ctrl + Mouse Wheel:** Zoom image - comes later
+- **P:** Toggle prompt visibility
 
 ---
 
-## User Interface
-- **Color Scheme**:
-  - Background: Dark Gray (`#1F1F1F`)
-  - Buttons: Orange (`#FFA500`)
-  - Text: Orange (`#FFA500`) on Black (`#000000`)
-- **Layout**:
-  - Left: Filter Settings Panel (Prompt, Date, File Size).
-  - Right: Image display, control elements, and metadata fields.
-- **Dynamic Sizing**: Adjusts to 90% of the monitor resolution.
+## 📸 Screenshots
+```markdown
+![Screenshot1](url-to-screenshot-1)
+![Screenshot2](url-to-screenshot-2)
+```
 
 ---
 
-## Known Issues
-- **Filter Functions**:
-  - Not all date filters (e.g., "Between two dates", "Not older than X days") are fully functional yet. These are currently being implemented.
-- **Large Folders**: Folders or subfolders with more than 4000 image files may cause performance issues or crashes. Optimization is in progress.
-- **Stability**: As a preview version, unexpected errors may occur.
+## ⚠️ Known Issues
+- Fullscreen view does not work with folders containing over 4000 image files (including subfolders). Use filters to reduce the number of files temporarily. This issue is under investigation—any solutions are welcome!
+- There are still several design flaws being addressed progressively.
+- Currently, only the last parentheses are captured for highlighting weights.
+- Some extraction logics may include unintended text not related to the prompt.
+- Window dragging may not function optimally on multi-monitor setups, especially beyond resolutions of 1920x1080.
 
 ---
 
-## Planned Improvements
-- Full implementation of all date filters.
-- Performance optimization for large folders (Lazy Loading, Multiprocessing).
-- Error handling and stability improvements.
-- Support for additional image formats (e.g., WebP).
+## 🔮 Planned Improvements
+- Customizable syntax highlighting settings.
+- Improved highlighting capturing all parentheses.
+- Enhanced logic processing for text extraction.
+- Image zoom function in full screen mode
+- Filtering out chunk snipes.
 
 ---
 
-## Usage
-1. Start the program.
-2. Select a folder via "Select folder" or drag an image via Drag-and-Drop.
-3. Use the filter options in the left panel and the search field in the top right.
-4. Browse through images and analyze metadata.
-5. Delete images or copy information as needed.
+## 📌 Important Notice
+If scaling does not fit your monitor, use the manual adjustment option available in the Options Menu!
 
 ---
 
-### Changes in 1.4.0.d4
-- Integration of Filter Settings into the main window (separate window removed).
-- New filter panel on the left with Prompt, Date, and File Size filters.
-- Removal of the old "Filter Settings" button.
-- Retention of all other functions and layouts.
+## 💡 Tips
+- Quickly load folders by dragging and dropping images.
+- Combine multiple filters for powerful image management.
+- Customize scaling for optimal visibility on your display.
 
 ---
 
-## Feedback
-Since this is a preview version, we welcome feedback! Please create an [Issue](https://github.com/LordKa-Berlin/ImagePromptViewer/issues) or contact me directly.
+## 🙌 Feedback & Contributions
+
+Feel free to report any bugs or suggest improvements.  
+If you have a better solution or idea, please share it—contributions are always welcome!
 
 ---
 
-*Developed by LordKa-Berlin, 2025*
+Enjoy using **ImagePromptViewer**! 🎉
 
