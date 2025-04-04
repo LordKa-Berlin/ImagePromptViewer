@@ -3,7 +3,7 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.6.0.H-MASTER
+Versionsnummer: 1.6.0.H5-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
@@ -15,7 +15,7 @@ Interne Bezeichnung: Master9 Alpha23
 - Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.6.0.H-MASTER"
+VERSION = "1.6.0.H5-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -174,21 +174,14 @@ def extract_text_chunks(img_path):
     
     original_text = full_text
     
-    # Hier kommen die verschiedenen Logiken zur Extraktion (Logik 4, 3, 1, 2, 5)
-    # Aus Gründen der Übersichtlichkeit und weil keine Änderungen in der Extraktionslogik gefordert wurden,
-    # übernehme ich hier den bestehenden Code (unverändert).
-    
     # LOGIK 4: Civitai/ComfyUI Format mit speziellen Markern und Unicode-Escapes
     try:
         debug_info.append("Debug: Checking Logik 4 (Civitai/ComfyUI Format)...")
-        
         marker1 = "p r o m p t \\u 0 0 2 2 : \\u 0 0 2 2"
         marker2 = "n e g a t i v e P r o m p t \\u 0 0 2 2 : \\u 0 0 2 2"
         marker3 = "s t e p s"
-        
         if marker1 in original_text and marker2 in original_text:
             debug_info.append("Debug: Logik 4 - All markers found")
-            
             start_prompt = original_text.find(marker1) + len(marker1)
             end_prompt = original_text.find(marker2)
             if start_prompt != -1 and end_prompt != -1:
@@ -197,7 +190,6 @@ def extract_text_chunks(img_path):
                 while safe_pos_pattern in prompt_text:
                     prompt_text = prompt_text.replace(safe_pos_pattern, "", 1).strip()
                 debug_info.append(f"Debug (Logik 4): Prompt: {repr(prompt_text)[:50]}...")
-                
                 start_negative = end_prompt + len(marker2)
                 pos_steps = original_text.find(marker3, start_negative)
                 if pos_steps != -1:
@@ -206,14 +198,11 @@ def extract_text_chunks(img_path):
                     while safe_neg_pattern in negative_text:
                         negative_text = negative_text.replace(safe_neg_pattern, "", 1).strip()
                     debug_info.append(f"Debug (Logik 4): Negative: {repr(negative_text)[:50]}...")
-                    
                     settings_text = original_text[pos_steps:].strip()
                     debug_info.append(f"Debug (Logik 4): Settings: {repr(settings_text)[:50]}...")
-                    
                     debug_info.append("Debug: USING Logik 4 extraction")
                     if hasattr(ImageManagerForm, 'instance'):
                         ImageManagerForm.instance.debug_info = "\n".join(debug_info)
-                    
                     return prompt_text, negative_text, settings_text
                 else:
                     debug_info.append("Debug: Logik 4 - steps marker not found")
@@ -228,33 +217,25 @@ def extract_text_chunks(img_path):
     try:
         import re
         debug_info.append("Debug: Checking Logik 3 (ComfyUI-Workflow)...")
-        
         MARKER_START = '"inputs":{"text":"'
         MARKER_END = '"parser":'
-        
         pattern = re.escape(MARKER_START) + r'(.*?)' + re.escape(MARKER_END)
         matches = re.findall(pattern, original_text, flags=re.DOTALL)
-        
         if matches:
             debug_info.append(f"Debug: Found {len(matches)} matches with ComfyUI markers.")
-            
             prompt_regex = ""
             if len(matches) >= 1:
                 prompt_regex = matches[0]
                 debug_info.append(f"Debug (ComfyUI): First segment found (Prompt): {repr(prompt_regex)[:50]}...")
-            
             negativ_regex = ""
             if len(matches) >= 2:
                 negativ_regex = matches[1]
                 debug_info.append(f"Debug (ComfyUI): Second segment found (Negative): {repr(negativ_regex)[:50]}...")
-            
             if prompt_regex or negativ_regex:
                 settings_regex = ""
                 debug_info.append("Debug: USING ComfyUI marker extraction")
-                
                 if hasattr(ImageManagerForm, 'instance'):
                     ImageManagerForm.instance.debug_info = "\n".join(debug_info)
-                    
                 return prompt_regex, negativ_regex, settings_regex
             else:
                 debug_info.append("Debug: ComfyUI markers found but no valid content extracted")
@@ -267,7 +248,6 @@ def extract_text_chunks(img_path):
     # Logik 1: JSON-Parsing
     try:
         debug_info.append("Debug: Checking Logik 1 (JSON)...")
-        
         data_dict = json.loads(original_text)
         if "models" in data_dict and isinstance(data_dict["models"], list):
             models = data_dict["models"]
@@ -295,7 +275,6 @@ def extract_text_chunks(img_path):
                 if hasattr(ImageManagerForm, 'instance'):
                     ImageManagerForm.instance.debug_info = "\n".join(debug_info)
                 return str(prompt_json), str(negative_json), steps_json
-
         prompt_json = data_dict.get("prompt", "")
         negative_json = data_dict.get("negativePrompt", "")
         idx_steps_in_normalized = normalized.find('"steps":')
@@ -312,7 +291,6 @@ def extract_text_chunks(img_path):
                             prompt_json = text_val
                         elif not negative_json:
                             negative_json = text_val
-
         if not settings_text:
             for key, value in data_dict.items():
                 if isinstance(value, dict):
@@ -321,7 +299,6 @@ def extract_text_chunks(img_path):
                         if steps_val:
                             settings_text = '"steps": ' + str(steps_val)
                             break
-                        
         if prompt_json or negative_json or settings_text:
             debug_info.append("Debug: JSON parsing successful (direct).")
             debug_info.append(f"Debug (Prompt): {repr(prompt_json)[:50]}...")
@@ -336,7 +313,6 @@ def extract_text_chunks(img_path):
     
     # Logik 2: Suche nach Markern im normalisierten Text
     debug_info.append("Debug: Checking Logik 2 (Marker)...")
-    
     normalized_lower = normalized.lower()
     if ('"prompt":' in normalized_lower and 
         '"negativeprompt":' in normalized_lower and 
@@ -359,7 +335,6 @@ def extract_text_chunks(img_path):
     
     # Logik 5 (Fallback): Traditionelle Marker "Negative prompt:" und "Steps:"
     debug_info.append("Debug: Checking Logik 5 (Traditional Markers)...")
-    
     idx_neg = normalized.find("Negative prompt:")
     idx_steps = normalized.find("Steps:")
     if idx_neg != -1:
@@ -368,7 +343,6 @@ def extract_text_chunks(img_path):
         prompt = normalized[:idx_steps].strip()
     else:
         prompt = normalized.strip()
-    
     if idx_neg != -1:
         if idx_steps != -1 and idx_steps > idx_neg:
             negativ = normalized[idx_neg + len("Negative prompt:"): idx_steps].strip()
@@ -376,23 +350,19 @@ def extract_text_chunks(img_path):
             negativ = normalized[idx_neg + len("Negative prompt:"):].strip()
     else:
         negativ = ""
-    
     if idx_steps != -1:
         settings = normalized[idx_steps:].strip()
     else:
         settings = ""
-    
     debug_info.extend([
         f"Debug (Old Markers): Prompt: {repr(prompt)[:50]}...",
         f"Debug (Old Markers): Negative Prompt: {repr(negativ)[:50]}...",
         f"Debug (Old Markers): Settings: {repr(settings)[:50]}..."
     ])
     debug_info.append("Debug: USING Old Markers extraction (fallback)")
-    
     if hasattr(ImageManagerForm, 'instance') and hasattr(ImageManagerForm.instance, 'current_image_path'):
         if os.path.normpath(img_path) == os.path.normpath(ImageManagerForm.instance.current_image_path):
              ImageManagerForm.instance.debug_info = "\n".join(debug_info)
-    
     return prompt, negativ, settings,
 
 # ---------------------------------------------------------------------
@@ -540,46 +510,37 @@ class ImageManagerForm(TkinterDnD.Tk):
         # Alle vorhandenen Widgets löschen
         for widget in self.winfo_children():
             widget.destroy()
-
         # Header und Status
         header_font = ("Arial", self.main_font_size)
         header_text = f"ImagePromptViewer\nVersion: {VERSION} - Created by Lordka."
         self.header_label = tk.Label(self, text=header_text, fg=TEXT_FG_COLOR, bg=BG_COLOR,
                                     font=header_font, justify="left")
         self.header_label.pack(anchor="w", padx=self.button_padding, pady=self.button_padding)
-
         status_font = ("Arial", self.main_font_size)
         self.status_text = ScrolledText(self, height=2, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=status_font)
         self.status_text.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         self.status("Form started.")
-
         self.always_on_top_var = tk.BooleanVar(value=False)
         self.top_checkbox = tk.Checkbutton(self, text="Always on Top", variable=self.always_on_top_var,
                                         command=self.update_topmost, fg=TEXT_FG_COLOR,
                                         bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.top_checkbox.place(relx=1.0, y=self.button_padding, anchor="ne")
-
         self.debug_button = tk.Button(self, text="Debug", command=self.show_debug_info,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
         self.debug_button.place(relx=0.85, y=self.button_padding, anchor="ne")
-
         self.info_button = tk.Button(self, text="?", command=self.show_info,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=2)
         self.info_button.place(relx=0.90, y=self.button_padding, anchor="ne")
-
         small_info_font = ("Arial", int(self.main_font_size * 0.9))
         self.image_info_label = tk.Label(self, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
                                         font=small_info_font, justify="left")
         self.image_info_label.pack(side="top", anchor="w", pady=self.button_padding)
-
         # Hauptcontainer: zwei Spalten (links: neuer Filterbereich, rechts: bestehende Steuerelemente & Bildanzeige)
         main_container = tk.Frame(self, bg=BG_COLOR)
         main_container.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-
         # Linke Spalte: Neuer integrierter Filter Settings Bereich
         filter_settings_panel = tk.Frame(main_container, bg=BG_COLOR)
         filter_settings_panel.pack(side="left", fill="y", padx=self.button_padding, pady=self.button_padding)
-        
         # --- In diesen Panel werden alle Filter-Optionen integriert ---
         # Prompt Filter Section
         prompt_frame = tk.LabelFrame(filter_settings_panel, text="Prompt Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
@@ -597,7 +558,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         tk.Radiobutton(prompt_frame, text="None of the words", variable=self.prompt_filter_mode, value="none",
                     bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
                     ).pack(anchor="w", padx=10)
-        
         # Date Filter Section
         date_frame = tk.LabelFrame(filter_settings_panel, text="Date Filter", fg=TEXT_FG_COLOR, bg=BG_COLOR,
                                 font=("Arial", int(self.main_font_size * 1.2), "bold"))
@@ -623,17 +583,13 @@ class ImageManagerForm(TkinterDnD.Tk):
         tk.Label(custom_date_frame1, text="Not older  than (days):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)).pack(side="left")
         self.entry_not_older = tk.Entry(custom_date_frame1, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
         self.entry_not_older.pack(side="left", padx=5)
-        
         custom_date_frame2 = tk.Frame(date_frame, bg=BG_COLOR)
         custom_date_frame2.pack(fill="x", padx=10, pady=2)
         tk.Label(custom_date_frame2, text="Older    than   (days):", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size)).pack(side="left")
         self.entry_older = tk.Entry(custom_date_frame2, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
         self.entry_older.pack(side="left", padx=5)
-        
-        # Zeile 1: Label
         tk.Label(date_frame, text="Between dates (YYYY‑MM‑DD):", bg=BG_COLOR, fg=TEXT_FG_COLOR,
                 font=("Arial", self.main_font_size)).pack(anchor="w", padx=10, pady=2)
-        # Zeile 2: Eingabefelder in einem eigenen Frame (unter dem Label)
         entry_frame = tk.Frame(date_frame, bg=BG_COLOR)
         entry_frame.pack(fill="x", padx=10, pady=2)
         self.entry_start_date = tk.Entry(entry_frame, bg="#000000", fg=TEXT_FG_COLOR,
@@ -644,8 +600,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.entry_end_date = tk.Entry(entry_frame, bg="#000000", fg=TEXT_FG_COLOR,
                                     insertbackground=TEXT_FG_COLOR, width=10)
         self.entry_end_date.pack(side="left", padx=5)
-
-        
         # File Size Filter Section
         size_frame = tk.LabelFrame(filter_settings_panel, text="File Size (KB)", fg=TEXT_FG_COLOR, bg=BG_COLOR,
                                 font=("Arial", int(self.main_font_size * 1.2), "bold"))
@@ -658,7 +612,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                 ).grid(row=1, column=0, sticky="e", padx=5, pady=5)
         self.entry_max_size = tk.Entry(size_frame, bg="#000000", fg=TEXT_FG_COLOR, insertbackground=TEXT_FG_COLOR, width=10)
         self.entry_max_size.grid(row=1, column=1, padx=5, pady=5)
-        
         # Button Panel im Filter Settings Bereich
         btn_panel = tk.Frame(filter_settings_panel, bg=BG_COLOR)
         btn_panel.pack(fill="x", pady=15)
@@ -672,12 +625,9 @@ class ImageManagerForm(TkinterDnD.Tk):
                             bg=BUTTON_BG_COLOR, fg=BUTTON_FG_COLOR, font=("Arial", self.main_font_size))
         reset_btn.pack(side="left", padx=(10, 10))
         # Linke Spalte (Filter Settings Panel) fertig
-
         # Rechte Spalte: Bestehende Steuerelemente (Filter-Button, Folderpath, Subfolder, Bildanzeige)
         right_controls = tk.Frame(main_container, bg=BG_COLOR)
         right_controls.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-        
-        # Filter Frame (ohne alten Filter Settings Button)
         filter_frame = tk.Frame(right_controls, bg=BG_COLOR)
         filter_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         self.filter_button = tk.Button(filter_frame, text="Filter", command=self.apply_filter,
@@ -710,7 +660,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.filter_settings_cb = tk.Checkbutton(filter_frame, text="Settings", variable=self.filter_settings_var, command=self.apply_filter,
                                                 fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.filter_settings_cb.pack(side="left", padx=self.button_padding)
-        
         self.image_counter_frame = tk.Frame(filter_frame, bg=BG_COLOR)
         self.image_counter_frame.pack(side="left", padx=self.button_padding)
         self.image_counter_label = tk.Label(self.image_counter_frame, text="Folder: 0 images filtered ", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
@@ -719,8 +668,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.filtered_counter_label.pack(side="left")
         self.image_counter_suffix_label = tk.Label(self.image_counter_frame, text=" images", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
         self.image_counter_suffix_label.pack(side="left")
-        
-        # Folder Frame
         folder_frame = tk.Frame(right_controls, bg=BG_COLOR)
         folder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         folder_label = tk.Label(folder_frame, text="Folder path:", fg=TEXT_FG_COLOR, bg=BG_COLOR, font=("Arial", self.main_font_size))
@@ -750,8 +697,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                                                         command=self.update_delete_button_color_main, fg=TEXT_FG_COLOR,
                                                         bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.delete_immediately_main_cb.pack(side="right", padx=self.button_padding)
-        
-        # Subfolder Frame
         subfolder_frame = tk.Frame(right_controls, bg=BG_COLOR)
         subfolder_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         self.subfolder_cb = tk.Checkbutton(subfolder_frame, text="Search subfolders", variable=self.search_subfolders_var,
@@ -761,7 +706,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                                     command=self.toggle_sort_order, bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
                                     font=("Arial", self.main_font_size), width=5)
         self.sort_button.pack(side="left", padx=self.button_padding)
-        # Neue Checkbuttons für Highlighting neben ASC/DESC-Button
         self.lora_cb = tk.Checkbutton(subfolder_frame, text="Lora highlight", variable=self.lora_highlight_var,
                                       fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size),
                                       command=self.refresh_all_text_highlights)
@@ -770,8 +714,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                                            fg=TEXT_FG_COLOR, bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size),
                                            command=self.refresh_all_text_highlights)
         self.weighting_cb.pack(side="left", padx=self.button_padding)
-        
-        # Bildanzeige: Dieser Frame wird im rechten Bereich platziert
         self.image_frame = tk.Frame(right_controls, bg=BG_COLOR)
         self.image_frame.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
         self.image_label = tk.Label(self.image_frame, bg=BG_COLOR)
@@ -787,8 +729,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.drop_canvas.dnd_bind('<<Drop>>', self.handle_drop)
         self.image_frame.grid_columnconfigure(0, weight=1)
         self.image_frame.grid_columnconfigure(1, weight=0)
-        
-        # Restliche Elemente unterhalb des Hauptcontainers
         nav_frame = tk.Frame(self, bg=BG_COLOR)
         nav_frame.pack(pady=self.button_padding)
         self.back_button = tk.Button(nav_frame, text="Back", command=self.show_previous_image,
@@ -956,8 +896,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                 if passes and self.date_one_year.get():
                     if (now_ts - ctime) > 365 * 24 * 3600:
                         passes = False
-
-                # Neue benutzerdefinierte Datumseingaben auswerten:
                 not_older = self.entry_not_older.get().strip() if hasattr(self, 'entry_not_older') else ""
                 if not_older:
                     try:
@@ -984,7 +922,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                             passes = False
                     except ValueError:
                         pass
-
             if passes:
                 self.filtered_images.append(file_path)
         if self.filtered_images:
@@ -1242,8 +1179,6 @@ class ImageManagerForm(TkinterDnD.Tk):
         text_widget.tag_remove("highlight", "1.0", tk.END)
         text_widget.tag_remove("lora", "1.0", tk.END)
         text_widget.tag_remove("weighting", "1.0", tk.END)
-        
-        # Bestehendes Filter-Highlighting (Keywords)
         if filter_text_raw:
             keywords = [k.strip().lower() for k in filter_text_raw.split(",") if k.strip()]
             text_lower = text.lower()
@@ -1258,17 +1193,13 @@ class ImageManagerForm(TkinterDnD.Tk):
                     text_widget.tag_add("highlight", start, end)
                     start_pos = pos + len(keyword)
             text_widget.tag_config("highlight", foreground=HIGHLIGHT_COLOR)
-        
         import re
-        # Lora highlight: Alle Strings zwischen < und >
         if self.lora_highlight_var.get():
             for match in re.finditer(r"<[^<>]*>", text):
                 start = f"1.0 + {match.start()} chars"
                 end = f"1.0 + {match.end()} chars"
                 text_widget.tag_add("lora", start, end)
             text_widget.tag_config("lora", foreground="white")
-        
-        # Weighting highlight: Alle Strings zwischen ( und )
         if self.weighting_highlight_var.get():
             for match in re.finditer(r"\([^()]*\)", text):
                 start = f"1.0 + {match.start()} chars"
@@ -1276,7 +1207,6 @@ class ImageManagerForm(TkinterDnD.Tk):
                 text_widget.tag_add("weighting", start, end)
             text_widget.tag_config("weighting", foreground="#ADD8E6")
 
-    # Neue Methode zur Aktualisierung aller Textfelder (Hauptfenster und Fullscreen)
     def refresh_all_text_highlights(self):
         if hasattr(self, "current_image_path") and self.current_image_path in self.text_chunks_cache:
             prompt, negativ, settings = self.text_chunks_cache[self.current_image_path]
@@ -1357,7 +1287,7 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.folder_history.insert(0, folder)
                 self.folder_history = self.folder_history[:10]
                 self.folder_combo['values'] = self.folder_history
-                save_history(self.folder_history, list(self.filter_history))
+                save_history(self.folder_history, self.filter_history_list)
 
     def select_image_from_folder(self):
         file_path = filedialog.askopenfilename(title="Select image", filetypes=[("Images", "*.png *.jpg *.jpeg")])
@@ -1597,6 +1527,9 @@ class ImageManagerForm(TkinterDnD.Tk):
                 continue_after_delete()
 
     def show_fullscreen(self):
+        """
+        Diese Methode öffnet das Vollbildfenster und ruft anschließend update_fs_texts() auf.
+        """
         if not hasattr(self, "current_image_path") or not self.current_image_path:
             self.status("No image available for fullscreen.")
             return
@@ -1611,64 +1544,30 @@ class ImageManagerForm(TkinterDnD.Tk):
         if not hasattr(self, "current_image") or not self.current_image:
             self.status("No image available for fullscreen.")
             return
-        self.fs_current_index = self.current_index
-        self.fs_image_path = self.filtered_images[self.fs_current_index]
-        try:
-            self.fs_image = load_image_with_cache(self.fs_image_path, self.image_cache, self.cache_limit)
-        except Exception as e:
-            self.status(f"Error in fullscreen: {e}")
-            return
+        # Erstelle das Vollbildfenster mit allen benötigten Elementen
         self.fullscreen_win = tk.Toplevel(self)
+        self.fullscreen_win.attributes("-fullscreen", True)
         self.fullscreen_win.configure(bg=BG_COLOR)
-        mon = self.fullscreen_monitor
-        self.fullscreen_win.geometry(f"{mon.width}x{mon.height}+{mon.x}+{mon.y}")
-        self.fullscreen_win.overrideredirect(True)
-        self.fullscreen_win.bind("<Escape>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<F11>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
-        self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
-        self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
-        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
-        self.fullscreen_win.focus_force()
-        self.fs_text_focus = False
-        info_font_size = int(self.main_font_size * 0.9)
-        self.fs_info_label = tk.Label(self.fullscreen_win, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                      font=("Arial", info_font_size))
-        self.fs_info_label.pack(side="top", anchor="n", pady=self.button_padding)
-        self.update_fs_info_fullscreen()
-        top_buttons = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        top_buttons.pack(anchor="nw", padx=self.button_padding, pady=self.button_padding)
-        self.fs_delete_button = tk.Button(top_buttons, text="Delete image", command=self.fs_delete_current_image,
-                                          bg="red" if self.delete_immediately_fs_var.get() else BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_delete_button.pack(side="left", padx=self.button_padding)
-        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="delete immediately", variable=self.delete_immediately_fs_var,
-                                                       command=self.update_delete_button_color_fs, fg=TEXT_FG_COLOR,
-                                                       bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-        self.delete_immediately_fs_cb.pack(side="left", padx=self.button_padding)
-        self.fs_close_button = tk.Button(top_buttons, text="Close", command=self.safe_close_fullscreen,
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_close_button.pack(side="left", padx=self.button_padding)
-        btn_fs_open = tk.Button(top_buttons, text="View image", command=self.open_image_fs,
-                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_open.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_name = tk.Button(top_buttons, text="Copy image name", command=self.copy_filename_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_name.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_path = tk.Button(top_buttons, text="Copy image path", command=self.copy_full_path_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_path.pack(side="left", padx=self.button_padding)
-        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Hide prompt", command=self.toggle_fs_prompt,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.prompt_toggle.pack(anchor="ne", padx=self.button_padding, pady=self.button_padding)
-        self.fullscreen_win.bind("p", lambda e: self.toggle_fs_prompt())
-        self.fs_text_frame = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_text_frame.grid_propagate(False)
-        self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-        self.fs_text_visible = True
+        self.fullscreen_win.bind("<Button-1>", lambda e: self.fs_show_next())
+        self.fullscreen_win.bind("<F11>", lambda e: self.safe_close_fullscreen(update_main=False))
+        # Bildanzeige-Frame
         self.fs_image_label = tk.Label(self.fullscreen_win, bg=BG_COLOR)
         self.fs_image_label.pack(side="left", fill="both", expand=True)
-        self.fs_image_label.bind("<Button-1>", lambda e: self.safe_close_fullscreen())
-        self.fs_image_label.bind("<MouseWheel>", self.fullscreen_mousewheel_image)
+        # Textfeld-Container für Prompt, Negative und Settings (rechts)
+        self.fs_text_frame = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
+        self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
+        # Optionaler Button zum Beenden des Vollbildmodus
+        exit_fs_btn = tk.Button(self.fullscreen_win, text="Exit Fullscreen", command=lambda: self.safe_close_fullscreen(update_main=False),
+                                  bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        exit_fs_btn.pack(side="bottom", pady=self.button_padding)
+        try:
+            self.fs_image = Image.open(self.fs_image_path)
+        except Exception as e:
+            self.status(f"Error opening image for fullscreen: {e}")
+            return
+        self.fs_info_label = tk.Label(self.fullscreen_win, bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+        self.fs_info_label.pack(side="bottom", pady=self.button_padding)
+        self.fs_text_visible = True
         self.update_fs_image()
         self.update_fs_texts()
 
@@ -1864,99 +1763,66 @@ class ImageManagerForm(TkinterDnD.Tk):
         else:
             self.status("No image selected.")
 
-    def show_fullscreen(self):
-        if not hasattr(self, "current_image_path") or not self.current_image_path:
-            self.status("No image available for fullscreen.")
-            return
-        if self.current_index != -1 and self.current_index < len(self.filtered_images):
-            self.fs_current_index = self.current_index
-            self.fs_image_path = self.filtered_images[self.fs_current_index]
-        else:
-            self.status("No valid image index for fullscreen mode.")
-            return
-        if self.fullscreen_win and self.fullscreen_win.winfo_exists():
-            self.safe_close_fullscreen(update_main=False)
-        if not hasattr(self, "current_image") or not self.current_image:
-            self.status("No image available for fullscreen.")
-            return
-        self.fs_current_index = self.current_index
-        self.fs_image_path = self.filtered_images[self.fs_current_index]
-        try:
-            self.fs_image = load_image_with_cache(self.fs_image_path, self.image_cache, self.cache_limit)
-        except Exception as e:
-            self.status(f"Error in fullscreen: {e}")
-            return
-
-        # Erstelle ein neues Vollbildfenster
-        self.fullscreen_win = tk.Toplevel(self)
-        self.fullscreen_win.configure(bg=BG_COLOR)
-        mon = self.fullscreen_monitor
-        self.fullscreen_win.geometry(f"{mon.width}x{mon.height}+{mon.x}+{mon.y}")
-        self.fullscreen_win.overrideredirect(True)
-        self.fullscreen_win.bind("<Escape>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<F11>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
-        self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
-        self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
-        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
-        self.fullscreen_win.focus_force()
-        self.fs_text_focus = False
-
-        info_font_size = int(self.main_font_size * 0.9)
-        self.fs_info_label = tk.Label(self.fullscreen_win, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                      font=("Arial", info_font_size))
-        self.fs_info_label.pack(side="top", anchor="n", pady=self.button_padding)
-        self.update_fs_info_fullscreen()
-
-        top_buttons = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        top_buttons.pack(anchor="nw", padx=self.button_padding, pady=self.button_padding)
-        self.fs_delete_button = tk.Button(top_buttons, text="Delete image", command=self.fs_delete_current_image,
-                                          bg="red" if self.delete_immediately_fs_var.get() else BTN_BG_COLOR,
-                                          fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_delete_button.pack(side="left", padx=self.button_padding)
-        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="delete immediately", variable=self.delete_immediately_fs_var,
-                                                       command=self.update_delete_button_color_fs, fg=TEXT_FG_COLOR,
-                                                       bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-        self.delete_immediately_fs_cb.pack(side="left", padx=self.button_padding)
-        self.fs_close_button = tk.Button(top_buttons, text="Close", command=self.safe_close_fullscreen,
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_close_button.pack(side="left", padx=self.button_padding)
-        btn_fs_open = tk.Button(top_buttons, text="View image", command=self.open_image_fs,
-                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_open.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_name = tk.Button(top_buttons, text="Copy image name", command=self.copy_filename_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_name.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_path = tk.Button(top_buttons, text="Copy image path", command=self.copy_full_path_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_path.pack(side="left", padx=self.button_padding)
-
-        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Hide prompt", command=self.toggle_fs_prompt,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.prompt_toggle.pack(anchor="ne", padx=self.button_padding, pady=self.button_padding)
-        self.fullscreen_win.bind("p", lambda e: self.toggle_fs_prompt())
-
-        # Falls bereits ein fs_text_frame existiert, zerstöre ihn, damit wir einen frischen Container erhalten
-        if hasattr(self, 'fs_text_frame') and self.fs_text_frame.winfo_exists():
-            self.fs_text_frame.destroy()
-        self.fs_text_frame = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_text_frame.grid_propagate(False)
-        self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-        self.fs_text_visible = True
-
-        # Erneuerung des Bild-Labels für den Vollbildbereich
-        if hasattr(self, 'fs_image_label') and self.fs_image_label.winfo_exists():
-            self.fs_image_label.destroy()
-        self.fs_image_label = tk.Label(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_image_label.pack(side="left", fill="both", expand=True)
-        self.fs_image_label.bind("<Button-1>", lambda e: self.safe_close_fullscreen())
-        self.fs_image_label.bind("<MouseWheel>", self.fullscreen_mousewheel_image)
-
-        self.update_fs_image()
-        self.update_fs_texts()
-
-
-import json
+    # --- update_fs_texts als Klassenmethode integrieren ---
+    def update_fs_texts(self):
+        """
+        Diese Methode wird im Vollbildmodus aufgerufen, um die Textfelder (Prompt, Negative, Settings)
+        zu erstellen/aktualisieren.
+        """
+        if not hasattr(self, 'fs_prompt_text'):
+            self.fs_prompt_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                               fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_prompt_button = tk.Button(
+                self.fs_text_frame, text="copy Prompt",
+                command=lambda: copy_to_clipboard(self, self.fs_prompt_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_prompt_button.grid(row=1, column=0, padx=self.button_padding)
+            self.fs_negativ_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_negativ_button = tk.Button(
+                self.fs_text_frame, text="copy Negative",
+                command=lambda: copy_to_clipboard(self, self.fs_negativ_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_negativ_button.grid(row=1, column=1, padx=self.button_padding)
+            self.fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
+                                                 fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_settings_text.grid(row=2, column=0, columnspan=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_settings_button = tk.Button(
+                self.fs_text_frame, text="copy Settings",
+                command=lambda: copy_to_clipboard(self, self.fs_settings_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_settings_button.grid(row=3, column=0, columnspan=2, padx=self.button_padding)
+            self.fs_prompt_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_prompt_text))
+            self.fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_negativ_text))
+            self.fs_settings_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_settings_text))
+            for i in range(2):
+                self.fs_text_frame.grid_columnconfigure(i, weight=1)
+            self.fs_text_frame.grid_rowconfigure(0, weight=1)
+            self.fs_text_frame.grid_rowconfigure(2, weight=0)
+        if self.fs_image_path not in self.text_chunks_cache:
+            self.text_chunks_cache[self.fs_image_path] = extract_text_chunks(self.fs_image_path)
+        prompt, negativ, settings = self.text_chunks_cache[self.fs_image_path]
+        filter_text = self.filter_var.get()
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        self.fs_prompt_text.delete("1.0", tk.END)
+        self.fs_prompt_text.insert("1.0", prompt)
+        self.highlight_text(self.fs_prompt_text, prompt, filter_text)
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        self.fs_negativ_text.delete("1.0", tk.END)
+        self.fs_negativ_text.insert("1.0", negativ)
+        self.highlight_text(self.fs_negativ_text, negativ, filter_text)
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        self.fs_settings_text.config(state=tk.NORMAL)
+        self.fs_settings_text.delete("1.0", tk.END)
+        self.fs_settings_text.insert("1.0", settings)
+        self.highlight_text(self.fs_settings_text, settings, filter_text)
+        self.fs_settings_text.config(state=tk.NORMAL)
 
 def save_history(folder_list, filter_list):
     data = {

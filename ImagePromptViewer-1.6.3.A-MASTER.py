@@ -3,7 +3,7 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.6.0.H-MASTER
+Versionsnummer: 1.6.1.0-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
@@ -15,7 +15,7 @@ Interne Bezeichnung: Master9 Alpha23
 - Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.6.0.H-MASTER"
+VERSION = "1.6.1.0-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -27,6 +27,30 @@ import threading
 from pathlib import Path
 from collections import deque, OrderedDict
 import json
+
+# Globaler Parameter für den Skalierungsfaktor-Multiplikator
+SCALING_MULTIPLIER = 2.0
+OPTIONS_FILE = "options_settings.json"
+
+def load_options_settings():
+    global SCALING_MULTIPLIER
+    if os.path.exists(OPTIONS_FILE):
+        try:
+            with open(OPTIONS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                SCALING_MULTIPLIER = data.get("scaling_multiplier", 2.0)
+        except Exception as e:
+            print(f"Fehler beim Laden der Options: {e}")
+    else:
+        SCALING_MULTIPLIER = 2.0
+
+def save_options_settings():
+    data = {"scaling_multiplier": SCALING_MULTIPLIER}
+    try:
+        with open(OPTIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Fehler beim Speichern der Options: {e}")
 
 # --------------------------------------------------------
 # Hilfsfunktion zur Validierung von Indexwerten
@@ -408,7 +432,10 @@ def get_scaling_factor(monitor):
     width_factor = monitor.width / ref_width
     height_factor = monitor.height / ref_height
     factor = min(width_factor, height_factor)
-    return max(0.2, min(1.2, factor))
+    # Reduziere den Faktor um 20 %
+    #return max(0.2, min(1.2, factor * 2.0)) # 24ZM = 0,3, 27ZM = 0.6, 32ZM = 08
+        # Verwende hier den konfigurierbaren SCALING_MULTIPLIER anstelle von 2.0
+    return max(0.2, min(1.2, factor * SCALING_MULTIPLIER))
 
 def get_default_image_scale(scaling_factor):
     default_scale = 0.25 + 0.5 * (scaling_factor - 0.5)
@@ -559,9 +586,11 @@ class ImageManagerForm(TkinterDnD.Tk):
                                         bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.top_checkbox.place(relx=1.0, y=self.button_padding, anchor="ne")
 
-        self.debug_button = tk.Button(self, text="Debug", command=self.show_debug_info,
+        # Statt des bisherigen Debug-Buttons wird hier ein Options-Button eingefügt:
+        self.options_button = tk.Button(self, text="Options", command=self.open_options_window,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
-        self.debug_button.place(relx=0.85, y=self.button_padding, anchor="ne")
+        self.options_button.place(relx=0.85, y=self.button_padding, anchor="ne")
+
 
         self.info_button = tk.Button(self, text="?", command=self.show_info,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=2)
@@ -859,6 +888,86 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.status("Form loaded.")
 
     # ------------------ Ende setup_ui() ------------------
+
+        # Methode, um das Options-Fenster zu öffnen
+    def open_options_window(self):
+        # Falls das Options-Fenster bereits existiert, einfach den Fokus setzen.
+        if hasattr(self, 'options_win') and self.options_win.winfo_exists():
+            self.options_win.focus_force()
+            return
+        self.options_win = tk.Toplevel(self)
+        self.options_win.title("Options")
+        self.options_win.configure(bg=BG_COLOR)
+        
+        # Frame für den Schieberegler und den Wertanzeige-Label
+        slider_frame = tk.Frame(self.options_win, bg=BG_COLOR)
+        slider_frame.pack(padx=self.button_padding, pady=self.button_padding, fill="x")
+        
+        # Label oberhalb des Schiebereglers, das den aktuellen Wert anzeigt
+        self.slider_value_label = tk.Label(slider_frame,
+                                        text=f"Current Multiplier: {SCALING_MULTIPLIER:.1f}",
+                                        bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                        font=("Arial", self.main_font_size))
+        self.slider_value_label.pack(anchor="w")
+        
+        # Schieberegler (Scale) – Werte von 0.0 bis 2.0 in Schritten von 0.1
+        self.options_slider = tk.Scale(slider_frame, from_=0.0, to=2.0, resolution=0.1,
+                                    orient="horizontal", bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                    font=("Arial", self.main_font_size),
+                                    command=self.update_slider_label)
+        self.options_slider.set(SCALING_MULTIPLIER)
+        self.options_slider.pack(fill="x")
+        
+        # Frame für Set-Button und Hinweis-Label
+        set_frame = tk.Frame(self.options_win, bg=BG_COLOR)
+        set_frame.pack(padx=self.button_padding, pady=(0, self.button_padding), fill="x")
+        
+        self.set_button = tk.Button(set_frame, text="Set", command=self.set_options,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.set_button.pack(side="left", padx=(0, self.button_padding))
+        
+        self.set_hint_label = tk.Label(set_frame, text="",
+                                    bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                    font=("Arial", self.main_font_size))
+        self.set_hint_label.pack(side="left")
+        
+        # Debug-Button aus dem Hauptformular in das Options-Fenster integrieren
+        self.options_debug_button = tk.Button(self.options_win, text="Debug", command=self.show_debug_info,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_debug_button.pack(side="bottom", pady=(self.button_padding, 0))
+        
+        # Close-Button für das Options-Fenster
+        self.options_close_button = tk.Button(self.options_win, text="Close", command=self.options_win.destroy,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_close_button.pack(side="bottom", pady=(self.button_padding, 0))
+
+        # Restart-Button im Optionsfenster
+        self.options_restart_button = tk.Button(self.options_win, text="Restart", command=self.restart_program,
+                                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_restart_button.pack(side="bottom", pady=(self.button_padding, 0))
+
+
+    # Methode zur Aktualisierung des Labels oberhalb des Schiebereglers
+    def update_slider_label(self, value):
+        try:
+            val = float(value)
+        except:
+            val = SCALING_MULTIPLIER
+        self.slider_value_label.config(text=f"Current Multiplier: {val:.1f}")
+
+    # Methode, um die neuen Options (Wert des Schiebereglers) zu übernehmen und zu speichern
+    def set_options(self):
+        global SCALING_MULTIPLIER
+        SCALING_MULTIPLIER = float(self.options_slider.get())
+        save_options_settings()  # Speichert den neuen Wert in der Datei
+        self.set_hint_label.config(text="Settings will be effective after restart")
+
+    def restart_program(self):
+    # Schließt das aktuelle Fenster und startet den Interpreter neu
+        self.destroy()
+        os.execl(sys.executable, sys.executable, *sys.argv)
+
+
 
     def clear_filter_inputs(self):
         if hasattr(self, 'prompt_filter_mode'):
@@ -1677,6 +1786,14 @@ class ImageManagerForm(TkinterDnD.Tk):
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
                 self.fullscreen_win.destroy()
                 self.fullscreen_win = None
+            # Setze die Referenzen zurück, damit sie beim nächsten Öffnen neu erstellt werden
+            self.fs_prompt_text = None
+            self.fs_negativ_text = None
+            self.fs_settings_text = None
+            self.fs_copy_prompt_button = None
+            self.fs_copy_negativ_button = None
+            self.fs_copy_settings_button = None
+
             self.focus_force()
             if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
                 self.current_index = validate_index(self.filtered_images.index(self.fs_image_path), self.filtered_images)
@@ -1684,6 +1801,7 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
             pass
+
 
     def show_preview_table(self):
         if not self.preview_frame.winfo_ismapped():
@@ -1790,6 +1908,77 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.prompt_toggle.config(text="Hide prompt")
             self.update_fs_texts()
         self.fullscreen_win.after(100, self.update_fs_image)
+
+    def update_fs_texts(self):
+        # Falls der Textbereich im Vollbildmodus nicht sichtbar ist, beenden
+        if not self.fs_text_visible:
+            return
+
+        # Erzeuge die Widgets, falls sie noch nicht existieren oder auf None gesetzt wurden
+        if not getattr(self, 'fs_prompt_text', None):
+            # Erzeuge die Widgets und speichere sie als Instanzvariablen
+            self.fs_prompt_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                               fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_prompt_button = tk.Button(self.fs_text_frame, text="copy Prompt",
+                                                    command=lambda: copy_to_clipboard(self, self.fs_prompt_text.get("1.0", tk.END)),
+                                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_prompt_button.grid(row=1, column=0, padx=self.button_padding)
+            
+            self.fs_negativ_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_negativ_button = tk.Button(self.fs_text_frame, text="copy Negative",
+                                                    command=lambda: copy_to_clipboard(self, self.fs_negativ_text.get("1.0", tk.END)),
+                                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_negativ_button.grid(row=1, column=1, padx=self.button_padding)
+            
+            self.fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
+                                                 fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_settings_text.grid(row=2, column=0, columnspan=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_settings_button = tk.Button(self.fs_text_frame, text="copy Settings",
+                                                     command=lambda: copy_to_clipboard(self, self.fs_settings_text.get("1.0", tk.END)),
+                                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_settings_button.grid(row=3, column=0, columnspan=2, padx=self.button_padding)
+            
+            # Mousewheel-Bindings
+            self.fs_prompt_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_prompt_text))
+            self.fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_negativ_text))
+            self.fs_settings_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_settings_text))
+            
+            # Gitterkonfiguration
+            for i in range(2):
+                self.fs_text_frame.grid_columnconfigure(i, weight=1)
+            self.fs_text_frame.grid_rowconfigure(0, weight=1)
+            self.fs_text_frame.grid_rowconfigure(2, weight=0)
+        
+        # Falls noch kein Text für das aktuell angezeigte Bild im Cache vorhanden ist, laden
+        if self.fs_image_path not in self.text_chunks_cache:
+            self.text_chunks_cache[self.fs_image_path] = extract_text_chunks(self.fs_image_path)
+        prompt, negativ, settings = self.text_chunks_cache[self.fs_image_path]
+        filter_text = self.filter_var.get()
+        
+        # Aktualisiere den Prompt-Text
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        self.fs_prompt_text.delete("1.0", tk.END)
+        self.fs_prompt_text.insert("1.0", prompt)
+        self.highlight_text(self.fs_prompt_text, prompt, filter_text)
+        self.fs_prompt_text.config(state=tk.DISABLED)
+        
+        # Aktualisiere den Negative-Prompt-Text
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        self.fs_negativ_text.delete("1.0", tk.END)
+        self.fs_negativ_text.insert("1.0", negativ)
+        self.highlight_text(self.fs_negativ_text, negativ, filter_text)
+        self.fs_negativ_text.config(state=tk.DISABLED)
+        
+        # Aktualisiere den Settings-Text
+        self.fs_settings_text.config(state=tk.NORMAL)
+        self.fs_settings_text.delete("1.0", tk.END)
+        self.fs_settings_text.insert("1.0", settings)
+        self.highlight_text(self.fs_settings_text, settings, filter_text)
+        self.fs_settings_text.config(state=tk.DISABLED)
+
 
     def fs_delete_current_image(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:
@@ -1979,5 +2168,7 @@ def load_history():
     return {"folder_history": [], "filter_history": []}
 
 if __name__ == "__main__":
+    load_options_settings()  # Lädt den gespeicherten Multiplikator (falls vorhanden)
     app = ImageManagerForm()
     app.mainloop()
+

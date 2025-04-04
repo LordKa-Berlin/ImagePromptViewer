@@ -3,7 +3,7 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.6.0.H-MASTER
+Versionsnummer: 1.6.0.H2-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
@@ -15,7 +15,7 @@ Interne Bezeichnung: Master9 Alpha23
 - Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.6.0.H-MASTER"
+VERSION = "1.6.0.H2-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -1596,82 +1596,6 @@ class ImageManagerForm(TkinterDnD.Tk):
             if confirm:
                 continue_after_delete()
 
-    def show_fullscreen(self):
-        if not hasattr(self, "current_image_path") or not self.current_image_path:
-            self.status("No image available for fullscreen.")
-            return
-        if self.current_index != -1 and self.current_index < len(self.filtered_images):
-            self.fs_current_index = self.current_index
-            self.fs_image_path = self.filtered_images[self.fs_current_index]
-        else:
-            self.status("No valid image index for fullscreen mode.")
-            return
-        if self.fullscreen_win and self.fullscreen_win.winfo_exists():
-            self.safe_close_fullscreen(update_main=False)
-        if not hasattr(self, "current_image") or not self.current_image:
-            self.status("No image available for fullscreen.")
-            return
-        self.fs_current_index = self.current_index
-        self.fs_image_path = self.filtered_images[self.fs_current_index]
-        try:
-            self.fs_image = load_image_with_cache(self.fs_image_path, self.image_cache, self.cache_limit)
-        except Exception as e:
-            self.status(f"Error in fullscreen: {e}")
-            return
-        self.fullscreen_win = tk.Toplevel(self)
-        self.fullscreen_win.configure(bg=BG_COLOR)
-        mon = self.fullscreen_monitor
-        self.fullscreen_win.geometry(f"{mon.width}x{mon.height}+{mon.x}+{mon.y}")
-        self.fullscreen_win.overrideredirect(True)
-        self.fullscreen_win.bind("<Escape>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<F11>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
-        self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
-        self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
-        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
-        self.fullscreen_win.focus_force()
-        self.fs_text_focus = False
-        info_font_size = int(self.main_font_size * 0.9)
-        self.fs_info_label = tk.Label(self.fullscreen_win, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                      font=("Arial", info_font_size))
-        self.fs_info_label.pack(side="top", anchor="n", pady=self.button_padding)
-        self.update_fs_info_fullscreen()
-        top_buttons = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        top_buttons.pack(anchor="nw", padx=self.button_padding, pady=self.button_padding)
-        self.fs_delete_button = tk.Button(top_buttons, text="Delete image", command=self.fs_delete_current_image,
-                                          bg="red" if self.delete_immediately_fs_var.get() else BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_delete_button.pack(side="left", padx=self.button_padding)
-        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="delete immediately", variable=self.delete_immediately_fs_var,
-                                                       command=self.update_delete_button_color_fs, fg=TEXT_FG_COLOR,
-                                                       bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-        self.delete_immediately_fs_cb.pack(side="left", padx=self.button_padding)
-        self.fs_close_button = tk.Button(top_buttons, text="Close", command=self.safe_close_fullscreen,
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_close_button.pack(side="left", padx=self.button_padding)
-        btn_fs_open = tk.Button(top_buttons, text="View image", command=self.open_image_fs,
-                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_open.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_name = tk.Button(top_buttons, text="Copy image name", command=self.copy_filename_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_name.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_path = tk.Button(top_buttons, text="Copy image path", command=self.copy_full_path_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_path.pack(side="left", padx=self.button_padding)
-        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Hide prompt", command=self.toggle_fs_prompt,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.prompt_toggle.pack(anchor="ne", padx=self.button_padding, pady=self.button_padding)
-        self.fullscreen_win.bind("p", lambda e: self.toggle_fs_prompt())
-        self.fs_text_frame = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_text_frame.grid_propagate(False)
-        self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-        self.fs_text_visible = True
-        self.fs_image_label = tk.Label(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_image_label.pack(side="left", fill="both", expand=True)
-        self.fs_image_label.bind("<Button-1>", lambda e: self.safe_close_fullscreen())
-        self.fs_image_label.bind("<MouseWheel>", self.fullscreen_mousewheel_image)
-        self.update_fs_image()
-        self.update_fs_texts()
-
     def safe_close_fullscreen(self, update_main=True):
         try:
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
@@ -1864,97 +1788,106 @@ class ImageManagerForm(TkinterDnD.Tk):
         else:
             self.status("No image selected.")
 
-    def show_fullscreen(self):
-        if not hasattr(self, "current_image_path") or not self.current_image_path:
-            self.status("No image available for fullscreen.")
-            return
-        if self.current_index != -1 and self.current_index < len(self.filtered_images):
-            self.fs_current_index = self.current_index
-            self.fs_image_path = self.filtered_images[self.fs_current_index]
-        else:
-            self.status("No valid image index for fullscreen mode.")
-            return
-        if self.fullscreen_win and self.fullscreen_win.winfo_exists():
-            self.safe_close_fullscreen(update_main=False)
-        if not hasattr(self, "current_image") or not self.current_image:
-            self.status("No image available for fullscreen.")
-            return
+def update_fs_texts(self):
+        """
+        Diese Methode wird im Vollbildmodus aufgerufen, um die Textfelder (Prompt, Negative, Settings)
+        zu erstellen/aktualisieren. Sie muss ganz links auf Klassenebene stehen.
+        """
+        # Erstelle die Textfelder nur einmal, wenn sie noch nicht existieren
+        if not hasattr(self, 'fs_prompt_text'):
+            self.fs_prompt_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                               fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_prompt_button = tk.Button(
+                self.fs_text_frame, text="copy Prompt",
+                command=lambda: copy_to_clipboard(self, self.fs_prompt_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_prompt_button.grid(row=1, column=0, padx=self.button_padding)
+            
+            self.fs_negativ_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_negativ_button = tk.Button(
+                self.fs_text_frame, text="copy Negative",
+                command=lambda: copy_to_clipboard(self, self.fs_negativ_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_negativ_button.grid(row=1, column=1, padx=self.button_padding)
+            
+            self.fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
+                                                 fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_settings_text.grid(row=2, column=0, columnspan=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_settings_button = tk.Button(
+                self.fs_text_frame, text="copy Settings",
+                command=lambda: copy_to_clipboard(self, self.fs_settings_text.get("1.0", tk.END)),
+                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size)
+            )
+            self.fs_copy_settings_button.grid(row=3, column=0, columnspan=2, padx=self.button_padding)
+            
+            # Mousewheel-Bindings
+            self.fs_prompt_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_prompt_text))
+            self.fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_negativ_text))
+            self.fs_settings_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_settings_text))
+            
+            # Gitterkonfiguration
+            for i in range(2):
+                self.fs_text_frame.grid_columnconfigure(i, weight=1)
+            self.fs_text_frame.grid_rowconfigure(0, weight=1)
+            self.fs_text_frame.grid_rowconfigure(2, weight=0)
+        
+        # Aktualisiere den Inhalt der bestehenden Widgets
+        if self.fs_image_path not in self.text_chunks_cache:
+            self.text_chunks_cache[self.fs_image_path] = extract_text_chunks(self.fs_image_path)
+        prompt, negativ, settings = self.text_chunks_cache[self.fs_image_path]
+        filter_text = self.filter_var.get()
+        
+        # Prompt
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        self.fs_prompt_text.delete("1.0", tk.END)
+        self.fs_prompt_text.insert("1.0", prompt)
+        self.highlight_text(self.fs_prompt_text, prompt, filter_text)
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        
+        # Negative
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        self.fs_negativ_text.delete("1.0", tk.END)
+        self.fs_negativ_text.insert("1.0", negativ)
+        self.highlight_text(self.fs_negativ_text, negativ, filter_text)
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        
+        # Settings
+        self.fs_settings_text.config(state=tk.NORMAL)
+        self.fs_settings_text.delete("1.0", tk.END)
+        self.fs_settings_text.insert("1.0", settings)
+        self.highlight_text(self.fs_settings_text, settings, filter_text)
+        self.fs_settings_text.config(state=tk.NORMAL)
+
+def show_fullscreen(self):
+    """
+    Diese Methode öffnet das Vollbildfenster und ruft anschließend update_fs_texts() auf.
+    Auch sie muss auf Klassenebene stehen und darf nicht ein zweites Mal definiert sein.
+    """
+    if not hasattr(self, "current_image_path") or not self.current_image_path:
+        self.status("No image available for fullscreen.")
+        return
+    if self.current_index != -1 and self.current_index < len(self.filtered_images):
         self.fs_current_index = self.current_index
         self.fs_image_path = self.filtered_images[self.fs_current_index]
-        try:
-            self.fs_image = load_image_with_cache(self.fs_image_path, self.image_cache, self.cache_limit)
-        except Exception as e:
-            self.status(f"Error in fullscreen: {e}")
-            return
+    else:
+        self.status("No valid image index for fullscreen mode.")
+        return
+    if self.fullscreen_win and self.fullscreen_win.winfo_exists():
+        self.safe_close_fullscreen(update_main=False)
+    if not hasattr(self, "current_image") or not self.current_image:
+        self.status("No image available for fullscreen.")
+        return
 
-        # Erstelle ein neues Vollbildfenster
-        self.fullscreen_win = tk.Toplevel(self)
-        self.fullscreen_win.configure(bg=BG_COLOR)
-        mon = self.fullscreen_monitor
-        self.fullscreen_win.geometry(f"{mon.width}x{mon.height}+{mon.x}+{mon.y}")
-        self.fullscreen_win.overrideredirect(True)
-        self.fullscreen_win.bind("<Escape>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<F11>", lambda e: self.safe_close_fullscreen())
-        self.fullscreen_win.bind("<Right>", lambda e: self.fs_show_next())
-        self.fullscreen_win.bind("<Left>", lambda e: self.fs_show_previous())
-        self.fullscreen_win.bind("<Control-MouseWheel>", self.fullscreen_zoom)
-        self.fullscreen_win.bind("<Delete>", lambda e: self.fs_delete_current_image())
-        self.fullscreen_win.focus_force()
-        self.fs_text_focus = False
-
-        info_font_size = int(self.main_font_size * 0.9)
-        self.fs_info_label = tk.Label(self.fullscreen_win, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
-                                      font=("Arial", info_font_size))
-        self.fs_info_label.pack(side="top", anchor="n", pady=self.button_padding)
-        self.update_fs_info_fullscreen()
-
-        top_buttons = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        top_buttons.pack(anchor="nw", padx=self.button_padding, pady=self.button_padding)
-        self.fs_delete_button = tk.Button(top_buttons, text="Delete image", command=self.fs_delete_current_image,
-                                          bg="red" if self.delete_immediately_fs_var.get() else BTN_BG_COLOR,
-                                          fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_delete_button.pack(side="left", padx=self.button_padding)
-        self.delete_immediately_fs_cb = tk.Checkbutton(top_buttons, text="delete immediately", variable=self.delete_immediately_fs_var,
-                                                       command=self.update_delete_button_color_fs, fg=TEXT_FG_COLOR,
-                                                       bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
-        self.delete_immediately_fs_cb.pack(side="left", padx=self.button_padding)
-        self.fs_close_button = tk.Button(top_buttons, text="Close", command=self.safe_close_fullscreen,
-                                         bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fs_close_button.pack(side="left", padx=self.button_padding)
-        btn_fs_open = tk.Button(top_buttons, text="View image", command=self.open_image_fs,
-                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_open.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_name = tk.Button(top_buttons, text="Copy image name", command=self.copy_filename_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_name.pack(side="left", padx=self.button_padding)
-        btn_fs_copy_path = tk.Button(top_buttons, text="Copy image path", command=self.copy_full_path_fs,
-                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        btn_fs_copy_path.pack(side="left", padx=self.button_padding)
-
-        self.prompt_toggle = tk.Button(self.fullscreen_win, text="Hide prompt", command=self.toggle_fs_prompt,
-                                       bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.prompt_toggle.pack(anchor="ne", padx=self.button_padding, pady=self.button_padding)
-        self.fullscreen_win.bind("p", lambda e: self.toggle_fs_prompt())
-
-        # Falls bereits ein fs_text_frame existiert, zerstöre ihn, damit wir einen frischen Container erhalten
-        if hasattr(self, 'fs_text_frame') and self.fs_text_frame.winfo_exists():
-            self.fs_text_frame.destroy()
-        self.fs_text_frame = tk.Frame(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_text_frame.grid_propagate(False)
-        self.fs_text_frame.pack(side="right", fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
-        self.fs_text_visible = True
-
-        # Erneuerung des Bild-Labels für den Vollbildbereich
-        if hasattr(self, 'fs_image_label') and self.fs_image_label.winfo_exists():
-            self.fs_image_label.destroy()
-        self.fs_image_label = tk.Label(self.fullscreen_win, bg=BG_COLOR)
-        self.fs_image_label.pack(side="left", fill="both", expand=True)
-        self.fs_image_label.bind("<Button-1>", lambda e: self.safe_close_fullscreen())
-        self.fs_image_label.bind("<MouseWheel>", self.fullscreen_mousewheel_image)
-
-        self.update_fs_image()
-        self.update_fs_texts()
-
+    # ... restlicher Code für das Erstellen des Vollbildfensters ...
+    # ...
+    # Ganz am Ende:
+    self.update_fs_image()
+    self.update_fs_texts()
 
 import json
 

@@ -3,7 +3,7 @@
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.6.0.H-MASTER
+Versionsnummer: 1.6.1.0-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
 Änderungen in Version 1.2.1.d:
@@ -15,7 +15,7 @@ Interne Bezeichnung: Master9 Alpha23
 - Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
 """
 
-VERSION = "1.6.0.H-MASTER"
+VERSION = "1.6.1.0-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -408,7 +408,8 @@ def get_scaling_factor(monitor):
     width_factor = monitor.width / ref_width
     height_factor = monitor.height / ref_height
     factor = min(width_factor, height_factor)
-    return max(0.2, min(1.2, factor))
+    # Reduziere den Faktor um 20 %
+    return max(0.2, min(1.2, factor * 2.0)) # 24ZM = 0,3, 27ZM = 0.6, 32ZM = 08
 
 def get_default_image_scale(scaling_factor):
     default_scale = 0.25 + 0.5 * (scaling_factor - 0.5)
@@ -1677,6 +1678,14 @@ class ImageManagerForm(TkinterDnD.Tk):
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
                 self.fullscreen_win.destroy()
                 self.fullscreen_win = None
+            # Setze die Referenzen zurück, damit sie beim nächsten Öffnen neu erstellt werden
+            self.fs_prompt_text = None
+            self.fs_negativ_text = None
+            self.fs_settings_text = None
+            self.fs_copy_prompt_button = None
+            self.fs_copy_negativ_button = None
+            self.fs_copy_settings_button = None
+
             self.focus_force()
             if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
                 self.current_index = validate_index(self.filtered_images.index(self.fs_image_path), self.filtered_images)
@@ -1684,6 +1693,7 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
             pass
+
 
     def show_preview_table(self):
         if not self.preview_frame.winfo_ismapped():
@@ -1790,6 +1800,77 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.prompt_toggle.config(text="Hide prompt")
             self.update_fs_texts()
         self.fullscreen_win.after(100, self.update_fs_image)
+
+    def update_fs_texts(self):
+        # Falls der Textbereich im Vollbildmodus nicht sichtbar ist, beenden
+        if not self.fs_text_visible:
+            return
+
+        # Erzeuge die Widgets, falls sie noch nicht existieren oder auf None gesetzt wurden
+        if not getattr(self, 'fs_prompt_text', None):
+            # Erzeuge die Widgets und speichere sie als Instanzvariablen
+            self.fs_prompt_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                               fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_prompt_button = tk.Button(self.fs_text_frame, text="copy Prompt",
+                                                    command=lambda: copy_to_clipboard(self, self.fs_prompt_text.get("1.0", tk.END)),
+                                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_prompt_button.grid(row=1, column=0, padx=self.button_padding)
+            
+            self.fs_negativ_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_negativ_button = tk.Button(self.fs_text_frame, text="copy Negative",
+                                                    command=lambda: copy_to_clipboard(self, self.fs_negativ_text.get("1.0", tk.END)),
+                                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_negativ_button.grid(row=1, column=1, padx=self.button_padding)
+            
+            self.fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
+                                                 fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_settings_text.grid(row=2, column=0, columnspan=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+            self.fs_copy_settings_button = tk.Button(self.fs_text_frame, text="copy Settings",
+                                                     command=lambda: copy_to_clipboard(self, self.fs_settings_text.get("1.0", tk.END)),
+                                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+            self.fs_copy_settings_button.grid(row=3, column=0, columnspan=2, padx=self.button_padding)
+            
+            # Mousewheel-Bindings
+            self.fs_prompt_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_prompt_text))
+            self.fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_negativ_text))
+            self.fs_settings_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_settings_text))
+            
+            # Gitterkonfiguration
+            for i in range(2):
+                self.fs_text_frame.grid_columnconfigure(i, weight=1)
+            self.fs_text_frame.grid_rowconfigure(0, weight=1)
+            self.fs_text_frame.grid_rowconfigure(2, weight=0)
+        
+        # Falls noch kein Text für das aktuell angezeigte Bild im Cache vorhanden ist, laden
+        if self.fs_image_path not in self.text_chunks_cache:
+            self.text_chunks_cache[self.fs_image_path] = extract_text_chunks(self.fs_image_path)
+        prompt, negativ, settings = self.text_chunks_cache[self.fs_image_path]
+        filter_text = self.filter_var.get()
+        
+        # Aktualisiere den Prompt-Text
+        self.fs_prompt_text.config(state=tk.NORMAL)
+        self.fs_prompt_text.delete("1.0", tk.END)
+        self.fs_prompt_text.insert("1.0", prompt)
+        self.highlight_text(self.fs_prompt_text, prompt, filter_text)
+        self.fs_prompt_text.config(state=tk.DISABLED)
+        
+        # Aktualisiere den Negative-Prompt-Text
+        self.fs_negativ_text.config(state=tk.NORMAL)
+        self.fs_negativ_text.delete("1.0", tk.END)
+        self.fs_negativ_text.insert("1.0", negativ)
+        self.highlight_text(self.fs_negativ_text, negativ, filter_text)
+        self.fs_negativ_text.config(state=tk.DISABLED)
+        
+        # Aktualisiere den Settings-Text
+        self.fs_settings_text.config(state=tk.NORMAL)
+        self.fs_settings_text.delete("1.0", tk.END)
+        self.fs_settings_text.insert("1.0", settings)
+        self.highlight_text(self.fs_settings_text, settings, filter_text)
+        self.fs_settings_text.config(state=tk.DISABLED)
+
 
     def fs_delete_current_image(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:

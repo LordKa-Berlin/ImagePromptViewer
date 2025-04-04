@@ -1,21 +1,95 @@
-#!/usr/bin/env python3  
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Programname: ImagePromptCleaner
 Datum: 2025-04-01
-Versionsnummer: 1.6.0.H-MASTER
+Versionsnummer: 1.7.2.A-MASTER
 Interne Bezeichnung: Master9 Alpha23
 
-Änderungen in Version 1.2.1.d:
-- Integration der Filter Settings in das Hauptformular: Das separate Filter Settings Formular wurde entfernt. 
-  Stattdessen erscheint ein neues Panel (Frame) im linken Bereich des Hauptfensters.
-- Alle Filter-Elemente (Prompt Filter, Date Filter, File Size Filter und die zugehörigen Buttons "Apply Filter", "Clear" und "Reset All") sind nun direkt integriert.
-- Erweiterung der Datum‑Filter: Neben den festen Checkbox‑Filtern werden jetzt auch benutzerdefinierte Eingaben (Not older than, Older than, Between dates) ermöglicht.
-- Die Unterordner‑Suche wird nachträglich aktualisiert, wenn das Kontrollkästchen "Search subfolders" umgeschaltet wird.
-- Die übrigen Funktionen (Bildanzeige, Navigation, Löschen via Delete‑Taste, History‑Funktionen, dynamische UI‑Anpassung etc.) bleiben unverändert.
+Inhalt 1.7.2.A-MASTER:
+
+1. **Globale Konfiguration und Imports**
+   - Definition von Konstanten (VERSION, HISTORY_FILE, SCALING_MULTIPLIER, Farben, etc.)
+   - Import von notwendigen Bibliotheken (tkinter, PIL, piexif, etc.) mit automatischer Installation bei Bedarf
+
+2. **Hilfsfunktionen**
+   - `load_options_settings()`: Lädt den Skalierungsfaktor aus einer JSON-Datei
+   - `save_options_settings()`: Speichert den Skalierungsfaktor in eine JSON-Datei
+   - `validate_index()`: Validiert Indexwerte für Listen
+   - `get_datetime_str()`: Liefert formatierten Zeitstempel
+   - `copy_to_clipboard()`: Kopiert Text in die Zwischenablage
+   - `load_image_with_cache()`: Lädt Bilder mit Caching-Mechanismus
+   - `match_keyword()`: Prüft Keywords in Texten mit optionaler Ganztwort-Suche
+   - `extract_text_chunks()`: Extrahiert Prompt, Negative Prompt und Settings aus Bildmetadaten (JPEG/PNG)
+
+3. **UI-Größen- und Skalierungsfunktionen**
+   - `get_window_size()`: Berechnet Fenstergröße basierend auf Monitorauflösung
+   - `get_scaling_factor()`: Berechnet Skalierungsfaktor basierend auf Monitor
+   - `get_default_image_scale()`: Bestimmt Standard-Bildskalierung
+   - `get_font_size()`: Berechnet Schriftgröße
+   - `get_button_padding()`: Berechnet Button-Abstände
+
+4. **Hauptklasse: ImageManagerForm**
+   - `__init__()`: Initialisiert das Hauptfenster, Variablen und Bindings
+   - `setup_ui()`: Erstellt das Haupt-UI mit Filterpanel, Bildanzeige und Steuerelementen
+   - `update_scaling()`: Passt UI dynamisch an Monitorgröße an
+   - `on_window_move()`: Reagiert auf Fensterbewegungen für Skalierungsanpassung
+
+5. **Filter- und Suchfunktionen**
+   - `apply_filters()`: Wendet Filter auf Bilder an (Prompt, Datei, Größe, Datum)
+   - `clear_filter_inputs()`: Löscht Filtereingaben
+   - `reset_all_filters()`: Setzt alle Filter zurück
+   - `update_filter_button_color()`: Aktualisiert Filter-Button-Farbe bei aktiven Filtern
+
+6. **Bildverwaltung und Anzeige**
+   - `load_folder_async()`: Lädt Bilder aus Ordnern im Hintergrund
+   - `on_folder_loaded()`: Verarbeitet geladene Ordnerdaten
+   - `handle_drop()`: Verarbeitet Drag-and-Drop von Bildern
+   - `choose_folder()`: Öffnet Ordnerauswahl-Dialog
+   - `select_image_from_folder()`: Öffnet Bildauswahl-Dialog
+   - `display_image_safe_async()`: Lädt und zeigt Bilder asynchron an
+   - `_finalize_display_image()`: Finalisiert Bildanzeige mit Skalierung
+   - `rescale_image()`: Skaliert aktuelles Bild neu
+   - `show_next_image()` / `show_previous_image()`: Navigiert zwischen Bildern
+   - `delete_current_image()`: Löscht aktuelles Bild
+
+7. **Vollbildmodus**
+   - `show_fullscreen()`: Öffnet und konfiguriert Vollbildfenster
+   - `safe_close_fullscreen()`: Schließt Vollbildfenster sicher
+   - `update_fs_image()`: Aktualisiert Bild im Vollbildmodus mit Debouncing
+   - `update_fs_texts()`: Aktualisiert Textfelder im Vollbildmodus
+   - `fs_show_next()` / `fs_show_previous()`: Navigiert im Vollbildmodus
+   - `fullscreen_zoom()`: Zoomt im Vollbildmodus
+   - `toggle_fs_prompt()`: Schaltet Textfelder ein/aus
+   - `fs_delete_current_image()`: Löscht Bild im Vollbildmodus
+
+8. **Text- und Highlighting-Funktionen**
+   - `highlight_text()`: Markiert Keywords, Lora- und Weighting-Texte
+   - `refresh_all_text_highlights()`: Aktualisiert Highlighting in Haupt- und Vollbildfenster
+
+9. **Zusätzliche Funktionen**
+   - `open_options_window()`: Öffnet Optionsfenster zur Skalierungsanpassung
+   - `show_debug_info()`: Zeigt Debug-Informationen an
+   - `populate_preview_table_lazy()`: Füllt Vorschauliste mit Lazy-Loading
+   - `toggle_folder_list()`: Schaltet Vorschauliste ein/aus
+   - `open_image_in_system()` / `open_image_fs()`: Öffnet Bild im System
+   - `copy_filename_fs()` / `copy_full_path_fs()`: Kopiert Dateinamen/Pfad
+
+10. **History-Management**
+    - `save_history()`: Speichert Ordner- und Filterverlauf
+    - `load_history()`: Lädt gespeicherten Verlauf
+
+Änderungen in Version 1.7.1.C3-MASTER:
+- Vollbildmodus optimiert: Debouncing für Bildaktualisierung, statisches Textfeld-Layout, Hintergrund-Bildladen
+- Fehlerbehebung: Entfernung von Rekursion in `debounce_update_fs_image`
+- UI-Thread-Entlastung: Asynchrone Bildverarbeitung für große Ordner
+
+Änderungen in Version 1.7.2.A-MASTER
+
+- Änderung Default Button wird als Slider ausgeführt
 """
 
-VERSION = "1.6.0.H-MASTER"
+VERSION = "1.7.2.A-MASTER"
 HISTORY_FILE = "ImagePromptViewer-History.json"
 
 import subprocess, sys, os, re, platform
@@ -26,7 +100,32 @@ from tkinter.scrolledtext import ScrolledText
 import threading
 from pathlib import Path
 from collections import deque, OrderedDict
+import time
 import json
+
+# Globaler Parameter für den Skalierungsfaktor-Multiplikator
+SCALING_MULTIPLIER = 0.6
+OPTIONS_FILE = "options_settings.json"
+
+def load_options_settings():
+    global SCALING_MULTIPLIER
+    if os.path.exists(OPTIONS_FILE):
+        try:
+            with open(OPTIONS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                SCALING_MULTIPLIER = data.get("scaling_multiplier", 2.0)
+        except Exception as e:
+            print(f"Fehler beim Laden der Options: {e}")
+    else:
+        SCALING_MULTIPLIER = 2.0
+
+def save_options_settings():
+    data = {"scaling_multiplier": SCALING_MULTIPLIER}
+    try:
+        with open(OPTIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Fehler beim Speichern der Options: {e}")
 
 # --------------------------------------------------------
 # Hilfsfunktion zur Validierung von Indexwerten
@@ -70,6 +169,7 @@ except ImportError:
     import piexif
     from piexif import helper
 
+BG_COLOR_Test = "#b55bff"
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"
 BTN_FG_COLOR = "#000000"
@@ -408,7 +508,10 @@ def get_scaling_factor(monitor):
     width_factor = monitor.width / ref_width
     height_factor = monitor.height / ref_height
     factor = min(width_factor, height_factor)
-    return max(0.2, min(1.2, factor))
+    # Reduziere den Faktor um 20 %
+    #return max(0.2, min(1.2, factor * 2.0)) # 24ZM = 0,3, 27ZM = 0.6, 32ZM = 08
+        # Verwende hier den konfigurierbaren SCALING_MULTIPLIER anstelle von 2.0
+    return max(0.2, min(1.2, factor * SCALING_MULTIPLIER))
 
 def get_default_image_scale(scaling_factor):
     default_scale = 0.25 + 0.5 * (scaling_factor - 0.5)
@@ -438,6 +541,9 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.scaling_factor = get_scaling_factor(self.selected_monitor)
         self.main_font_size = get_font_size(self.selected_monitor)
         self.button_padding = get_button_padding(self.selected_monitor)
+
+        self.fs_update_interval = 100  # Minimaler Abstand zwischen Fullscreen-Updates in Millisekunden
+        self.last_fs_update_time = 0   # Zeitstempel des letzten Updates (in Millisekunden)
 
         window_width, window_height = get_window_size(self.selected_monitor)
         self.geometry(f"{window_width}x{window_height}")
@@ -559,13 +665,20 @@ class ImageManagerForm(TkinterDnD.Tk):
                                         bg=BG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size))
         self.top_checkbox.place(relx=1.0, y=self.button_padding, anchor="ne")
 
-        self.debug_button = tk.Button(self, text="Debug", command=self.show_debug_info,
+        # Options-Button:
+        self.options_button = tk.Button(self, text="Options", command=self.open_options_window,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
-        self.debug_button.place(relx=0.85, y=self.button_padding, anchor="ne")
+        self.options_button.place(relx=0.89, y=self.button_padding, anchor="ne")
+        # EXIT Button
+        self.exit_button = tk.Button(self, text="Exit", command=self.quit,
+                             bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=6)
+        self.exit_button.place(relx=0.92, y=self.button_padding, anchor="ne")
+
+
 
         self.info_button = tk.Button(self, text="?", command=self.show_info,
                                     bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=2)
-        self.info_button.place(relx=0.90, y=self.button_padding, anchor="ne")
+        self.info_button.place(relx=0.94, y=self.button_padding, anchor="ne")
 
         small_info_font = ("Arial", int(self.main_font_size * 0.9))
         self.image_info_label = tk.Label(self, text="", fg=TEXT_FG_COLOR, bg=BG_COLOR,
@@ -608,7 +721,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         tk.Checkbutton(date_frame, text="Within 2 weeks", variable=self.date_two_weeks,
                     bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
                     ).pack(anchor="w", padx=10)
-        tk.Checkbutton(date_frame, text="Within 4 weeks", variable=self.date_four_weeks,
+        tk.Checkbutton(date_frame, text="Within 3 weeks", variable=self.date_four_weeks,
                     bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size)
                     ).pack(anchor="w", padx=10)
         tk.Checkbutton(date_frame, text="Within 1 month", variable=self.date_one_month,
@@ -774,12 +887,28 @@ class ImageManagerForm(TkinterDnD.Tk):
         # Bildanzeige: Dieser Frame wird im rechten Bereich platziert
         self.image_frame = tk.Frame(right_controls, bg=BG_COLOR)
         self.image_frame.pack(fill="both", expand=True, padx=self.button_padding, pady=self.button_padding)
+
+            # Variablen für den Slider und die Checkbox
+        self.scale_value = tk.IntVar(value=55)  # Standardwert: 50%
+        self.default_scale_var = tk.BooleanVar(value=True)  # Default an
+
+
+        # Checkbox "Default" – ebenfalls zentriert
+        ###default_checkbox = tk.Checkbutton(scale_frame, text="Default-1",
+        ###                              variable=self.default_scale_var,
+        ###                              command=lambda: self.rescale_image(),
+        ###                              font=("Arial", self.main_font_size),
+        ###                              bg=BG_COLOR, fg=TEXT_FG_COLOR,
+        ###                              selectcolor=BG_COLOR)
+        ##y default_checkbox.pack(anchor="center", pady=2)
+
+
         self.image_label = tk.Label(self.image_frame, bg=BG_COLOR)
         self.image_label.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
         self.image_label.bind("<Button-1>", lambda e: self.show_fullscreen())
         self.image_label.bind("<MouseWheel>", self.on_image_mousewheel)
-        self.drop_canvas = tk.Canvas(self.image_frame, width=int(150 * self.scaling_factor), height=int(112 * self.scaling_factor),
-                                    bg="#555555", highlightthickness=2, highlightbackground="white")
+        self.drop_canvas = tk.Canvas(self.image_frame, width=int(600 * self.scaling_factor), height=int(448 * self.scaling_factor), #drop image here größe anpassen
+                                    bg="#000000", highlightthickness=4, highlightbackground="orange")
         self.drop_canvas.create_text(int(75 * self.scaling_factor), int(56 * self.scaling_factor),
                                     text="Drop Image Here", fill="white", font=("Arial", self.main_font_size))
         self.drop_canvas.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="e")
@@ -788,32 +917,83 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.image_frame.grid_columnconfigure(0, weight=1)
         self.image_frame.grid_columnconfigure(1, weight=0)
         
+        # --- Neuer Scaling-Frame: Slider und Default-Checkbox ---
+        scaling_frame = tk.Frame(self, bg=BG_COLOR)
+        scaling_frame.pack(pady=self.button_padding)
+
+        # Label (in Englisch)
+        scaling_label = tk.Label(scaling_frame, text="Image Scaling", bg=BG_COLOR, fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+        scaling_label.pack(side="left", padx=(self.button_padding, 5))
+
+        # Schieberegler: Werte von 10 bis 100 (%)
+        
+        self.scaling_slider = tk.Scale(scaling_frame,
+                               from_=10,
+                               to=100,
+                               orient="horizontal",
+                               length=300,  # hier die gewünschte Länge in Pixeln eintragen
+                               bg=BG_COLOR,
+                               fg=TEXT_FG_COLOR,
+                               font=("Arial", self.main_font_size),
+                               command=self.on_scaling_slider_change)
+
+
+        # Setze den Standardwert des Sliders auf den von get_default_image_scale() (multipliziert mit 100)
+        default_slider_value = int(get_default_image_scale(self.scaling_factor) * 100)
+        self.scaling_slider.set(default_slider_value)
+        self.scaling_slider.pack(side="left", padx=5)
+
+        # Checkbox "Default": Aktiviert den Standardwert (soll beim Start aktiviert sein)
+        self.default_scaling_var = tk.BooleanVar(value=True)
+        self.default_scaling_cb = tk.Checkbutton(scaling_frame, text="Default", variable=self.default_scaling_var, bg=BG_COLOR, fg=TEXT_FG_COLOR, selectcolor=BG_COLOR, font=("Arial", self.main_font_size), command=self.on_default_scaling_toggle)
+        self.default_scaling_cb.pack(side="left", padx=5)
+
+        
         # Restliche Elemente unterhalb des Hauptcontainers
+        # Navigationsbereich (Back, Fullscreen, Next) in einer Zeile
         nav_frame = tk.Frame(self, bg=BG_COLOR)
         nav_frame.pack(pady=self.button_padding)
+
+        # Back-Button an Spalte 0
         self.back_button = tk.Button(nav_frame, text="Back", command=self.show_previous_image,
-                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
-        self.back_button.pack(side="left", padx=self.button_padding)
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                    font=("Arial", self.main_font_size), width=10)
+        self.back_button.grid(row=0, column=0, padx=self.button_padding)
+
+        # Fullscreen-Button in Spalte 1
+        self.fullscreen_button = tk.Button(nav_frame, text="Fullscreen", command=self.show_fullscreen,
+                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                        font=("Arial", self.main_font_size), width=10)
+        self.fullscreen_button.grid(row=0, column=1, padx=self.button_padding)
+
+        # Next-Button an Spalte 2
         self.next_button = tk.Button(nav_frame, text="Next", command=self.show_next_image,
-                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size), width=10)
-        self.next_button.pack(side="left", padx=self.button_padding)
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                    font=("Arial", self.main_font_size), width=10)
+        self.next_button.grid(row=0, column=2, padx=self.button_padding)
+
+
+        # Neuer Controls-Frame: Fullscreen-Button und Monitor-Button
         controls_frame = tk.Frame(self, bg=BG_COLOR)
         controls_frame.pack(pady=self.button_padding)
-        self.scale_var = tk.StringVar(value=DEFAULT_SCALE)
-        self.scale_dropdown = tk.OptionMenu(controls_frame, self.scale_var, *SCALE_OPTIONS, command=lambda value: self.rescale_image(value))
-        self.scale_dropdown.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
-        self.scale_dropdown.pack(side="left", padx=self.button_padding)
-        self.fullscreen_button = tk.Button(controls_frame, text="Fullscreen", command=self.show_fullscreen,
-                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
-        self.fullscreen_button.pack(side="left", padx=self.button_padding)
+
+        # Fullscreen-Button – bleibt wie in der ursprünglichen Version
+        ###self.fullscreen_button = tk.Button(controls_frame, text="Fullscreen", command=self.show_fullscreen,
+          ###                              bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        ###self.fullscreen_button.pack(side="left", padx=self.button_padding)
+
+        # Monitor-Button – nur anzeigen, wenn mehrere Monitore vorhanden sind
         if len(self.monitor_list) > 1:
             self.monitor_choice = tk.StringVar()
             monitor_names = [f"Monitor {i}: {mon.width}x{mon.height}" for i, mon in enumerate(self.monitor_list)]
             self.monitor_choice.set(monitor_names[0])
             self.monitor_menu = tk.OptionMenu(controls_frame, self.monitor_choice, *monitor_names,
                                             command=self.update_fullscreen_monitor)
-            self.monitor_menu.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
+            self.monitor_menu.configure(bg=BTN_BG_COLOR, fg=BTN_FG_COLOR,
+                                        font=("Arial", int(self.main_font_size + 2 * self.scaling_factor)))
             self.monitor_menu.pack(side="left", padx=self.button_padding)
+
+
         textchunks_frame = tk.Frame(self, bg=BG_COLOR)
         textchunks_frame.pack(fill="x", padx=self.button_padding, pady=self.button_padding)
         self.prompt_text = ScrolledText(textchunks_frame, height=16, bg=TEXT_BG_COLOR,
@@ -859,6 +1039,85 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.status("Form loaded.")
 
     # ------------------ Ende setup_ui() ------------------
+
+        # Methode, um das Options-Fenster zu öffnen
+    def open_options_window(self):
+        # Falls das Options-Fenster bereits existiert, einfach den Fokus setzen.
+        if hasattr(self, 'options_win') and self.options_win.winfo_exists():
+            self.options_win.focus_force()
+            return
+        self.options_win = tk.Toplevel(self)
+        self.options_win.title("Options")
+        self.options_win.configure(bg=BG_COLOR)
+        
+        # Frame für den Schieberegler und den Wertanzeige-Label
+        slider_frame = tk.Frame(self.options_win, bg=BG_COLOR)
+        slider_frame.pack(padx=self.button_padding, pady=self.button_padding, fill="x")
+
+        self.slider_title_label = tk.Label(slider_frame,
+                                   text="User Interface Scaling Factor",
+                                   bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                   font=("Arial", self.main_font_size))
+        self.slider_title_label.pack(anchor="w")
+        
+        # Schieberegler (Scale) – Werte von 0.0 bis 2.0 in Schritten von 0.1
+        self.options_slider = tk.Scale(slider_frame, from_=0.0, to=2.0, resolution=0.1,
+                                    orient="horizontal", bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                    font=("Arial", self.main_font_size),
+                                    command=self.update_slider_label)
+        self.options_slider.set(SCALING_MULTIPLIER)
+        self.options_slider.pack(fill="x")
+        
+        # Frame für Set-Button und Hinweis-Label
+        set_frame = tk.Frame(self.options_win, bg=BG_COLOR)
+        set_frame.pack(padx=self.button_padding, pady=(0, self.button_padding), fill="x")
+        
+        self.set_button = tk.Button(set_frame, text="Set", command=self.set_options,
+                                    bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.set_button.pack(side="left", padx=(0, self.button_padding))
+        
+        self.set_hint_label = tk.Label(set_frame, text="",
+                                    bg=BG_COLOR, fg=TEXT_FG_COLOR,
+                                    font=("Arial", self.main_font_size))
+        self.set_hint_label.pack(side="left")
+        
+        # Debug-Button aus dem Hauptformular in das Options-Fenster integrieren
+        self.options_debug_button = tk.Button(self.options_win, text="Debug", command=self.show_debug_info,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_debug_button.pack(side="bottom", pady=(self.button_padding, 0))
+        
+        # Close-Button für das Options-Fenster
+        self.options_close_button = tk.Button(self.options_win, text="Close", command=self.options_win.destroy,
+                                            bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_close_button.pack(side="bottom", pady=(self.button_padding, 0))
+
+        # Restart-Button im Optionsfenster
+        self.options_restart_button = tk.Button(self.options_win, text="Restart", command=self.restart_program,
+                                                bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+        self.options_restart_button.pack(side="bottom", pady=(self.button_padding, 0))
+
+
+    # Methode zur Aktualisierung des Labels oberhalb des Schiebereglers
+    def update_slider_label(self, value):
+        try:
+            val = float(value)
+        except:
+            val = SCALING_MULTIPLIER
+        self.slider_value_label.config(text=f"Current Multiplier: {val:.1f}")
+
+    # Methode, um die neuen Options (Wert des Schiebereglers) zu übernehmen und zu speichern
+    def set_options(self):
+        global SCALING_MULTIPLIER
+        SCALING_MULTIPLIER = float(self.options_slider.get())
+        save_options_settings()  # Speichert den neuen Wert in der Datei
+        self.set_hint_label.config(text="Settings will be effective after restart")
+
+    def restart_program(self):
+    # Schließt das aktuelle Fenster und startet den Interpreter neu
+        self.destroy()
+        os.execl(sys.executable, sys.executable, *sys.argv)
+
+
 
     def clear_filter_inputs(self):
         if hasattr(self, 'prompt_filter_mode'):
@@ -948,7 +1207,7 @@ class ImageManagerForm(TkinterDnD.Tk):
                     if (now_ts - ctime) > 14 * 24 * 3600:
                         passes = False
                 if passes and self.date_four_weeks.get():
-                    if (now_ts - ctime) > 28 * 24 * 3600:
+                    if (now_ts - ctime) > 21 * 24 * 3600:
                         passes = False
                 if passes and self.date_one_month.get():
                     if (now_ts - ctime) > 30 * 24 * 3600:
@@ -1107,8 +1366,16 @@ class ImageManagerForm(TkinterDnD.Tk):
         if hasattr(self, 'drop_canvas'):
             self.drop_canvas.config(width=int(150 * self.scaling_factor), height=int(112 * self.scaling_factor))
             self.drop_canvas.delete("all")
-            self.drop_canvas.create_text(int(75 * self.scaling_factor), int(56 * self.scaling_factor),
-                                         text="Drop Image Here", fill="white", font=("Arial", self.main_font_size))
+        self.drop_canvas.create_text(
+            int(75 * self.scaling_factor),
+            int(56 * self.scaling_factor),
+            text="Drop\nImage\nHere",
+            fill="orange",
+            font=("Arial", self.main_font_size),
+            anchor="center",
+            justify="center"
+        )
+
 
     def handle_delete_key(self, event):
         if self.fullscreen_win and self.fullscreen_win.winfo_exists():
@@ -1287,38 +1554,46 @@ class ImageManagerForm(TkinterDnD.Tk):
         if self.fullscreen_win and self.fullscreen_win.winfo_exists():
             self.update_fs_texts()
 
+    
     def load_folder_async(self, folder, file_path=None):
         self.status("Loading folder in background...")
+        # Leere vorhandene Listen und Caches
         self.folder_images = []
         self.ctime_cache.clear()
         self.text_chunks_cache.clear()
         self.abort_loading = False
-        def check_abort():
-            return self.abort_loading
-        def on_key(event):
-            if event.keysym == 'Escape':
-                self.abort_loading = True
-                self.status("Loading aborted by user.")
-        self.bind("<KeyPress>", on_key)
-        image_paths = []
-        if self.search_subfolders_var.get():
-            image_paths = list(Path(folder).rglob("*"))
-        else:
-            image_paths = [Path(folder) / f for f in os.listdir(folder)]
-        total = len(image_paths)
-        for idx, p in enumerate(image_paths):
-            if check_abort():
-                break
-            if p.suffix.lower() in IMAGE_EXTENSIONS:
-                norm_path = os.path.normpath(str(p))
-                self.folder_images.append(norm_path)
-                self.ctime_cache[norm_path] = os.path.getctime(norm_path)
-            if idx % 50 == 0 or idx == total - 1:
-                percent = int((idx+1) / total * 100)
-                self.status(f"Reading files... {idx+1}/{total} ({percent}%)")
-        self.unbind("<KeyPress>")
-        self.folder_images.sort(key=lambda x: self.ctime_cache[x], reverse=(self.sort_order == "DESC"))
-        self.after(0, lambda: self.on_folder_loaded(folder, file_path))
+
+        def worker():
+            if self.search_subfolders_var.get():
+                generator = Path(folder).rglob("*")
+            else:
+                generator = (Path(folder) / f for f in os.listdir(folder))
+            
+            chunk = []
+            chunk_size = 100  # Verarbeite in Gruppen von 100 Dateien
+            total = 0
+            for p in generator:
+                if self.abort_loading:
+                    break
+                total += 1
+                if p.suffix.lower() in IMAGE_EXTENSIONS:
+                    norm_path = os.path.normpath(str(p))
+                    chunk.append(norm_path)
+                    self.ctime_cache[norm_path] = os.path.getctime(norm_path)
+                if total % chunk_size == 0:
+                    self.after(0, lambda c=chunk: self.folder_images.extend(c))
+                    self.after(0, lambda: self.status(f"Reading files... {total} processed"))
+                    chunk = []
+                    time.sleep(0.009)  # Kurze Pause on 0.001 auf 0.009 gesetzt
+            if chunk:
+                self.after(0, lambda c=chunk: self.folder_images.extend(c))
+                time.sleep(0.001)
+            # Sobald alle Dateien verarbeitet sind, sortiere und lade das erste Bild
+            self.after(0, lambda: self.on_folder_loaded(folder, file_path))
+        
+        threading.Thread(target=worker, daemon=True).start()
+
+
 
     def on_folder_loaded(self, folder, file_path):
         if self.folder_images:
@@ -1477,20 +1752,22 @@ class ImageManagerForm(TkinterDnD.Tk):
             avail_width = 800
             avail_height = 600
         orig_width, orig_height = self.current_image.size
-        if default_scale or (self.scale_var.get() == "Default"):
-            default_scale_factor = get_default_image_scale(self.scaling_factor)
+
+        if self.default_scale_var.get():
+            scale_factor = get_default_image_scale(self.scaling_factor)
         else:
-            default_scale_factor = int(self.scale_var.get().replace("%", "")) / 100
-        new_width = int(orig_width * default_scale_factor)
-        new_height = int(orig_height * default_scale_factor)
+            scale_factor = self.scale_value.get() / 100.0
+        new_width = int(orig_width * scale_factor)
+        new_height = int(orig_height * scale_factor)
         max_width = int(avail_width * 0.8)
         max_height = int(avail_height * 0.8)
         width_factor = max_width / orig_width
         height_factor = max_height / orig_height
         fit_factor = min(width_factor, height_factor)
-        if fit_factor < default_scale_factor:
+        if fit_factor < scale_factor:
             new_width = int(orig_width * fit_factor)
             new_height = int(orig_height * fit_factor)
+
         self.resized_image = self.current_image.resize((new_width, new_height), Image.LANCZOS)
         self.tk_image = ImageTk.PhotoImage(self.resized_image)
         self.image_label.config(image=self.tk_image)
@@ -1504,20 +1781,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.image_info_label.config(text=info_text)
         self.image_frame.update_idletasks()
         orig_width, orig_height = self.current_image.size
-        if default_scale or (self.scale_var.get() == "Default"):
-            default_scale_factor = get_default_image_scale(self.scaling_factor)
-        else:
-            default_scale_factor = int(self.scale_var.get().replace("%", "")) / 100
-        new_width = int(orig_width * default_scale_factor)
-        new_height = int(orig_height * default_scale_factor)
-        max_width = int(avail_width * 0.8)
-        max_height = int(avail_height * 0.8)
-        width_factor = max_width / orig_width
-        height_factor = max_height / orig_height
-        fit_factor = min(width_factor, height_factor)
-        if fit_factor < default_scale_factor:
-            new_width = int(orig_width * fit_factor)
-            new_height = int(orig_height * fit_factor)
+
         self.resized_image = self.current_image.resize((new_width, new_height), Image.LANCZOS)
         self.tk_image = ImageTk.PhotoImage(self.resized_image)
         self.image_label.config(image=self.tk_image)
@@ -1531,9 +1795,11 @@ class ImageManagerForm(TkinterDnD.Tk):
         info_text = f"Filename: {os.path.basename(file_path)}\nPath: {file_path}\nCreated: {created_str}"
         self.image_info_label.config(text=info_text)
 
-    def rescale_image(self, value):
+    def rescale_image(self, value=None):
         if self.current_image:
             self.display_image(self.current_image_path)
+
+
 
     def extract_and_display_text_chunks(self, file_path):
         if file_path not in self.text_chunks_cache:
@@ -1677,6 +1943,14 @@ class ImageManagerForm(TkinterDnD.Tk):
             if self.fullscreen_win and self.fullscreen_win.winfo_exists():
                 self.fullscreen_win.destroy()
                 self.fullscreen_win = None
+            # Setze die Vollbild-Widget-Referenzen zurück, sodass sie beim nächsten Öffnen neu erzeugt werden
+            self.fs_prompt_text = None
+            self.fs_negativ_text = None
+            self.fs_settings_text = None
+            self.fs_copy_prompt_button = None
+            self.fs_copy_negativ_button = None
+            self.fs_copy_settings_button = None
+
             self.focus_force()
             if update_main and hasattr(self, "fs_image_path") and self.fs_image_path in self.filtered_images:
                 self.current_index = validate_index(self.filtered_images.index(self.fs_image_path), self.filtered_images)
@@ -1684,6 +1958,7 @@ class ImageManagerForm(TkinterDnD.Tk):
                 self.extract_and_display_text_chunks(self.fs_image_path)
         except tk.TclError:
             pass
+
 
     def show_preview_table(self):
         if not self.preview_frame.winfo_ismapped():
@@ -1713,6 +1988,12 @@ class ImageManagerForm(TkinterDnD.Tk):
 
     def update_fs_image(self):
         try:
+            current_time = int(time.time() * 1000)  # aktuelle Zeit in Millisekunden
+            if current_time - self.last_fs_update_time < self.fs_update_interval:
+                # Wenn die letzte Aktualisierung zu kurz her ist, wird das Update übersprungen
+                return
+            self.last_fs_update_time = current_time
+
             self.fullscreen_win.update_idletasks()
             avail_w = self.fs_image_label.winfo_width()
             avail_h = self.fs_image_label.winfo_height()
@@ -1729,6 +2010,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fs_tk_image = ImageTk.PhotoImage(fs_resized)
         self.fs_image_label.config(image=self.fs_tk_image)
         self.update_fs_info_fullscreen()
+
 
     def fullscreen_zoom(self, event):
         try:
@@ -1791,6 +2073,73 @@ class ImageManagerForm(TkinterDnD.Tk):
             self.update_fs_texts()
         self.fullscreen_win.after(100, self.update_fs_image)
 
+    def update_fs_texts(self):
+        if not self.fs_text_visible:
+            return
+        try:
+            # Erzeuge die Widgets, falls sie noch nicht existieren oder auf None gesetzt wurden
+            if not getattr(self, 'fs_prompt_text', None):
+                self.fs_prompt_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_prompt_text.grid(row=0, column=0, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+                self.fs_copy_prompt_button = tk.Button(self.fs_text_frame, text="copy Prompt",
+                                                        command=lambda: copy_to_clipboard(self, self.fs_prompt_text.get("1.0", tk.END)),
+                                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_copy_prompt_button.grid(row=1, column=0, padx=self.button_padding)
+                
+                self.fs_negativ_text = ScrolledText(self.fs_text_frame, height=8, bg=TEXT_BG_COLOR,
+                                                    fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_negativ_text.grid(row=0, column=1, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+                self.fs_copy_negativ_button = tk.Button(self.fs_text_frame, text="copy Negative",
+                                                        command=lambda: copy_to_clipboard(self, self.fs_negativ_text.get("1.0", tk.END)),
+                                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_copy_negativ_button.grid(row=1, column=1, padx=self.button_padding)
+                
+                self.fs_settings_text = ScrolledText(self.fs_text_frame, height=4, bg=TEXT_BG_COLOR,
+                                                    fg=TEXT_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_settings_text.grid(row=2, column=0, columnspan=2, padx=self.button_padding, pady=self.button_padding, sticky="nsew")
+                self.fs_copy_settings_button = tk.Button(self.fs_text_frame, text="copy Settings",
+                                                        command=lambda: copy_to_clipboard(self, self.fs_settings_text.get("1.0", tk.END)),
+                                                        bg=BTN_BG_COLOR, fg=BTN_FG_COLOR, font=("Arial", self.main_font_size))
+                self.fs_copy_settings_button.grid(row=3, column=0, columnspan=2, padx=self.button_padding)
+                
+                # Mousewheel-Bindings
+                self.fs_prompt_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_prompt_text))
+                self.fs_negativ_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_negativ_text))
+                self.fs_settings_text.bind("<MouseWheel>", lambda e: self.fullscreen_mousewheel_text(e, self.fs_settings_text))
+                
+                # Gitterkonfiguration
+                for i in range(2):
+                    self.fs_text_frame.grid_columnconfigure(i, weight=1)
+                self.fs_text_frame.grid_rowconfigure(0, weight=1)
+                self.fs_text_frame.grid_rowconfigure(2, weight=0)
+            
+            if self.fs_image_path not in self.text_chunks_cache:
+                self.text_chunks_cache[self.fs_image_path] = extract_text_chunks(self.fs_image_path)
+            prompt, negativ, settings = self.text_chunks_cache[self.fs_image_path]
+            filter_text = self.filter_var.get()
+            
+            self.fs_prompt_text.config(state=tk.NORMAL)
+            self.fs_prompt_text.delete("1.0", tk.END)
+            self.fs_prompt_text.insert("1.0", prompt)
+            self.highlight_text(self.fs_prompt_text, prompt, filter_text)
+            self.fs_prompt_text.config(state=tk.DISABLED)
+            
+            self.fs_negativ_text.config(state=tk.NORMAL)
+            self.fs_negativ_text.delete("1.0", tk.END)
+            self.fs_negativ_text.insert("1.0", negativ)
+            self.highlight_text(self.fs_negativ_text, negativ, filter_text)
+            self.fs_negativ_text.config(state=tk.DISABLED)
+            
+            self.fs_settings_text.config(state=tk.NORMAL)
+            self.fs_settings_text.delete("1.0", tk.END)
+            self.fs_settings_text.insert("1.0", settings)
+            self.highlight_text(self.fs_settings_text, settings, filter_text)
+            self.fs_settings_text.config(state=tk.DISABLED)
+        except Exception as e:
+            print(f"Fehler in update_fs_texts: {e}")
+
+
     def fs_delete_current_image(self):
         if not hasattr(self, "fs_image_path") or not self.fs_image_path:
             self.status("No image selected to delete.")
@@ -1831,14 +2180,61 @@ class ImageManagerForm(TkinterDnD.Tk):
             if confirm:
                 continue_after_delete()
 
+    ##xA
+
     def open_image_in_system(self):
-        if hasattr(self, "current_image_path") and self.current_image_path:
-            if os.name == "nt":
-                os.startfile(self.current_image_path)
+            if hasattr(self, "current_image_path") and self.current_image_path:
+                if os.name == "nt":
+                    os.startfile(self.current_image_path)
+                else:
+                    os.system(f'xdg-open "{self.current_image_path}"')
             else:
-                os.system(f'xdg-open "{self.current_image_path}"')
-        else:
-            self.status("No image selected.")
+                self.status("No image selected.")
+
+    def on_scaling_slider_change(self, value):
+            """
+            Wird aufgerufen, wenn der Slider bewegt wird.
+            Falls die Default-Checkbox aktiviert ist, wird der Slider immer auf den Standardwert zurückgesetzt.
+            Andernfalls wird das Bild mit dem manuellen Wert (in Prozent) neu skaliert.
+            """
+            if self.default_scaling_var.get():
+                default_value = int(get_default_image_scale(self.scaling_factor) * 100)
+                if int(value) != default_value:
+                    self.scaling_slider.set(default_value)
+            else:
+                manual_scale = int(value) / 100.0
+                self.rescale_image_custom(manual_scale)
+
+    def on_default_scaling_toggle(self):
+            """
+            Wird aufgerufen, wenn die Default-Checkbox geändert wird.
+            Ist sie aktiviert, setzt sie den Slider auf den Standardwert und skaliert das Bild dementsprechend.
+            Andernfalls wird der aktuelle Sliderwert übernommen.
+            """
+            if self.default_scaling_var.get():
+                default_value = int(get_default_image_scale(self.scaling_factor) * 100)
+                self.scaling_slider.set(default_value)
+                self.rescale_image_custom(get_default_image_scale(self.scaling_factor))
+            else:
+                current_value = self.scaling_slider.get()
+                self.rescale_image_custom(current_value / 100.0)
+
+    def rescale_image_custom(self, scale_factor):
+            """
+            Skaliert das aktuell geladene Bild neu anhand des übergebenen Skalierungsfaktors (als Dezimalzahl, z. B. 0.75 für 75%).
+            """
+            if self.current_image:
+                orig_width, orig_height = self.current_image.size
+                new_width = int(orig_width * scale_factor)
+                new_height = int(orig_height * scale_factor)
+                self.resized_image = self.current_image.resize((new_width, new_height), Image.LANCZOS)
+                self.tk_image = ImageTk.PhotoImage(self.resized_image)
+                self.image_label.config(image=self.tk_image)
+                self.status(f"Image scaled to {int(scale_factor * 100)}%")
+
+
+    ##xB
+
 
     def open_image_fs(self):
         if hasattr(self, "fs_image_path") and self.fs_image_path:
@@ -1953,7 +2349,7 @@ class ImageManagerForm(TkinterDnD.Tk):
         self.fs_image_label.bind("<MouseWheel>", self.fullscreen_mousewheel_image)
 
         self.update_fs_image()
-        self.update_fs_texts()
+        self.fullscreen_win.after(100, self.update_fs_texts)
 
 
 import json
@@ -1979,5 +2375,7 @@ def load_history():
     return {"folder_history": [], "filter_history": []}
 
 if __name__ == "__main__":
+    load_options_settings()  # Lädt den gespeicherten Multiplikator (falls vorhanden)
     app = ImageManagerForm()
     app.mainloop()
+

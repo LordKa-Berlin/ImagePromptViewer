@@ -181,3 +181,28 @@ Wenn ich im Vollbild ein Bild gelöscht habe, dann wird im Vollbild das folgende
 
 Ich möchte das neben dem ASC/DESC Button ein Kontrollfeld angelegt wird mit dem Namen "Lora highlight", wenn er aktiviert wird, sollen jeder String,  der mit "<" anfängt und mit ">"  endet eine weiße Schrift haben, inklusive der "<>" zeichen. Das soll in den Promptfeldern im Hauptfenster und im Vollbild passieren.
 Daneben legst du noch mal ein Kontrollfeld an mit dem Namen  "Weighting highlight" wenn er aktiviert wird, sollen jeder String,  der mit "(" anfängt und mit ")"  endet eine hellblaue Schrift haben, inklusive der "()" zeichen. Das soll in den Promptfeldern im Hauptfenster und im Vollbild passieren.
+
+
+
+schreibe mir bitte eine ausführliche Anweisung für die version Versionsnummer: 1.6.1.0-MASTER, erwähne folgendes. Die version ist noch nicht ausgiebig getestete, es können noch fehler bugs auftreten, gerne können die user das program testen, es wäre nett wenn sie mir ihre erfahrungen hier mitteilen, auch änderungswünsch udn vorschläge für erweiterungen können mitgetteielt werden. 
+
+# 24ZM = 0,3, 27ZM = 0.6, 32ZM = 08
+
+
+Ich habe das jetzt mal getestet, für einen 24 zoll monitor mit einer Auflösung von 1920x1080 ist der Multiplikator gut geeignet, für einen 27 Zoll Monitor ist 0.6 und für einen 32 Zoll monitor ist 0.8 gut geeignet.
+
+Erstelle mir im Formmular einen neuen Button an der stelle wo der Debug Button sitzt, Name "Customization". Wenn ich der Button aktiviert wird öffnet sich ein neues Fenster integriere in dem Fenster den Debug Button, der vorher im Hauptformular war. Integriere in das Fenster einen schieberegler mit folgender Funktion
+
+Durch den schieberegler soll der Wert factor * 2.0 aus dieser Funktion verändert werden. Der schieberegler soll die werte von 0.0 bis 2.0 abdecken.
+
+def get_scaling_factor(monitor):
+    ref_width, ref_height = 3840, 2160
+    width_factor = monitor.width / ref_width
+    height_factor = monitor.height / ref_height
+    factor = min(width_factor, height_factor)
+    # Reduziere den Faktor um 20 %
+    return max(0.2, min(1.2, factor * 2.0)) # 24ZM = 0,3, 27ZM = 0.6, 32ZM = 08
+
+
+für einen 24 zoll monitor mit einer Auflösung von 1920x1080 ist der Multiplikator gut geeignet, für einen 27 Zoll Monitor ist 0.6 und für einen 32 Zoll monitor ist 0.8 gut geeignet.
+
