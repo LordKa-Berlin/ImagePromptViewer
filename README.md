@@ -59,6 +59,13 @@ ImagePromptViewer is still in its early development phase — more AI tools and 
 ### 🖼️ User-Interface-Scaling
 ![ImagePromptViewer Fullscreen View](User-Interface-Scaling.png)
 
+
+### 🛠️ Editable List
+![Screenshot Edit Mode](imagepromptviewer-mainscreen.png)
+
+### 🛠️ one click to toggle between all deactivated (will not be copied)and all activated, will be copied as well
+![Screenshot View Mode](imagepromptviewer-fullscreen.png)
+
 ---
 
 ## Installation
