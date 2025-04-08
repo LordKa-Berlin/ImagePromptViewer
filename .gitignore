@@ -1,2 +1,10 @@
-# Alles im Ordner IGN-Entwicklung ignorieren
+# Ignore everything in the IGN-Development folder
 /IGN-Entwicklung/
+
+# Ignore the mypy cache folder
+.mypy_cache/
+
+# Ignore VSCode files
+*.code-workspace
+launch.json
+.vscode/
