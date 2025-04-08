@@ -1,7 +1,7 @@
 [project]
 name = "ImagePromptViewer"
 version = "1.8.0.0"
-description = "Add your description here"
+description = "A lightweight, powerful image viewer tailored for AI-generated images that contain embedded prompt metadata."
 
 authors = [
     {name = "LordKa-Berlin", email = "lordkaberlin@gmail.com"}
