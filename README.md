@@ -40,7 +40,7 @@ Whether you’re curating datasets, reviewing generations, or digging into promp
 ![Fullscreen Mode](screenshots/imagepromptviewer-fullscreen.png)
 
 <h3>🖼️ UI Scaling</h3>
-<img src="screenshots/User-Interface-Scaling.png" alt="UI Scaling" width="50%">
+<img src="screenshots/User-Interface-Scaling.png" alt="UI Scaling" width="25%">
 
 ---
 
