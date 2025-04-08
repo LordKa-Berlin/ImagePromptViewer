@@ -1,13 +1,13 @@
 
 ---
 
-### ✅ STABLE RELEASE: ImagePromptViewer 1.8.0.0
+## ✅ Neue `README.md` mit **relativen Bildpfaden**:
 
 ```markdown
 # ImagePromptViewer
 
 **Version**: 1.8.0.0  
-**Release Date**: 2025-04-8  
+**Release Date**: 2025-04-08  
 **Internal Designation**: Master9 Stable  
 **Author**: LordKa-Berlin  
 
@@ -58,19 +58,6 @@ ImagePromptViewer is still in its early development phase — more AI tools and 
 
 ### 🖼️ UI Scaling  
 ![UI Scaling](screenshots/User-Interface-Scaling.png)
-
-
-## Screenshots
-
-### 🖼️ Main Window  
-![Main Window](https://raw.githubusercontent.com/LordKa-Berlin/ImagePromptViewer/main/screenshots/imagepromptviewer-mainscreen.png)
-
-### 🖼️ Fullscreen Mode  
-![Fullscreen Mode](https://raw.githubusercontent.com/LordKa-Berlin/ImagePromptViewer/main/screenshots/imagepromptviewer-fullscreen.png)
-
-### 🖼️ UI Scaling  
-![UI Scaling](https://raw.githubusercontent.com/LordKa-Berlin/ImagePromptViewer/main/screenshots/User-Interface-Scaling.png)
-
 
 ---
 
