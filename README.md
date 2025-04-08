@@ -39,9 +39,6 @@ Whether you’re curating datasets, reviewing generations, or digging into promp
 ### 🖼️ Fullscreen Mode  
 ![Fullscreen Mode](screenshots/imagepromptviewer-fullscreen.png)
 
-### 🖼️ UI Scaling  
-![UI Scaling](screenshots/User-Interface-Scaling.png)
-
 <h3>🖼️ UI Scaling</h3>
 <img src="screenshots/User-Interface-Scaling.png" alt="UI Scaling" width="50%">
 
