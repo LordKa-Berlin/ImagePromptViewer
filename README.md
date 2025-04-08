@@ -1,8 +1,4 @@
-
 ---
-
-## ✅ Neue `README.md` mit **relativen Bildpfaden**:
-
 ```markdown
 # ImagePromptViewer
 
