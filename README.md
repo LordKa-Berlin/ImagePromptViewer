@@ -1,5 +1,3 @@
-
-```markdown
 # 🖼️ ImagePromptViewer
 
 **Version:** 1.8.0.0  
