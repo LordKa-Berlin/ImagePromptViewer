@@ -87,6 +87,22 @@ python ImagePromptViewer-1.8.0.0.py
 
 ---
 
+## 🧪 Help Improve ImagePromptViewer
+
+ImagePromptViewer is still in an early development stage and may not yet support **all prompt embedding formats** used by various AI image generation tools.
+
+If you encounter a file where the prompt is **not detected or displayed correctly**, please send:
+
+- 🖼️ The image file  
+- 🧾 A note stating which tool was used to generate it
+
+📧 to **lordkaberlin@gmail.com**
+
+This helps improve future compatibility and ensures more formats can be supported in upcoming versions.
+
+Thank you for contributing to the improvement of ImagePromptViewer!
+
+
 ## ⚠️ Known Limitations
 
 - 📅 Date range filtering is still experimental
