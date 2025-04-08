@@ -46,7 +46,6 @@ ImagePromptViewer is still in its early development phase — more AI tools and 
 
 ## Screenshots
 
-
 ### 🖼️ Main Window  
 ![Main Window](screenshots/imagepromptviewer-mainscreen.png)
 
