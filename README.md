@@ -1,8 +1,4 @@
 
----
-
-## ✅ Saubere, fertige `README.md` für dein Projekt **ImagePromptViewer**
-
 ```markdown
 # 🖼️ ImagePromptViewer
 
