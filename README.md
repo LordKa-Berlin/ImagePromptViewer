@@ -56,6 +56,9 @@ ImagePromptViewer is still in its early development phase — more AI tools and 
 ### 🖼️ Fullscreen Mode
 ![ImagePromptViewer Fullscreen View](imagepromptviewer-fullscreen.png)
 
+### 🖼️ User-Interface-Scaling
+![ImagePromptViewer Fullscreen View](User-Interface-Scaling.png)
+
 ---
 
 ## Installation
