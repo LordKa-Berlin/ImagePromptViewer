@@ -149,6 +149,7 @@ def validate_index(index, items):
         return len(items) - 1 if items else -1
     return index
 
+
 BG_COLOR_Test = "#b55bff"
 BG_COLOR = "#1F1F1F"
 BTN_BG_COLOR = "#FFA500"

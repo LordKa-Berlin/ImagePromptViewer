@@ -25,6 +25,12 @@ dependencies = [
     { name = "tkinterdnd2" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "types-pillow" },
+    { name = "types-send2trash" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "piexif", specifier = "==1.1.3" },
@@ -32,6 +38,12 @@ requires-dist = [
     { name = "screeninfo", specifier = "==0.8.1" },
     { name = "send2trash", specifier = "==1.8.3" },
     { name = "tkinterdnd2", specifier = "==0.4.3" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "types-pillow" },
+    { name = "types-send2trash" },
 ]
 
 [[package]]
@@ -135,4 +147,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/6e/2a/9d50ee58c7a60bf0c8d4bd8030b4afc29c8bf60158f95dbc89e8081d29d2/tkinterdnd2-0.4.3.tar.gz", hash = "sha256:03a932a11b42ab139c4552b414aa10ee8a087b8386b52baca8c62939760c2ef2", size = 444595 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/c3/e04f004a53c00dc01126b6f998264cef672c6883c36aa4bd65845a8eb4c0/tkinterdnd2-0.4.3-py3-none-any.whl", hash = "sha256:8804f5d2e2a99713ec93e85384397fec6bf66fdf2065e3750938d55018971c4a", size = 493006 },
+]
+
+[[package]]
+name = "types-pillow"
+version = "10.2.0.20240822"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/18/4a/4495264dddaa600d65d68bcedb64dcccf9d9da61adff51f7d2ffd8e4c9ce/types-Pillow-10.2.0.20240822.tar.gz", hash = "sha256:559fb52a2ef991c326e4a0d20accb3bb63a7ba8d40eb493e0ecb0310ba52f0d3", size = 35389 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/23/e81a5354859831fcf54d488d33b80ba6133ea84f874a9c0ec40a4881e133/types_Pillow-10.2.0.20240822-py3-none-any.whl", hash = "sha256:d9dab025aba07aeb12fd50a6799d4eac52a9603488eca09d7662543983f16c5d", size = 54354 },
+]
+
+[[package]]
+name = "types-send2trash"
+version = "1.8.2.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/fa/3c99413e1eb2bafca67aafe681c3d213422fd9565b3851fc9c3753d6ede9/types-Send2Trash-1.8.2.7.tar.gz", hash = "sha256:f471c0dcb6c0f6682eebdbf4498a2f4fe16b4c9c25e64969450334734ac1649c", size = 2725 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ca/ff/f34aba2dec864d0d97af5c11c9690f429fdf7388a9663cc817b4a6b1f8f7/types_Send2Trash-1.8.2.7-py3-none-any.whl", hash = "sha256:e4796fa3888ad0272ed73e5e2f983f75f5a171ca0b553a7362d902c553478334", size = 3186 },
 ]
