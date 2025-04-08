@@ -92,7 +92,6 @@ import json
 import os
 import platform
 import re
-import subprocess
 import sys
 import threading
 import time
@@ -102,6 +101,13 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
+
+import piexif
+from piexif import helper
+from PIL import Image, ImageTk
+from screeninfo import get_monitors
+from send2trash import send2trash
+from tkinterdnd2 import DND_FILES, TkinterDnD
 
 VERSION = "1.8.0.0"
 HISTORY_FILE = "ImagePromptViewer-History.json"
@@ -142,39 +148,6 @@ def validate_index(index, items):
     elif index >= len(items):
         return len(items) - 1 if items else -1
     return index
-
-
-try:
-    from tkinterdnd2 import DND_FILES, TkinterDnD
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "tkinterdnd2"])
-    from tkinterdnd2 import DND_FILES, TkinterDnD
-
-try:
-    from PIL import Image, ImageTk
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
-    from PIL import Image, ImageTk
-
-try:
-    from screeninfo import get_monitors
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "screeninfo"])
-    from screeninfo import get_monitors
-
-try:
-    from send2trash import send2trash
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "send2trash"])
-    from send2trash import send2trash
-
-try:
-    import piexif
-    from piexif import helper
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "piexif"])
-    import piexif
-    from piexif import helper
 
 BG_COLOR_Test = "#b55bff"
 BG_COLOR = "#1F1F1F"

@@ -25,6 +25,12 @@ dependencies = [
     "tkinterdnd2==0.4.3",
 ]
 
+[dependency-groups]
+dev = [
+    "types-Send2Trash",
+    "types-Pillow",
+]
+
 [project.gui-scripts]
 main = "ImagePromptViewer:main"
 
@@ -42,5 +48,5 @@ indent-width = 4
 quote-style = "double"
 indent-style = "space"
 
-[tool.uv]
-package = false
+[tool.mypy]
+follow_untyped_imports = true
