@@ -1,0 +1,53 @@
+[project]
+name = "ImagePromptViewer"
+version = "1.8.0.0"
+description = "A lightweight, powerful image viewer tailored for AI-generated images that contain embedded prompt metadata."
+
+authors = [
+    {name = "LordKa-Berlin", email = "lordkaberlin@gmail.com"}
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+	"Development Status :: 3 - Alpha",
+]
+
+readme = "README.md"
+license = "CC-BY-NC-4.0"
+license-files = ["LICENSE.md"]
+
+requires-python = ">=3.12"
+dependencies = [
+    "piexif==1.1.3",
+    "pillow==11.1.0",
+    "screeninfo==0.8.1",
+    "send2trash==1.8.3",
+    "tkinterdnd2==0.4.3",
+]
+
+[dependency-groups]
+dev = [
+    "types-Send2Trash",
+    "types-Pillow",
+]
+
+[project.gui-scripts]
+main = "ImagePromptViewer:main"
+
+[project.urls]
+Homepage = "https://github.com/LordKa-Berlin/ImagePromptViewer"
+Issues = "https://github.com/LordKa-Berlin/ImagePromptViewer/issues"
+
+[tool.ruff]
+# Default black-like configuration
+line-length = 88
+target-version = "py312"
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+follow_untyped_imports = true
