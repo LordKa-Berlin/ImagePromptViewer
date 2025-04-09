@@ -62,7 +62,9 @@ Whether you're curating datasets, analyzing generation details, or exploring how
 ```bash
 pip install tkinterdnd2 Pillow screeninfo send2trash piexif
 ```
-
+💡 Note:
+All required modules will be checked and automatically installed when the script starts.
+Manual installation using the command above is only necessary if you prefer to set them up in advance or want to avoid auto-installation at runtime.
 ### Start the App
 
 ```bash
